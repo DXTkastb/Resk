@@ -11,14 +11,78 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-home: Scaffold(
-  appBar: AppBar(title: const Text('Reminder App!'),),
-
-),
-
-
-
+      home: MainApp(),
     );
   }
 }
 
+class MainApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return MainAppState();
+  }
+}
+
+class MainAppState extends State<MainApp> {
+  int _currentindex = 0;
+
+  List<Widget> widgetlist = [
+    Container(
+      color: Colors.teal.shade200,
+      alignment: Alignment.center,
+      width: double.infinity,
+      child: const Text(''),
+    ),
+    Container(
+      color: Colors.deepPurple.shade200,
+      alignment: Alignment.center,
+      width: double.infinity,
+      child: const Text(''),
+    ),
+    Container(
+      color: Colors.red.shade200,
+      alignment: Alignment.center,
+      width: double.infinity,
+      child: const Text(''),
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Scaffold(
+      body: widgetlist[_currentindex],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: (_currentindex == 0) ? Colors.teal : Colors.deepPurple,
+        child: const Icon(Icons.add_box_rounded),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentindex,
+        onTap: (x) {
+          if (_currentindex != x) {
+            setState(() {
+              _currentindex = x;
+            });
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.task_rounded,
+              ),
+              label: 'Tasks'),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.alarm_rounded,
+              ),
+              label: 'Reminders'),
+        ],
+      ),
+      appBar: AppBar(
+        title: const Text('Reminder App'),
+      ),
+    );
+  }
+}
