@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:reminder_app/reminder_screen/remiderpage.dart';
+import 'package:reminder_app/tasks_screen/taskspage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,27 +29,37 @@ class MainApp extends StatefulWidget {
 }
 
 class MainAppState extends State<MainApp> {
+  late Timer time;
+  @override
+  void initState() {
+    run();
+    super.initState();
+  }
+
+  @override
+  void dispose(){
+    time.cancel();
+    super.dispose();
+  }
+
+  void run() {
+    time=
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState((){
+
+        _currentindex=0;
+
+      });
+
+    });
+
+  }
+
   int _currentindex = 0;
 
   List<Widget> widgetlist = [
-    Container(
-      color: Colors.teal.shade200,
-      alignment: Alignment.center,
-      width: double.infinity,
-      child: const Text(''),
-    ),
-    Container(
-      color: Colors.deepPurple.shade200,
-      alignment: Alignment.center,
-      width: double.infinity,
-      child: const Text(''),
-    ),
-    Container(
-      color: Colors.red.shade200,
-      alignment: Alignment.center,
-      width: double.infinity,
-      child: const Text(''),
-    ),
+    ReminderPage(),
+    TasksPage(),
   ];
 
   @override
