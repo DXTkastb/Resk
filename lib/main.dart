@@ -29,37 +29,13 @@ class MainApp extends StatefulWidget {
 }
 
 class MainAppState extends State<MainApp> {
-  late Timer time;
-  @override
-  void initState() {
-    run();
-    super.initState();
-  }
-
-  @override
-  void dispose(){
-    time.cancel();
-    super.dispose();
-  }
-
-  void run() {
-    time=
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState((){
-
-        _currentindex=0;
-
-      });
-
-    });
-
-  }
 
   int _currentindex = 0;
 
   List<Widget> widgetlist = [
-    ReminderPage(),
     TasksPage(),
+    ReminderPage(),
+
   ];
 
   @override
