@@ -1,25 +1,12 @@
-
 import 'package:flutter/material.dart';
 import 'package:reminder_app/dbhelper/databaseManager.dart';
 import 'package:reminder_app/reminder_screen/remiderpage.dart';
 import 'package:reminder_app/tasks_screen/taskspage.dart';
 
-
-
-
-
 void main() async {
-  print(DatabaseManager.firsttime);
   WidgetsFlutterBinding.ensureInitialized();
-  DatabaseManager databaseManager=DatabaseManager.databaseManagerInstance;
+  DatabaseManager databaseManager = DatabaseManager.databaseManagerInstance;
   await databaseManager.initiateDatabse();
-  (await databaseManager.queryRows()).forEach((element) {
-    element.forEach((key, value) {
-      print('$key : $value');
-
-    });
-  });
-  print(DatabaseManager.firsttime);
   runApp(const MyApp());
 }
 
@@ -84,7 +71,6 @@ class MainAppState extends State<MainApp> {
         ],
       ),
       appBar: AppBar(
-
         title: const Text('Reminder App'),
       ),
     );
