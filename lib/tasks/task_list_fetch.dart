@@ -17,6 +17,23 @@ class TaskListFetch extends ChangeNotifier {
   notifyListeners();
   }
 
+  Future<void> addTask(String title,String description, int reach, int score) async{
+    print('length is ${
+        _listtaskdata.length
+    }');
+    var tsk=TaskData(_listtaskdata.length+1, title, description, reach, score);
+    (await DatabaseManager.databaseManagerInstance.addTask(tsk).then((_) {
+      _listtaskdata.add(tsk);
+    })
+    .then((_){
+      notifyListeners();
+    })
+    );
+
+
+
+  }
+
 
 
 

@@ -7,7 +7,7 @@ class DatabaseManager {
   static late final _db;
   static const dbName = 'Tasks.db';
   static const version = 1;
-  static int index = 0;
+
 
   get db => _db;
 
@@ -35,16 +35,13 @@ class DatabaseManager {
       await db.execute(
           'INSERT INTO TASK VALUES(4,\'Sketch Dragon\',\'pencil sketching\',\'1\',\'1\')');
 
-      index = (await db.query(
-            'TASK',
-          ))
-              .length +
-          1;
+
+
     }, version: 1);
   }
 
   Future<List<Map<String, dynamic>>> queryRows() async {
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 2));
     Database db = await databaseManagerInstance.db;
     return await db.query('TASK');
   }
@@ -53,7 +50,7 @@ class DatabaseManager {
     Database db = await databaseManagerInstance.db;
 
     return await db.insert('TASK', {
-      'ID': index,
+      'ID': taskData.index,
       'TITLE': taskData.title,
       'DESCRIPTION': taskData.description,
       'REACH': (taskData.reached) ? 1 : 0,

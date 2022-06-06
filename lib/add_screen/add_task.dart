@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:reminder_app/tasks/taskData.dart';
+import 'package:reminder_app/tasks/task_list_fetch.dart';
 
 class AddTask extends StatelessWidget {
   @override
@@ -16,6 +19,9 @@ class AddTask extends StatelessWidget {
 }
 
 class AddTaskForm extends StatefulWidget {
+
+
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -24,71 +30,90 @@ class AddTaskForm extends StatefulWidget {
 }
 
 class TaskForm extends State<AddTaskForm> {
+
+  bool processing=false;
+
+  void onadd(BuildContext ctx){
+
+    setState((){
+      processing=true;
+    });
+
+    Future.delayed(Duration.zero).then((_) async {
+      await Future.delayed(Duration.zero);
+      await Provider.of<TaskListFetch>(ctx,listen: false).addTask( 'title','DES', 0, 0);
+    }).then((value) async {
+      await Future.delayed(const Duration(seconds: 2));
+      Navigator.of(ctx).pop();
+    });
+
+  }
+
+
+
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(
+    return (!processing) ?Container(
       alignment: Alignment.center,
       height: 300,
       width: 300,
-      child:
-        Material(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  keyboardType:  TextInputType.text,
-                  validator: (value){
-                        if(value!=null && value.isNotEmpty){
-
-                        }
-                      return 'enter title!';
-                  },
-
-                ),
-                TextFormField(
-                  keyboardType:  TextInputType.text,
-                  validator: (value){
-                    if(value!=null && value.isNotEmpty){
-
-                    }
-                    return 'enter description!';
-                  },
-                minLines: 2,
-                  maxLines: 3,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Builder(
+        builder: (BuildContext ctx){
+          return
+            Scaffold(
+              body: Form(
+                key: _formKey,
+                child: Column(
                   children: [
-                    ElevatedButton(onPressed: () {
-
-
-                      if (_formKey.currentState!.validate()) {
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')),
-                        );
-                      }
-                    }, child:const Text('ADD')),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      validator: (value) {
+                        if (value != null && value.isNotEmpty) {}
+                        return 'enter title!';
                       },
-                      child: const Text('CANCEL'),
                     ),
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      validator: (value) {
+                        if (value != null && value.isNotEmpty) {}
+                        return 'enter description!';
+                      },
+                      minLines: 2,
+                      maxLines: 3,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+
+                                      onadd(context);
+                              // if (_formKey.currentState!.validate()) {
+                              //   // If the form is valid, display a snackbar. In the real world,
+                              //   // you'd often call a server or save the information in a database.
+
+                              //   );
+                              // }
+                            },
+                            child: const Text('ADD')),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(ctx).pop();
+                          },
+                          child: const Text('CANCEL'),
+                        ),
+                      ],
+                    )
                   ],
-                )
-
-              ],
-            ),
-          ),
-        ),
-
-
-    );
+                ),
+              ),
+            );
+        },
+      ),
+    ):const Center(child: CircularProgressIndicator(),);
   }
+
 }
