@@ -1,114 +1,81 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reminder_app/tasks/taskData.dart';
+import 'package:reminder_app/tasks/task_list_fetch.dart';
+import 'package:reminder_app/tasks_screen/taskWid.dart';
 
 import '../dbhelper/databaseManager.dart';
 
 class TasksPage extends StatelessWidget {
+  final Future tasklist;
+
+  const TasksPage(this.tasklist);
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(
-      padding: const EdgeInsets.all(10),
-      child: FutureBuilder(
-        future: getCards(),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.hasData) {
+    return FutureBuilder(
+      future: tasklist,
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Consumer<TaskListFetch>(builder: (ctx,tlist,_){
             return ListView(
               children: [
-                ...snapshot.data
+                ...getCards(tlist.listtaskdata)
               ],
             );
-          }
-          return const CircularProgressIndicator();
-        },
-      ),
+          });
+        }
+        return const Center(child: CircularProgressIndicator());
+      },
     );
   }
 }
 
-Future<List<Widget>> getCards() async {
-  var list1 = (await DatabaseManager.databaseManagerInstance.queryRows());
-  List<Widget> list2=[];
-  list1.forEach((element) {
-    int index=0;
-    String title='';
-    String description='';
-    int reach=0;
-    int score=0;
-    element.forEach((key, value) {
-      switch (key) {
-        case 'ID':
-          {
-            index = value;
-          }
-          break;
-        case 'TITLE':
-          {
-            title = value;
-          }
-          break;
-        case 'DESCRIPTION':
-          {
-            description = value;
-          }
-          break;
-        case 'REACH':
-          {
-            reach = value;
-          }
-          break;
-        case 'SCORE':
-          {
-            score = value;
-          }
-          break;
-      }
-    }
+List<Widget> getCards(Object tlist) {
 
-
-
-
-    );
-    list2.add(
-TaskWidget(TaskData(index,title,description,reach,score))
-
-    );
-
+  List<Widget> returnList=[];
+  (tlist as List).forEach((element) { 
+    returnList.add(TaskWidget(element));
   });
-  return list2;
-}
-
-
-class TaskWidget extends StatelessWidget{
-  final TaskData taskData;
-  const TaskWidget(this.taskData);
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Card(
-      child: Column(
-
-        children: [
-  CardText(taskData.title),
-          CardText(taskData.description),
-        ],
-      ),
-
-
-    );
-  }
-
-}
-
-class CardText extends StatelessWidget{
-  final String text;
-  const CardText(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-   return Text(text,style: const TextStyle(fontSize: 12),);
-  }
-
-
+return returnList;
+  // List<Widget> list2 = [];
+  // for (var element in (tlist as List)) {
+  //   int index = 0;
+  //   String title = '';
+  //   String description = '';
+  //   int reach = 0;
+  //   int score = 0;
+  //   element.forEach((key, value) {
+  //     switch (key) {
+  //       case 'ID':
+  //         {
+  //           index = value;
+  //         }
+  //         break;
+  //       case 'TITLE':
+  //         {
+  //           title = value;
+  //         }
+  //         break;
+  //       case 'DESCRIPTION':
+  //         {
+  //           description = value;
+  //         }
+  //         break;
+  //       case 'REACH':
+  //         {
+  //           reach = value;
+  //         }
+  //         break;
+  //       case 'SCORE':
+  //         {
+  //           score = value;
+  //         }
+  //         break;
+  //     }
+  //   });
+  //   list2.add(TaskWidget(TaskData(index, title, description, reach, score)));
+  // }
+  // return list2;
 }

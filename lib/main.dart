@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:reminder_app/add_screen/add_task.dart';
 import 'package:reminder_app/dbhelper/databaseManager.dart';
 import 'package:reminder_app/reminder_screen/remiderpage.dart';
+import 'package:reminder_app/tasks/task_list_fetch.dart';
 import 'package:reminder_app/tasks_screen/taskspage.dart';
 
 void main() async {
@@ -16,13 +19,25 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MainApp(),
+    return ChangeNotifierProvider(
+
+      create: (BuildContext context) {
+        return TaskListFetch();
+      },
+      child: MaterialApp(
+        routes:{
+          '/addtask':(_){
+            return AddTask();
+          },
+        } ,
+        home: MainApp(),
+      ),
     );
   }
 }
 
 class MainApp extends StatefulWidget {
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -31,20 +46,37 @@ class MainApp extends StatefulWidget {
 }
 
 class MainAppState extends State<MainApp> {
+  late Future tasklist;
+
   int _currentindex = 0;
 
-  List<Widget> widgetlist = [
-    TasksPage(),
-    ReminderPage(),
-  ];
+
+
+
+  @override
+  void didChangeDependencies() {
+    tasklist=Provider.of<TaskListFetch>(context,listen: false).setTasks().then((value) {
+      print('called via provider!');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+
     // TODO: implement build
     return Scaffold(
-      body: widgetlist[_currentindex],
+      body: (_currentindex==0)?TasksPage(tasklist):ReminderPage(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+
+                if(_currentindex==0){
+                  Navigator.of(context).pushNamed('/addtask');
+                }
+                else if(_currentindex==1){
+
+                }
+
+        },
         backgroundColor: (_currentindex == 0) ? Colors.teal : Colors.deepPurple,
         child: const Icon(Icons.add_box_rounded),
       ),

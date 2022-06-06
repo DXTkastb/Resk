@@ -44,6 +44,7 @@ class DatabaseManager {
   }
 
   Future<List<Map<String, dynamic>>> queryRows() async {
+    await Future.delayed(const Duration(seconds: 5));
     Database db = await databaseManagerInstance.db;
     return await db.query('TASK');
   }
