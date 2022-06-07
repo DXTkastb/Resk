@@ -5,6 +5,7 @@ import 'package:reminder_app/dbhelper/databaseManager.dart';
 import 'package:reminder_app/reminder_screen/remiderpage.dart';
 import 'package:reminder_app/tasks/task_list_fetch.dart';
 import 'package:reminder_app/tasks_screen/taskspage.dart';
+import 'package:reminder_app/update_screen/updateScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
+    return ChangeNotifierProvider<TaskListFetch>(
 
       create: (BuildContext context) {
         return TaskListFetch();
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
           '/addtask':(_){
             return AddTask();
           },
+          '/updatetask':(_){
+            return UpdateScreen();
+          }
         } ,
         home: MainApp(),
       ),
@@ -70,7 +74,13 @@ class MainAppState extends State<MainApp> {
         onPressed: () {
 
                 if(_currentindex==0){
-                  Navigator.of(context).pushNamed('/addtask');
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                  Navigator.of(context).pushNamed('/addtask').then((value) {
+                    if(value==true) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Task Added!')));
+                    }
+                    
+                  });
                 }
                 else if(_currentindex==1){
 

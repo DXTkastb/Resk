@@ -41,7 +41,7 @@ class DatabaseManager {
   }
 
   Future<List<Map<String, dynamic>>> queryRows() async {
-    await Future.delayed(const Duration(seconds: 2));
+
     Database db = await databaseManagerInstance.db;
     return await db.query('TASK');
   }
@@ -64,16 +64,23 @@ class DatabaseManager {
     return await db.delete('TASK', where: 'ID = ?', whereArgs: [id]);
   }
 
-  Future<int> updateTask(TaskData taskData) async {
+  Future<int> updateTask(int id,String title,String description,int reach) async {
+    await Future.delayed(Duration(seconds: 3));
     Database db = await databaseManagerInstance.db;
     return await db.update(
         'TASK',
         {
-          'TITLE': taskData.title,
-          'DESCRIPTION': taskData.description,
-          'REACH': (taskData.reached) ? 1 : 0,
+          'TITLE': title,
+          // taskData.title,
+          'DESCRIPTION': description,
+          // taskData.description,
+          'REACH': reach
+          // (taskData.reached) ? 1 : 0,
         },
         where: 'ID = ?',
-        whereArgs: [taskData.index!]);
+        whereArgs: [id]
+        // [taskData.index!]
+
+    );
   }
 }

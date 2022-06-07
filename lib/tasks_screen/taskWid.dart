@@ -18,6 +18,10 @@ class TaskWidget extends StatelessWidget {
           children: [
             CardText(taskData.title,1),
             CardText(taskData.description,2),
+            ElevatedButton(onPressed: (){
+              Navigator.of(context).pushReplacementNamed('/updatetask',arguments: taskData);
+
+            }, child:const  Text('df'))
           ],
         ),
       ),

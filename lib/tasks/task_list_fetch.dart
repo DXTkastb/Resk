@@ -10,11 +10,12 @@ class TaskListFetch extends ChangeNotifier {
   List<TaskData> get listtaskdata => _listtaskdata;
 
   Future<void> setTasks() async{
+
     _listtaskdata = (await DatabaseManager.databaseManagerInstance.queryRows()).map((e) {
       return TaskData(e['ID'], e['TITLE'], e['DESCRIPTION'], e['REACH'], e['SCORE']);
     }).toList();
 
-  notifyListeners();
+    notifyListeners();
   }
 
   Future<void> addTask(String title,String description, int reach, int score) async{

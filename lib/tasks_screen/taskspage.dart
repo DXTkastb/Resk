@@ -36,7 +36,7 @@ List<Widget> getCards(Object tlist) {
 
   List<Widget> returnList=[];
   (tlist as List).forEach((element) { 
-    returnList.add(TaskWidget(element));
+    returnList.add(TaskWidget(element) );
   });
 return returnList;
   // List<Widget> list2 = [];
