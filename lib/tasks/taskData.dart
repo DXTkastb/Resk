@@ -8,7 +8,7 @@ class TaskData {
   final bool reached;
   final int score;
 
-  TaskData(this.index, this.title, this.description, int reach, this.score)
+  const TaskData(this.index, this.title, this.description, int reach, this.score)
       : reached = (reach == 1) ? true : false;
 
 

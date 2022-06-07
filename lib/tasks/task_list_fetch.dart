@@ -31,9 +31,25 @@ class TaskListFetch extends ChangeNotifier {
     })
     );
 
+  }
+
+
+  Future<void> removeTask(TaskData data) async{
+
+
+    (await DatabaseManager.databaseManagerInstance.deleteTask(data.index).then((_) {
+
+
+      _listtaskdata.remove(data);
+      notifyListeners();
+
+
+    }));
+
 
 
   }
+
 
 
 

@@ -62,6 +62,7 @@ class MainAppState extends State<MainApp> {
     tasklist=Provider.of<TaskListFetch>(context,listen: false).setTasks().then((value) {
       print('called via provider!');
     });
+    super.didChangeDependencies();
   }
 
   @override
