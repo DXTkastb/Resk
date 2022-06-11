@@ -13,11 +13,16 @@ class TasksPage extends StatelessWidget {
 
   const TasksPage(this.tasklist);
 
-  List<Widget> getCards(Object tlist) {
+  List<Widget> getCards(Object tlist,double width) {
 
     List<Widget> returnList=[];
     (tlist as List).forEach((element) {
-      returnList.add(TaskWidget(element) );
+      returnList.add(
+        ChangeNotifierProvider<TaskData>.value(value: element,
+        builder: (_,tt){
+          return TaskWidget(width);
+        },)
+      );
     });
     return returnList;
 
@@ -25,6 +30,8 @@ class TasksPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var width=MediaQuery.of(context).size.width;
     // TODO: implement build
     return FutureBuilder(
       future: tasklist,
@@ -33,7 +40,7 @@ class TasksPage extends StatelessWidget {
           return Consumer<TaskListFetch>(builder: (ctx,tlist,_){
             return ListView(
               children: [
-                ...getCards(tlist.listtaskdata)
+                ...getCards(tlist.listtaskdata,width)
               ],
             );
           });

@@ -3,14 +3,17 @@ import 'package:provider/provider.dart';
 import 'package:reminder_app/add_screen/add_task.dart';
 import 'package:reminder_app/dbhelper/databaseManager.dart';
 import 'package:reminder_app/reminder_screen/remiderpage.dart';
+import 'package:reminder_app/tasks/btask_list_fetch.dart';
 import 'package:reminder_app/tasks/task_list_fetch.dart';
+import 'package:reminder_app/tasks_screen/brieftaskspage.dart';
 import 'package:reminder_app/tasks_screen/taskspage.dart';
 import 'package:reminder_app/update_screen/updateScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DatabaseManager databaseManager = DatabaseManager.databaseManagerInstance;
-  await databaseManager.initiateDatabse();
+  await databaseManager.initiateDailyDatabase();
+  await databaseManager.initiateBriefTask();
   runApp(const MyApp());
 }
 
@@ -20,28 +23,40 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<TaskListFetch>(
-
-      create: (BuildContext context) {
-        return TaskListFetch();
-      },
-      child: MaterialApp(
-        routes:{
-          '/addtask':(_){
-            return AddTask();
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<TaskListFetch>(
+          create: (BuildContext context) {
+            return TaskListFetch();
           },
-          '/updatetask':(_){
-            return UpdateScreen();
-          }
-        } ,
-        home: MainApp(),
-      ),
+        ),
+        ChangeNotifierProvider<BtaskListFetch>(
+          create: (BuildContext context) {
+            return BtaskListFetch();
+          },
+        ),
+      ],
+     builder: (a,b){
+        return MaterialApp(
+          routes: {
+            '/addtask': (_) {
+              return AddTask();
+            },
+            '/updatetask': (_) {
+              return UpdateScreen();
+            },
+            '/reminderpage': (_) {
+              return ReminderPage();
+            }
+          },
+          home: MainApp(),
+        );
+     },
     );
   }
 }
 
 class MainApp extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -51,42 +66,59 @@ class MainApp extends StatefulWidget {
 
 class MainAppState extends State<MainApp> {
   late Future tasklist;
+  late Future btasklist;
 
   int _currentindex = 0;
 
-
-
-
   @override
   void didChangeDependencies() {
-    tasklist=Provider.of<TaskListFetch>(context,listen: false).setTasks().then((value) {
-      print('called via provider!');
-    });
+
+    tasklist = Provider.of<TaskListFetch>(context, listen: false).setTasks();
+    btasklist = Provider.of<BtaskListFetch>(context, listen: false).setTasks();
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-
     // TODO: implement build
     return Scaffold(
-      body: (_currentindex==0)?TasksPage(tasklist):ReminderPage(),
+      drawer: SafeArea(
+        child: Drawer(
+          child: Column(
+            children: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushNamed('/reminderpage');
+                  },
+                  child: const Text('Reminders',style: TextStyle(),)),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Stats'))
+            ],
+          ),
+        ),
+      ),
+      body:
+          (_currentindex == 0) ? BriefTaskPage(btasklist):TasksPage(tasklist) ,
+      // Container(
+      //         color: Colors.blueGrey,
+      //         width: double.infinity,
+      //         height: double.infinity,
+      //       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-
-                if(_currentindex==0){
-                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                  Navigator.of(context).pushNamed('/addtask').then((value) {
-                    if(value==true) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Task Added!')));
-                    }
-                    
-                  });
-                }
-                else if(_currentindex==1){
-
-                }
-
+          if (_currentindex == 1) {
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            Navigator.of(context).pushNamed('/addtask').then((value) {
+              if (value == true) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(const SnackBar(content: Text('Task Added!')));
+              }
+            });
+          } else if (_currentindex == 1) {}
         },
         backgroundColor: (_currentindex == 0) ? Colors.teal : Colors.deepPurple,
         child: const Icon(Icons.add_box_rounded),
@@ -105,12 +137,12 @@ class MainAppState extends State<MainApp> {
               icon: Icon(
                 Icons.task_rounded,
               ),
-              label: 'Tasks'),
+              label: 'Brief Tasks'),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.alarm_rounded,
               ),
-              label: 'Reminders'),
+              label: 'Daily Tasks'),
         ],
       ),
       appBar: AppBar(

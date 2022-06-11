@@ -20,6 +20,7 @@ class ReminderState extends State<Reminder> {
 
   @override
   void initState() {
+
     if (!timecheck()) {
       run();
     } else {

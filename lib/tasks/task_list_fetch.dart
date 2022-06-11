@@ -37,29 +37,28 @@ class TaskListFetch extends ChangeNotifier {
     28,
     29,
     30,
-
   ];
 
   List<TaskData> get listtaskdata => _listtaskdata;
 
   Future<void> setTasks() async {
-    TaskListFetch._rowList.addAll(trueList);
+    await Future.delayed(Duration(seconds: 3))
+;    TaskListFetch._rowList.addAll(trueList);
     _listtaskdata =
-        (await DatabaseManager.databaseManagerInstance.queryRows()).map((e) {
+        (await DatabaseManager.databaseManagerInstance.queryDailyTaskRows()).map((e) {
       TaskListFetch._rowList.remove(e['ID']);
       return TaskData(
           e['ID'], e['TITLE'], e['DESCRIPTION'], e['REACH'], e['SCORE']);
     }).toList();
-
     notifyListeners();
   }
 
   Future<void> addTask(
-      String title, String description, int reach, int score) async {
+      String title, String description,) async {
     if (TaskListFetch._rowList.isNotEmpty) {
       var tsk = TaskData(
-          TaskListFetch._rowList.last, title, description, reach, score);
-      (await DatabaseManager.databaseManagerInstance.addTask(tsk).then((_) {
+          TaskListFetch._rowList.last, title, description, 0, 0);
+      (await DatabaseManager.databaseManagerInstance.addDailyTask(tsk).then((_) {
         _listtaskdata.add(tsk);
         TaskListFetch._rowList.removeLast();
         notifyListeners();
@@ -69,7 +68,7 @@ class TaskListFetch extends ChangeNotifier {
 
   Future<void> removeTask(TaskData data) async {
     (await DatabaseManager.databaseManagerInstance
-        .deleteTask(data.index)
+        .deleteDailyTask(data.index)
         .then((_) {
       _listtaskdata.remove(data);
       TaskListFetch._rowList.add(data.index);

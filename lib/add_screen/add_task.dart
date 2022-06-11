@@ -42,7 +42,7 @@ class TaskForm extends State<AddTask> {
     Future.delayed(Duration.zero).then((_) async {
       await Future.delayed(Duration.zero);
       await Provider.of<TaskListFetch>(ctx, listen: false)
-          .addTask('title', 'DES', 0, 0);
+          .addTask(tx1.text, tx2.text);
     }).then((value) async {
       await Future.delayed(const Duration(seconds: 2));
       if (mounted) {

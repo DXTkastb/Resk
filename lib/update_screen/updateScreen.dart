@@ -21,9 +21,9 @@ class _UpdateScreenState extends State<UpdateScreen> {
     setState((){
       updating=!updating;
     });
-    await DatabaseManager.databaseManagerInstance.updateTask(id,tx1.text,tx2.text,int.parse(tx3.text));
+    await DatabaseManager.databaseManagerInstance.updateDailyTask(id,tx1.text,tx2.text,int.parse(tx3.text));
     if (mounted) {
-      Navigator.of(context).pushReplacementNamed('/');
+      Navigator.of(context).pop([tx1.text,tx2.text,int.parse(tx3.text)]);
     }
   }
 
@@ -77,7 +77,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
                           child: const Text('UPDATE'),
                         ),
                         ElevatedButton(onPressed: (){
-                          Navigator.of(context).pushReplacementNamed('/');
+                          Navigator.of(context).pop(false);
                         }, child: const Text('CANCEL')),
                       ],
                     )
