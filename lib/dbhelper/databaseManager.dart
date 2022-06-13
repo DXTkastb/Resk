@@ -28,18 +28,23 @@ class DatabaseManager {
   Future<void> initiateBriefTask() async {
     _db2 = await openDatabase(join(await getDatabasesPath(), taskDbName2),
         onCreate: (db, version) async {
+      print('oncreate');
+print(version);  print('-------------------');
       return await db.execute(
-        'CREATE TABLE BTASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DONE INTEGER NOT NULL)',
+        'CREATE TABLE  IF NOT EXISTS BTASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DONE INTEGER NOT NULL)',
       );
-    }, onOpen: (db) async {
-      if (firsttime == 0) {
-        await db.execute('DELETE FROM BTASK');
-      }
-      await db.execute('INSERT INTO BTASK VALUES(1,\'Go Running\',1)');
-      await db.execute('INSERT INTO BTASK VALUES(2,\'Eat Meal\',0)');
-      await db.execute('INSERT INTO BTASK VALUES(3,\'Competitve Coding\',0)');
-      await db.execute('INSERT INTO BTASK VALUES(4,\'Sketch Dragon\',1)');
-    }, version: 1);
+    },
+
+        onOpen: (db) async {
+      // if (firsttime == 0) {
+      //   await db.execute('DELETE FROM BTASK');
+      // }
+      // await db.execute('INSERT INTO BTASK VALUES(1,\'Go Running\',1)');
+      // await db.execute('INSERT INTO BTASK VALUES(2,\'Eat Meal\',0)');
+      // await db.execute('INSERT INTO BTASK VALUES(3,\'Competitve Coding\',0)');
+      // await db.execute('INSERT INTO BTASK VALUES(4,\'Sketch Dragon\',1)');
+    },
+        version: 2);
   }
 
   Future<List<Map<String, dynamic>>> queryBriefTaskRows() async {
@@ -75,21 +80,23 @@ class DatabaseManager {
     _db = await openDatabase(join(await getDatabasesPath(), taskDbName),
         onCreate: (db, version) async {
       return await db.execute(
-        'CREATE TABLE TASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DESCRIPTION TEXT NOT NULL, REACH INTEGER NOT NULL, SCORE INTEGER NOT NULL)',
+        'CREATE TABLE IF NOT EXISTS TASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DESCRIPTION TEXT NOT NULL, REACH INTEGER NOT NULL, SCORE INTEGER NOT NULL)',
       );
-    }, onOpen: (db) async {
-      if (firsttime == 0) {
-        await db.execute('DELETE FROM TASK');
-      }
-      await db.execute(
-          'INSERT INTO TASK VALUES(1,\'Go Running\',\'fit body\',\'0\',\'0\')');
-      await db.execute(
-          'INSERT INTO TASK VALUES(2,\'Eat Meal\',\'healthy bowl\',\'1\',\'3\')');
-      await db.execute(
-          'INSERT INTO TASK VALUES(3,\'Competitve Codinggggggggggggggggggggggggggggggggg\',\'do greedy algos\',\'0\',\'0\')');
-      await db.execute(
-          'INSERT INTO TASK VALUES(4,\'Sketch Dragon\',\'pencil sketching\',\'1\',\'1\')');
-    }, version: 1);
+    },
+        // onOpen: (db) async {
+      // if (firsttime == 0) {
+      //   await db.execute('DELETE FROM TASK');
+      // }
+      // await db.execute(
+      //     'INSERT INTO TASK VALUES(1,\'Go Running\',\'fit body\',\'0\',\'0\')');
+      // await db.execute(
+      //     'INSERT INTO TASK VALUES(2,\'Eat Meal\',\'healthy bowl\',\'1\',\'3\')');
+      // await db.execute(
+      //     'INSERT INTO TASK VALUES(3,\'Competitve Codinggggggggggggggggggggggggggggggggg\',\'do greedy algos\',\'0\',\'0\')');
+      // await db.execute(
+      //     'INSERT INTO TASK VALUES(4,\'Sketch Dragon\',\'pencil sketching\',\'1\',\'1\')');
+    // },
+  version: 2);
   }
 
   Future<List<Map<String, dynamic>>> queryDailyTaskRows() async {
@@ -116,7 +123,7 @@ class DatabaseManager {
   }
 
   Future<int> updateDailyTask(
-      int id, String title, String description, int reach) async {
+      int id, String title, String description, int reach,int score) async {
     Database db = await databaseManagerInstance.db;
     return await db.update(
         'TASK',
@@ -125,7 +132,8 @@ class DatabaseManager {
           // taskData.title,
           'DESCRIPTION': description,
           // taskData.description,
-          'REACH': reach
+          'REACH': reach,
+          'SCORE': score,
           // (taskData.reached) ? 1 : 0,
         },
         where: 'ID = ?',
@@ -134,4 +142,9 @@ class DatabaseManager {
 
         );
   }
+
+
+
+
+
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reminder_app/tasks/taskData.dart';
 import 'package:reminder_app/tasks/task_list_fetch.dart';
 
 class AddTask extends StatefulWidget {
@@ -14,24 +13,26 @@ class AddTask extends StatefulWidget {
 class TaskForm extends State<AddTask> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController tx1 = TextEditingController(
-    text: 'Title'
-  );
+  TextEditingController tx1 = TextEditingController(text: 'Title');
 
-  TextEditingController tx2 = TextEditingController(
-    text: 'Description'
-  );
+  TextEditingController tx2 = TextEditingController(text: 'Description');
+
+  late FocusNode myFocusNode;
 
   bool processing = false;
 
+  @override
+  void initState() {
+    myFocusNode = FocusNode();
+    super.initState();
+  }
 
   @override
   void dispose() {
-
+    myFocusNode.dispose();
     tx1.dispose();
     tx2.dispose();
     super.dispose();
-
   }
 
   void onadd(BuildContext ctx) {
@@ -53,31 +54,48 @@ class TaskForm extends State<AddTask> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size.height;
+
     // TODO: implement build
     return (!processing)
-        ? Container(
-            color: Colors.amber.shade100,
-            alignment: Alignment.center,
-            child: Builder(
-              builder: (BuildContext ctx) {
-                return SizedBox(
-                  width: 300,
-                  child: Scaffold(
-                    body: Form(
+        ? Builder(
+            builder: (BuildContext ctx) {
+              return Scaffold(
+                body: Center(
+                  child: Container(
+                    decoration:BoxDecoration(
+                      color: Colors.deepPurple.shade200,
+                      borderRadius:const  BorderRadius.all(Radius.circular(12)),
+                    ),
+                    // decoration:  BoxDecoration(border: Border.all(width: 0) ,
+                    // color: Colors.white,
+                    // borderRadius:const  BorderRadius.all(Radius.circular(10)),
+                    //   boxShadow: const [BoxShadow(offset: Offset(0, 9),blurRadius: 18,spreadRadius: 0.2)],
+                    // ),
+                    padding:
+                        const EdgeInsets.only(top: 20, left: 30, right: 30),
+                    height: size / 2.3,
+                    width: 300,
+                    child: Form(
                       key: _formKey,
                       child: Column(
                         children: [
                           TextFormField(
+                            textInputAction: TextInputAction.next,
                             controller: tx1,
                             keyboardType: TextInputType.text,
+                            onFieldSubmitted: (_) {
+                              FocusScope.of(context).requestFocus(myFocusNode);
+                            },
                             validator: (value) {
                               if (value != null && value.isNotEmpty) {}
                               return 'enter title!';
                             },
                           ),
                           TextFormField(
+                            focusNode: myFocusNode,
                             controller: tx2,
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.multiline,
                             validator: (value) {
                               if (value != null && value.isNotEmpty) {}
                               return 'enter description!';
@@ -85,32 +103,56 @@ class TaskForm extends State<AddTask> {
                             minLines: 2,
                             maxLines: 3,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ElevatedButton(
-                                  onPressed: () {
-                                    onadd(context);
-                                  },
-                                  child: const Text('ADD')),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(ctx).pop(false);
-                                },
-                                child: const Text('CANCEL'),
-                              ),
-                            ],
+                          const Expanded(child: SizedBox()),
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                SizedBox(
+                                  width: 100,
+                                  child: ElevatedButton(
+
+                                      style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                            return Colors.deepPurple.shade800;
+                                          })
+                                      )
+                                      ,
+                                      onPressed: () {
+                                        onadd(context);
+                                      },
+                                      child: const Text('ADD')),
+                                ),
+                                SizedBox(
+                                  width: 100,
+                                  child: ElevatedButton(
+
+                                    style: ButtonStyle(
+                                        backgroundColor: MaterialStateProperty.resolveWith((states) {
+                                          return Colors.deepPurple.shade800;
+                                        })
+                                    )
+                                    ,
+                                    onPressed: () {
+                                      Navigator.of(ctx).pop(false);
+                                    },
+                                    child: const Text('CANCEL'),
+                                  ),
+                                ),
+                              ],
+                            ),
                           )
                         ],
                       ),
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           )
         : Container(
-            color: Colors.teal.shade700,
+            color: Colors.deepPurple,
             child: const Center(
               child: CircularProgressIndicator(
                 color: Colors.white,

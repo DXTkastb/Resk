@@ -37,13 +37,21 @@ class TasksPage extends StatelessWidget {
       future: tasklist,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return Consumer<TaskListFetch>(builder: (ctx,tlist,_){
-            return ListView(
-              children: [
-                ...getCards(tlist.listtaskdata,width)
-              ],
-            );
-          });
+          return Padding(
+            padding: const EdgeInsets.only(top:10),
+            child: Consumer<TaskListFetch>(builder: (ctx,tlist,_){
+
+
+              if(tlist.listtaskdata.isEmpty)
+                return const Center(child: Text('Add Tasks!'),);
+
+              return ListView(
+                children: [
+                  ...getCards(tlist.listtaskdata,width)
+                ],
+              );
+            }),
+          );
         }
         return const Center(child: CircularProgressIndicator());
       },

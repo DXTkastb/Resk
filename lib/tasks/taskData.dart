@@ -5,21 +5,33 @@ class TaskData extends ChangeNotifier{
    int index;
    String title;
    String description;
-   bool reached;
+   int reached;
    int score;
 
-  TaskData(this.index, this.title, this.description, int reach, this.score)
-      : reached = (reach == 1) ? true : false;
+  TaskData(this.index, this.title, this.description,  this.reached, this.score);
 
 
-  void didupdate(String titl,String descriptio,int reach, ){
 
-    title=titl;
-    description=descriptio;
-    reached=(reach==1);
 
-    notifyListeners();
+  Future<void> didupdate(String titl,String descriptio,int reach,) async{
+
+    if(reach==1 && reached==0){
+      score++;
+    }
+    else if(reach==0 && reached==1){
+      score--;
+    }
+
+    await DatabaseManager.databaseManagerInstance.updateDailyTask(index, titl, descriptio, reach,score).then((value) {
+      title=titl;
+      description=descriptio;
+      reached=reach;
+      score=score;
+      notifyListeners();
+    });
+
   }
+
 
 
 }

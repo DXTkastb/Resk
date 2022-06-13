@@ -17,6 +17,10 @@ class BriefTaskPage extends StatelessWidget {
         builder: (ctx, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Consumer<BtaskListFetch>(builder: (context, blist, _) {
+
+              if(blist.listtaskdata.isEmpty)
+                return const Center(child: Text('No Breif Task!'),);
+
               return ListView(
                 children: [
                   ...blist.listtaskdata.map((e) {
@@ -48,8 +52,8 @@ class BTaskCard extends StatelessWidget {
   }
 
   Color getColor(bool d) {
-    if (d) return Colors.blue.shade500;
-    return Colors.blue.shade200;
+    if (d) return Colors.pinkAccent.shade100;
+    return Colors.pink.shade100;
   }
 
   @override
@@ -65,15 +69,23 @@ class BTaskCard extends StatelessWidget {
             children: [
               Text(bTaskData.title),
               Text((bTaskData.done) ? 'done' : 'unfinished'),
-              ElevatedButton(
-                  onPressed: () {
-                    Future.delayed(Duration.zero,() async {
-                      await updateTask(bTaskData.id,bTaskData.done);
-                      bTaskData.onUpdate();
-                    });
-                    
-                  },
-                  child: const Text('toggle'))
+              Row(
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        Future.delayed(Duration.zero,() async {
+                          await updateTask(bTaskData.id,bTaskData.done);
+                          bTaskData.onUpdate();
+                        });
+
+                      },
+                      child: const Text('toggle')),
+                  TextButton(onPressed: (){
+                    Provider.of<BtaskListFetch>(context,listen: false).removeTask(bTaskData);
+
+                  }, child: const Text('delete'))
+                ],
+              )
             ],
           ),
         );

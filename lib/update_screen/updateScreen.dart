@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reminder_app/buttons/update_button.dart';
 import 'package:reminder_app/dbhelper/databaseManager.dart';
 import 'package:reminder_app/tasks/taskData.dart';
 
@@ -17,11 +18,10 @@ class _UpdateScreenState extends State<UpdateScreen> {
   late TextEditingController tx2;
   late TextEditingController tx3;
 
-  Future<void> updateTask(int id) async {
+  void updateTask()  {
     setState((){
       updating=!updating;
     });
-    await DatabaseManager.databaseManagerInstance.updateDailyTask(id,tx1.text,tx2.text,int.parse(tx3.text));
     if (mounted) {
       Navigator.of(context).pop([tx1.text,tx2.text,int.parse(tx3.text)]);
     }
@@ -31,9 +31,10 @@ class _UpdateScreenState extends State<UpdateScreen> {
   @override
   void didChangeDependencies() {
     task = (ModalRoute.of(context)!.settings.arguments) as TaskData;
+
     tx1=TextEditingController(text: task.title);
     tx2=TextEditingController(text: task.description);
-    tx3=TextEditingController(text: '${(task.reached)?1:0}');
+    tx3=TextEditingController(text: '${task.reached}');
     super.didChangeDependencies();
   }
 
@@ -69,13 +70,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
 
                     Row(
                       children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            await updateTask(task.index);
-
-                          },
-                          child: const Text('UPDATE'),
-                        ),
+                        UpdateButton(() {updateTask();},' update'),
                         ElevatedButton(onPressed: (){
                           Navigator.of(context).pop(false);
                         }, child: const Text('CANCEL')),

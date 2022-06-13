@@ -9,6 +9,8 @@ import 'package:reminder_app/tasks_screen/brieftaskspage.dart';
 import 'package:reminder_app/tasks_screen/taskspage.dart';
 import 'package:reminder_app/update_screen/updateScreen.dart';
 
+import 'add_screen/add_btask.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DatabaseManager databaseManager = DatabaseManager.databaseManagerInstance;
@@ -41,6 +43,9 @@ class MyApp extends StatelessWidget {
           routes: {
             '/addtask': (_) {
               return AddTask();
+            },
+            '/addbtask': (_) {
+              return AddBTask();
             },
             '/updatetask': (_) {
               return UpdateScreen();
@@ -78,6 +83,10 @@ class MainAppState extends State<MainApp> {
     super.didChangeDependencies();
   }
 
+  void removeAnyScaffoldSnack(){
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -111,21 +120,32 @@ class MainAppState extends State<MainApp> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (_currentindex == 1) {
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            removeAnyScaffoldSnack();
             Navigator.of(context).pushNamed('/addtask').then((value) {
               if (value == true) {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(const SnackBar(content: Text('Task Added!')));
               }
             });
-          } else if (_currentindex == 1) {}
+          } else {
+            removeAnyScaffoldSnack();
+            Navigator.of(context).pushNamed('/addbtask').then((value) {
+              if (value == true) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(const SnackBar(content: Text('Task Added!')));
+              }
+            });
+
+          }
         },
         backgroundColor: (_currentindex == 0) ? Colors.teal : Colors.deepPurple,
         child: const Icon(Icons.add_box_rounded),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.shifting,
         currentIndex: _currentindex,
         onTap: (x) {
+          removeAnyScaffoldSnack();
           if (_currentindex != x) {
             setState(() {
               _currentindex = x;
@@ -134,18 +154,23 @@ class MainAppState extends State<MainApp> {
         },
         items: const [
           BottomNavigationBarItem(
+            backgroundColor: Colors.teal,
               icon: Icon(
                 Icons.task_rounded,
               ),
               label: 'Brief Tasks'),
+
           BottomNavigationBarItem(
+              backgroundColor: Colors.deepPurple,
               icon: Icon(
                 Icons.alarm_rounded,
+
               ),
               label: 'Daily Tasks'),
         ],
       ),
       appBar: AppBar(
+        backgroundColor: (_currentindex==1)?Colors.deepPurple:Colors.teal,
         title: const Text('Reminder App'),
       ),
     );
