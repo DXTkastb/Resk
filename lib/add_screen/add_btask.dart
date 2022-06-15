@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reminder_app/buttons/cancel_button.dart';
 import 'package:reminder_app/tasks/btask_list_fetch.dart';
 import 'package:reminder_app/tasks/task_list_fetch.dart';
+
+import '../buttons/add_button.dart';
 
 class AddBTask extends StatefulWidget {
   @override
@@ -95,36 +98,10 @@ class TaskForm extends State<AddBTask> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          SizedBox(
-                            width: 100,
-                            child: ElevatedButton(
-
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                      return Colors.teal.shade800;
-                                    })
-                                )
-                                ,
-                                onPressed: () {
-                                  onadd(context);
-                                },
-                                child: const Text('ADD')),
-                          ),
-                          SizedBox(
-                            width: 100,
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                  return Colors.teal.shade800;
-                                })
-                              )
-                              ,
-                              onPressed: () {
-                                Navigator.of(ctx).pop(false);
-                              },
-                              child: const Text('CANCEL'),
-                            ),
-                          ),
+                          AddButton( () {
+                            onadd(context);
+                          },),
+                       CancelButton(() {    Navigator.of(ctx).pop(false);})
                         ],
                       ),
                     )

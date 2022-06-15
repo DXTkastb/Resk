@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reminder_app/buttons/add_button.dart';
+import 'package:reminder_app/buttons/cancel_button.dart';
 import 'package:reminder_app/tasks/task_list_fetch.dart';
 
 class AddTask extends StatefulWidget {
@@ -63,9 +65,9 @@ class TaskForm extends State<AddTask> {
               return Scaffold(
                 body: Center(
                   child: Container(
-                    decoration:BoxDecoration(
+                    decoration: BoxDecoration(
                       color: Colors.deepPurple.shade200,
-                      borderRadius:const  BorderRadius.all(Radius.circular(12)),
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
                     ),
                     // decoration:  BoxDecoration(border: Border.all(width: 0) ,
                     // color: Colors.white,
@@ -109,37 +111,12 @@ class TaskForm extends State<AddTask> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                SizedBox(
-                                  width: 100,
-                                  child: ElevatedButton(
-
-                                      style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                            return Colors.deepPurple.shade800;
-                                          })
-                                      )
-                                      ,
-                                      onPressed: () {
-                                        onadd(context);
-                                      },
-                                      child: const Text('ADD')),
-                                ),
-                                SizedBox(
-                                  width: 100,
-                                  child: ElevatedButton(
-
-                                    style: ButtonStyle(
-                                        backgroundColor: MaterialStateProperty.resolveWith((states) {
-                                          return Colors.deepPurple.shade800;
-                                        })
-                                    )
-                                    ,
-                                    onPressed: () {
-                                      Navigator.of(ctx).pop(false);
-                                    },
-                                    child: const Text('CANCEL'),
-                                  ),
-                                ),
+                                AddButton(() {
+                                  onadd(context);
+                                }),
+                                CancelButton(() {
+                                  Navigator.of(ctx).pop(false);
+                                })
                               ],
                             ),
                           )
