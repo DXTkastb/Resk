@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:reminder_app/tasks/taskData.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -7,96 +8,62 @@ import '../tasks/btaskdata.dart';
 class DatabaseManager {
   static int firsttime = 0;
   static late final _db;
-  static late final _db2;
-  static late final _db3;
+
   static const taskDbName = 'Tasks.db';
-  static const taskDbName2 = 'BTasks.db';
 
   static const version = 1;
 
   get db => _db;
-
-  get db2 => _db2;
-
-  get db3 => _db3;
 
   DatabaseManager._factory();
 
   static final DatabaseManager databaseManagerInstance =
       DatabaseManager._factory();
 
-  Future<void> initiateBriefTask() async {
-    _db2 = await openDatabase(join(await getDatabasesPath(), taskDbName2),
+  Future<void> initiateTask() async {
+    _db = await openDatabase(join(await getDatabasesPath(), taskDbName),
         onCreate: (db, version) async {
-      print('oncreate');
-print(version);  print('-------------------');
-      return await db.execute(
-        'CREATE TABLE  IF NOT EXISTS BTASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DONE INTEGER NOT NULL)',
-      );
-    },
-
-        onOpen: (db) async {
-      // if (firsttime == 0) {
-      //   await db.execute('DELETE FROM BTASK');
-      // }
-      // await db.execute('INSERT INTO BTASK VALUES(1,\'Go Running\',1)');
-      // await db.execute('INSERT INTO BTASK VALUES(2,\'Eat Meal\',0)');
-      // await db.execute('INSERT INTO BTASK VALUES(3,\'Competitve Coding\',0)');
-      // await db.execute('INSERT INTO BTASK VALUES(4,\'Sketch Dragon\',1)');
-    },
-        version: 2);
+      return await db
+          .execute(
+        'CREATE TABLE  IF NOT EXISTS BTASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DONE INTEGER NOT NULL, TDATE DATE)',
+      )
+          .then((value) async {
+        return await db.execute(
+            'CREATE TABLE IF NOT EXISTS TASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DESCRIPTION TEXT NOT NULL, REACH INTEGER NOT NULL, SCORE INTEGER NOT NULL)');
+      });
+    }, onOpen: (db) async {}, version: 2);
   }
 
   Future<List<Map<String, dynamic>>> queryBriefTaskRows() async {
-    Database db = await databaseManagerInstance.db2;
-    return await db.query('BTASK');
+    Database db = await databaseManagerInstance.db;
+    String date = DateFormat('yMMdd').format(DateTime.now());
+    return await db
+        .query('BTASK', where: 'TDATE = ?', whereArgs: ['DATE(\'$date\')']);
   }
 
-  Future<int> addBriefTask(BTaskData btaskData) async {
-    Database db = await databaseManagerInstance.db2;
+  Future<void> addBriefTask(List<BData> data) async {
+    Database db = await databaseManagerInstance.db;
 
-    return await db.insert('BTASK', {
-      'ID': btaskData.id,
-      'TITLE': btaskData.title,
-      'DONE': (btaskData.done)?1:0,
-    });
+    for (var element in data) {
+      await db.insert('BTASK', {
+        'TITLE': element.title,
+        'DONE': 0,
+        'TDATE': 'DATE(\'${element.date}\')'
+      });
+    }
   }
 
   Future<int> deleteBreifTask(int id) async {
-    Database db = await databaseManagerInstance.db2;
+    Database db = await databaseManagerInstance.db;
 
     return await db.delete('BTASK', where: 'ID = ?', whereArgs: [id]);
   }
 
-  Future<int> updateBreifTask(int id,bool done) async {
-    Database db = await databaseManagerInstance.db2;
+  Future<int> updateBreifTask(int id, bool done) async {
+    Database db = await databaseManagerInstance.db;
 
-    return await db.update('BTASK', {
-      'DONE':(done)?1:0
-    }, where: 'ID = ?', whereArgs: [id]);
-  }
-
-  Future<void> initiateDailyDatabase() async {
-    _db = await openDatabase(join(await getDatabasesPath(), taskDbName),
-        onCreate: (db, version) async {
-      return await db.execute(
-        'CREATE TABLE IF NOT EXISTS TASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DESCRIPTION TEXT NOT NULL, REACH INTEGER NOT NULL, SCORE INTEGER NOT NULL)',
-      );
-    },
-        // onOpen: (db) async {
-      // if (firsttime == 0) {
-      //   await db.execute('DELETE FROM TASK');
-      // }
-      // await db.execute(
-      //     'INSERT INTO TASK VALUES(1,\'Go Running\',\'fit body\',\'0\',\'0\')');
-      // await db.execute(
-      //     'INSERT INTO TASK VALUES(2,\'Eat Meal\',\'healthy bowl\',\'1\',\'3\')');
-      // await db.execute(
-      //     'INSERT INTO TASK VALUES(3,\'Competitve Codinggggggggggggggggggggggggggggggggg\',\'do greedy algos\',\'0\',\'0\')');
-      // await db.execute(
-      //     'INSERT INTO TASK VALUES(4,\'Sketch Dragon\',\'pencil sketching\',\'1\',\'1\')');
-    // },
-  version: 2);
+    return await db.update('BTASK', {'DONE': (done) ? 1 : 0},
+        where: 'ID = ?', whereArgs: [id]);
   }
 
   Future<List<Map<String, dynamic>>> queryDailyTaskRows() async {
@@ -123,7 +90,7 @@ print(version);  print('-------------------');
   }
 
   Future<int> updateDailyTask(
-      int id, String title, String description, int reach,int score) async {
+      int id, String title, String description, int reach, int score) async {
     Database db = await databaseManagerInstance.db;
     return await db.update(
         'TASK',
@@ -142,9 +109,4 @@ print(version);  print('-------------------');
 
         );
   }
-
-
-
-
-
 }

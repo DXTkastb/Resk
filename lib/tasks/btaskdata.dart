@@ -12,3 +12,13 @@ class BTaskData extends ChangeNotifier{
     notifyListeners();
   }
 }
+
+class BData extends ChangeNotifier{
+  String date;
+  final String title;
+  bool done;
+
+  BData(this.title, this.done,this.date);
+
+
+}

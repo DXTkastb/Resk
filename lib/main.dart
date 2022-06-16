@@ -14,8 +14,8 @@ import 'add_screen/add_btask.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DatabaseManager databaseManager = DatabaseManager.databaseManagerInstance;
-  await databaseManager.initiateDailyDatabase();
-  await databaseManager.initiateBriefTask();
+
+  await databaseManager.initiateTask();
   runApp(const MyApp());
 }
 
@@ -111,7 +111,7 @@ class MainAppState extends State<MainApp> {
         ),
       ),
       body:
-          (_currentindex == 0) ? BriefTaskPage(btasklist):TasksPage(tasklist) ,
+          (_currentindex == 0) ? BriefTaskPage(btasklist):TasksPage(tasklist),
       // Container(
       //         color: Colors.blueGrey,
       //         width: double.infinity,
