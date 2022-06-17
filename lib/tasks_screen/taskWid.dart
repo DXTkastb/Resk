@@ -54,7 +54,6 @@ class _TaskWidgetState extends State<TaskWidget> {
                   Container(
                     padding: const EdgeInsets.only(top: 5),
                     // color: Colors.red,
-                    width: widget.width * 0.61,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

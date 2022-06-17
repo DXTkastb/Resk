@@ -15,7 +15,7 @@ class DoneButton extends StatelessWidget {
         style: ButtonStyle(
           shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
           backgroundColor: MaterialStateProperty.all((done == 0) ? Colors.red.shade700 : Colors.lightGreen),
-          maximumSize: MaterialStateProperty.all(const Size(81, 50)),
+          // maximumSize: MaterialStateProperty.all(const Size(81, 50)),
           minimumSize: MaterialStateProperty.all(const Size(0, 35)),
         ),
         child: Row(

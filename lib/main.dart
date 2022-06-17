@@ -13,8 +13,9 @@ import 'package:reminder_app/update_screen/updateScreen.dart';
 import 'add_screen/add_btask.dart';
 
 void main() async {
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
+
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
   DatabaseManager databaseManager = DatabaseManager.databaseManagerInstance;
 
   await databaseManager.initiateTask();
