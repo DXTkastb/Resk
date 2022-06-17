@@ -8,10 +8,25 @@ import 'package:reminder_app/tasks/task_list_fetch.dart';
 
 import '../tasks/taskData.dart';
 
-class TaskWidget extends StatelessWidget {
+class TaskWidget extends StatefulWidget {
   final double width;
 
   const TaskWidget(this.width);
+
+  @override
+  State<TaskWidget> createState() => _TaskWidgetState();
+}
+
+class _TaskWidgetState extends State<TaskWidget> {
+
+  List<Color> getColors(int value){
+    return const [
+
+      Color.fromRGBO(
+        255, 203, 35, 1.0),
+      Color.fromRGBO( 255, 215, 111, 1.0)];
+  }
+
 
   void removeAnyScaffoldSnack(BuildContext context) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -39,7 +54,7 @@ class TaskWidget extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.only(top: 5),
                     // color: Colors.red,
-                    width: width * 0.61,
+                    width: widget.width * 0.61,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -65,17 +80,18 @@ class TaskWidget extends StatelessWidget {
                             UpdateButton(() {
                               removeAnyScaffoldSnack(context);
                               Navigator.of(context)
-                                  .pushNamed('/updatetask', arguments: taskData)
-                                  .then((value) async {
-                                if (value is List) {
-                                  await taskData.didupdate(
-                                    value[0],
-                                    value[1],
-                                    value[2],
-                                  );
-                                  // Provider.of<TaskData>(context,listen: false).didupdate(value[0],value[1],value[2]);
-                                }
-                              });
+                                  .pushNamed('/updatetask', arguments: taskData);
+                              //     .then((value) async {
+                              //   if (value is List) {
+                              //     await taskData.didupdate(
+                              //       value[0],
+                              //       value[1],
+                              //       value[2],
+                              //     );
+                              //     // Provider.of<TaskData>(context,listen: false).didupdate(value[0],value[1],value[2]);
+                              //   }
+                              // })
+                              // ;
                             }),
                             const SizedBox(
                               width: 2,
@@ -115,16 +131,17 @@ class TaskWidget extends StatelessWidget {
                   ),
                   Container(
                     // width: width*0.2,
-                    decoration: BoxDecoration(     color: Colors.amberAccent,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                    gradient:  LinearGradient(begin: Alignment.topCenter,end: Alignment.bottomCenter, colors: getColors(taskData.score),) ,
+           ),
 
                     child: Center(
                         child: Padding(
                             padding: const EdgeInsets.all(10),
                             child: Text(
                               '${taskData.score}',
-                              style: const TextStyle(fontSize: 22),
+                              style: const TextStyle(fontSize: 20),
                             ))),
                   )
                 ],

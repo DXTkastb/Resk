@@ -42,8 +42,9 @@ class TasksPage extends StatelessWidget {
             child: Consumer<TaskListFetch>(builder: (ctx,tlist,_){
 
 
-              if(tlist.listtaskdata.isEmpty)
+              if(tlist.listtaskdata.isEmpty) {
                 return const Center(child: Text('Add Tasks!'),);
+              }
 
               return ListView(
                 children: [

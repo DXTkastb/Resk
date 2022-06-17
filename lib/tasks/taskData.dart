@@ -14,7 +14,6 @@ class TaskData extends ChangeNotifier{
 
 
   Future<void> didupdate(String titl,String descriptio,int reach,) async{
-
     if(reach==1 && reached==0){
       score++;
     }

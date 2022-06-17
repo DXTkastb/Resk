@@ -30,8 +30,26 @@ class DatabaseManager {
           .then((value) async {
         return await db.execute(
             'CREATE TABLE IF NOT EXISTS TASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DESCRIPTION TEXT NOT NULL, REACH INTEGER NOT NULL, SCORE INTEGER NOT NULL)');
+      }).then((value) async {
+        return db
+            .execute('CREATE TABLE CDATE(CD DATE NOT NULL)')
+            .then((value) async {
+          await db.insert('CDATE', {
+            'CD': 'DATE(\'${DateFormat('yMMdd').format(DateTime.now())}\')'
+          });
+        });
       });
-    }, onOpen: (db) async {}, version: 2);
+    }, onOpen: (db) async {
+      List cdate = await db.query('CDATE');
+
+      if ((cdate[0]['CD'] as String).substring(6, 14) !=
+          DateFormat('yMMdd').format(DateTime.now())) {
+        await db.delete('CDATE');
+        await db.insert('CDATE',
+            {'CD': 'DATE(\'${DateFormat('yMMdd').format(DateTime.now())}\')'});
+        await db.update('TASK', {'REACH': 0});
+      }
+    }, version: 3);
   }
 
   Future<List<Map<String, dynamic>>> queryBriefTaskRows() async {

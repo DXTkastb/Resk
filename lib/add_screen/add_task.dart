@@ -63,12 +63,10 @@ class TaskForm extends State<AddTask> {
         ? Builder(
             builder: (BuildContext ctx) {
               return Scaffold(
+                backgroundColor: Colors.deepPurpleAccent.shade100,
                 body: Center(
                   child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.deepPurple.shade200,
-                      borderRadius: const BorderRadius.all(Radius.circular(12)),
-                    ),
+
                     // decoration:  BoxDecoration(border: Border.all(width: 0) ,
                     // color: Colors.white,
                     // borderRadius:const  BorderRadius.all(Radius.circular(10)),
