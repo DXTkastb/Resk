@@ -13,9 +13,9 @@ import 'package:reminder_app/update_screen/updateScreen.dart';
 import 'add_screen/add_btask.dart';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   DatabaseManager databaseManager = DatabaseManager.databaseManagerInstance;
 
   await databaseManager.initiateTask();
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
           },
         ),
       ],
-     builder: (a,b){
+      builder: (a, b) {
         return MaterialApp(
           routes: {
             '/addtask': (_) {
@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
           },
           home: MainApp(),
         );
-     },
+      },
     );
   }
 }
@@ -75,46 +75,134 @@ class MainApp extends StatefulWidget {
 class MainAppState extends State<MainApp> {
   late Future tasklist;
   late Future btasklist;
+  late Size size;
 
   int _currentindex = 0;
 
   @override
+  void initState() {
+    size = Size(500, 700);
+
+    super.initState();
+  }
+
+  @override
   void didChangeDependencies() {
+    print('did called!');
 
     tasklist = Provider.of<TaskListFetch>(context, listen: false).setTasks();
     btasklist = Provider.of<BtaskListFetch>(context, listen: false).setTasks();
     super.didChangeDependencies();
   }
 
-  void removeAnyScaffoldSnack(){
+  void removeAnyScaffoldSnack() {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
   }
 
   @override
   Widget build(BuildContext context) {
+
     // TODO: implement build
     return Scaffold(
       drawer: SafeArea(
         child: Drawer(
-          child: Column(
-            children: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pushNamed('/reminderpage');
-                  },
-                  child: const Text('Reminders',style: TextStyle(),)),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Stats'))
-            ],
-          ),
-        ),
+            child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all(
+                    const ContinuousRectangleBorder()),
+                backgroundColor:
+                    MaterialStateProperty.all(Colors.deepOrange.shade900),
+                foregroundColor:
+                    MaterialStateProperty.all(Colors.deepOrange.shade200),
+                overlayColor:
+                    MaterialStateProperty.all(Colors.deepOrange.shade400),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  'Reminders',
+                  style: TextStyle(
+                      fontSize: size.height / 38,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed('/reminderpage');
+              },
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all(
+                    const ContinuousRectangleBorder()),
+                backgroundColor:
+                    MaterialStateProperty.all(Colors.deepOrange.shade700),
+                foregroundColor:
+                    MaterialStateProperty.all(Colors.deepOrange.shade200),
+                overlayColor:
+                    MaterialStateProperty.all(Colors.deepOrange.shade400),
+              ),
+              child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Text(
+                    'Stats',
+                    style: TextStyle(
+                        fontSize: size.height / 38,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                    textAlign: TextAlign.center,
+                  )),
+            )
+          ],
+        )),
       ),
-      body:
-          (_currentindex == 0) ? BriefTaskPage(btasklist):TasksPage(tasklist),
+      body: LayoutBuilder(
+        builder: (ctx, cons) {
+          return Theme(
+              data: ThemeData(
+                  textTheme: TextTheme(
+                headline1: TextStyle(
+                    fontSize: cons.maxHeight/25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black.withOpacity(1)),
+                headline2:  TextStyle(
+                    fontSize: cons.maxHeight/26,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+                headline3: TextStyle(
+                    fontSize: cons.maxHeight/32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black.withOpacity(0.6)),
+                    headline4:  TextStyle(color: Colors.deepPurple,
+                        fontSize: cons.maxHeight/28,
+                        fontWeight: FontWeight.bold,
+                        ),
+                headline5: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+                headline6:  TextStyle(
+                    fontSize: cons.maxHeight/28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              )),
+              child: (_currentindex == 0)
+                  ? BriefTaskPage(
+                      btasklist,
+                    )
+                  : TasksPage(
+                      tasklist,
+                    ));
+        },
+      ),
       // Container(
       //         color: Colors.blueGrey,
       //         width: double.infinity,
@@ -138,43 +226,55 @@ class MainAppState extends State<MainApp> {
                     .showSnackBar(const SnackBar(content: Text('Task Added!')));
               }
             });
-
           }
         },
         backgroundColor: (_currentindex == 0) ? Colors.teal : Colors.deepPurple,
-        child: const Icon(Icons.add_box_rounded),
+        child: const Icon(
+          Icons.add_box_rounded,
+        ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.shifting,
-        currentIndex: _currentindex,
-        onTap: (x) {
-          removeAnyScaffoldSnack();
-          if (_currentindex != x) {
-            setState(() {
-              _currentindex = x;
-            });
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            backgroundColor: Colors.teal,
-              icon: Icon(
-                Icons.task_rounded,
-              ),
-              label: 'Brief Tasks'),
+      bottomNavigationBar: SizedBox(
+        height: size.height/10,
+        child: BottomNavigationBar(
 
-          BottomNavigationBarItem(
-              backgroundColor: Colors.deepPurple,
-              icon: Icon(
-                Icons.alarm_rounded,
-
-              ),
-              label: 'Daily Tasks'),
-        ],
+          type: BottomNavigationBarType.shifting,
+          currentIndex: _currentindex,
+          onTap: (x) {
+            removeAnyScaffoldSnack();
+            if (_currentindex != x) {
+              setState(() {
+                _currentindex = x;
+              });
+            }
+          },
+          items: [
+            BottomNavigationBarItem(
+                backgroundColor: Colors.teal,
+                icon: Icon(
+                  Icons.task_rounded,
+                  size: size.height / 22,
+                ),
+                label: 'Brief Tasks'),
+            BottomNavigationBarItem(
+                backgroundColor: Colors.deepPurple,
+                icon: Icon(
+                  Icons.alarm_rounded,
+                  size: size.height / 22,
+                ),
+                label: 'Daily Tasks'),
+          ],
+        ),
       ),
       appBar: AppBar(
-        backgroundColor: (_currentindex==1)?Colors.deepPurple:Colors.teal,
-        title: const Text('Reminder App'),
+        toolbarHeight: size.height/10,
+        shape: const ContinuousRectangleBorder(borderRadius: BorderRadius.only(bottomRight: Radius.circular(30),bottomLeft: Radius.circular(30))),
+        backgroundColor: (_currentindex == 1) ? Colors.deepPurple : Colors.teal,
+        title: Text(
+          'Resk',
+          style: TextStyle(
+              fontSize: size.height / 28, fontWeight: FontWeight.bold),
+
+        ),
       ),
     );
   }

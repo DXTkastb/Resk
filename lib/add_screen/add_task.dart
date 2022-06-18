@@ -15,9 +15,9 @@ class AddTask extends StatefulWidget {
 class TaskForm extends State<AddTask> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController tx1 = TextEditingController(text: 'Title');
+  TextEditingController tx1 = TextEditingController();
 
-  TextEditingController tx2 = TextEditingController(text: 'Description');
+  TextEditingController tx2 = TextEditingController();
 
   late FocusNode myFocusNode;
 
@@ -56,7 +56,7 @@ class TaskForm extends State<AddTask> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size.height;
+
 
     // TODO: implement build
     return (!processing)
@@ -73,14 +73,23 @@ class TaskForm extends State<AddTask> {
                     //   boxShadow: const [BoxShadow(offset: Offset(0, 9),blurRadius: 18,spreadRadius: 0.2)],
                     // ),
                     padding:
-                        const EdgeInsets.only(top: 20, left: 30, right: 30),
-                    height: size / 2.3,
-                    width: 300,
+                        const EdgeInsets.only(top: 20, left: 50, right: 50),
+
+
                     child: Form(
                       key: _formKey,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextFormField(
+                          TextFormField(     maxLength: 30,                       decoration: InputDecoration(
+                              focusedBorder: const UnderlineInputBorder(),
+                              focusColor: Colors.teal.shade900,
+                              hoverColor: Colors.teal.shade900,
+                              labelText: 'TITLE',
+                              labelStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.teal.shade900)),
+                            style: const TextStyle(fontSize: 22,decoration: TextDecoration.none),
                             textInputAction: TextInputAction.next,
                             controller: tx1,
                             keyboardType: TextInputType.text,
@@ -92,7 +101,16 @@ class TaskForm extends State<AddTask> {
                               return 'enter title!';
                             },
                           ),
-                          TextFormField(
+                          TextFormField(maxLength: 100,
+                            decoration: InputDecoration(
+                                focusedBorder: const UnderlineInputBorder(),
+                                focusColor: Colors.teal.shade900,
+                                hoverColor: Colors.teal.shade900,
+                                labelText: 'DESCRIPTION',
+                                labelStyle: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.teal.shade900)),
+                            style: const TextStyle(fontSize: 22,decoration: TextDecoration.none),
                             focusNode: myFocusNode,
                             controller: tx2,
                             keyboardType: TextInputType.multiline,
@@ -103,9 +121,9 @@ class TaskForm extends State<AddTask> {
                             minLines: 2,
                             maxLines: 3,
                           ),
-                          const Expanded(child: SizedBox()),
+
                           Padding(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(30),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [

@@ -34,16 +34,15 @@ class _TaskWidgetState extends State<TaskWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     // TODO: implement build
     return Padding(
-      padding: const EdgeInsets.only(top: 0, bottom: 5, left: 10, right: 10),
+      padding: const EdgeInsets.only(top: 2.5, bottom: 3.5, left: 15, right: 15),
       child: Card(
         elevation: 5,
         color: Colors.deepPurple.shade100,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: Padding(
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.only(top:20,left: 20,right: 20,bottom: 15),
           child: Consumer<TaskData>(
             builder: (ctx, taskData, child) {
 
@@ -53,17 +52,17 @@ class _TaskWidgetState extends State<TaskWidget> {
                 children: [
                   Container(
                     padding: const EdgeInsets.only(top: 5),
-                    // color: Colors.red,
+
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CardText(taskData.title, 1),
+                        CardText(taskData.title,true),
                         const SizedBox(
                           height: 10,
                         ),
-                        CardText(taskData.description, 2),
+                        CardText(taskData.description,false),
                         const SizedBox(
-                          height: 10,
+                          height: 17,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -74,9 +73,9 @@ class _TaskWidgetState extends State<TaskWidget> {
                             },
                                 (taskData.reached )),
                             const SizedBox(
-                              width: 2,
+                              width: 4,
                             ),
-                            UpdateButton(() {
+                            UpdateButtonIco(() {
                               removeAnyScaffoldSnack(context);
                               Navigator.of(context)
                                   .pushNamed('/updatetask', arguments: taskData);
@@ -93,7 +92,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                               // ;
                             }),
                             const SizedBox(
-                              width: 2,
+                              width: 4,
                             ),
                             DeleteButton(() {
                               removeAnyScaffoldSnack(context);
@@ -131,16 +130,16 @@ class _TaskWidgetState extends State<TaskWidget> {
                   Container(
                     // width: width*0.2,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(30),
                     gradient:  LinearGradient(begin: Alignment.topCenter,end: Alignment.bottomCenter, colors: getColors(taskData.score),) ,
            ),
 
                     child: Center(
                         child: Padding(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(13),
                             child: Text(
                               '${taskData.score}',
-                              style: const TextStyle(fontSize: 20),
+                              style: Theme.of(context).textTheme.headline2,
                             ))),
                   )
                 ],
@@ -155,21 +154,19 @@ class _TaskWidgetState extends State<TaskWidget> {
 
 class CardText extends StatelessWidget {
   final String text;
-  final int h;
+  final bool istitle;
 
-  const CardText(this.text, this.h);
+
+  const CardText(this.text,this.istitle);
 
   @override
   Widget build(BuildContext context) {
-    double norm = 14;
-    if (h == 1)
-      norm = 20;
-    else if (h == 2) norm = 16;
+
 
     // TODO: implement build
     return Text(
       text,
-      style: TextStyle(fontSize: norm),
+      style:(istitle)?Theme.of(context).textTheme.headline1:Theme.of(context).textTheme.headline3,
     );
   }
 }

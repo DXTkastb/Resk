@@ -9,8 +9,6 @@ import '../dbhelper/databaseManager.dart';
 class TasksPage extends StatelessWidget {
   final Future tasklist;
 
-
-
   const TasksPage(this.tasklist);
 
   List<Widget> getCards(Object tlist,double width) {
@@ -37,22 +35,20 @@ class TasksPage extends StatelessWidget {
       future: tasklist,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return Padding(
-            padding: const EdgeInsets.only(top:10),
-            child: Consumer<TaskListFetch>(builder: (ctx,tlist,_){
+          return Consumer<TaskListFetch>(builder: (ctx,tlist,_){
 
 
-              if(tlist.listtaskdata.isEmpty) {
-                return const Center(child: Text('Add Tasks!'),);
-              }
+            if(tlist.listtaskdata.isEmpty) {
+              return  Center(child: Text('Add Tasks!',style: Theme.of(context).textTheme.headline6,),);
+            }
 
-              return ListView(
-                children: [
-                  ...getCards(tlist.listtaskdata,width)
-                ],
-              );
-            }),
-          );
+            return ListView(
+              children: [
+                const SizedBox(height: 7,),
+                ...getCards(tlist.listtaskdata,width)
+              ],
+            );
+          });
         }
         return const Center(child: CircularProgressIndicator());
       },

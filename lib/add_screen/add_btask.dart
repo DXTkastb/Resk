@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:reminder_app/buttons/cancel_button.dart';
 import 'package:reminder_app/tasks/btask_list_fetch.dart';
@@ -17,7 +18,7 @@ class AddBTask extends StatefulWidget {
 class TaskForm extends State<AddBTask> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController tx1 = TextEditingController(text: 'Task Description');
+  TextEditingController tx1 = TextEditingController();
   late DateTime date1;
   late DateTime date2;
 
@@ -59,90 +60,136 @@ class TaskForm extends State<AddBTask> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size.height;
+
 
     // TODO: implement build
     return (!processing)
         ? Builder(
             builder: (BuildContext ctx) {
               return Scaffold(
-                body: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.teal.shade200,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    ),
-                    padding:
-                        const EdgeInsets.only(top: 20, left: 30, right: 30),
-                    height: size / 3,
-                    width: 300,
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            textInputAction: TextInputAction.next,
-                            controller: tx1,
-                            keyboardType: TextInputType.text,
-                            onFieldSubmitted: (_) {
-                              FocusScope.of(context).requestFocus(myFocusNode);
-                            },
-                            validator: (value) {
-                              if (value != null && value.isNotEmpty) {}
-                              return 'enter title!';
-                            },
-                          ),
-                          Row(
+                body: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.teal.shade200,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  ),
+                  padding:
+                      const EdgeInsets.only(top: 20, left: 50, right: 50),
+
+
+                  child: Form(
+                    key: _formKey,
+                    child:Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextFormField(
+                          maxLength: 50,
+                          decoration: InputDecoration(
+                              focusedBorder: const UnderlineInputBorder(),
+                              focusColor: Colors.teal.shade900,
+                              hoverColor: Colors.teal.shade900,
+                              labelText: 'DESCRIPTION',
+                              labelStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.teal.shade900)),
+                          style: const TextStyle(fontSize: 22,decoration: TextDecoration.none),
+                          textInputAction: TextInputAction.done,
+                          controller: tx1,
+                          keyboardType: TextInputType.text,
+                          onFieldSubmitted: (_) {
+                            FocusScope.of(context).requestFocus(myFocusNode);
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) { return 'enter title!';}
+                           return null;
+                          },
+                        ),
+                        const SizedBox(height: 20,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            ActionChip(
+                              labelStyle: const TextStyle(color: Colors.white),
+                              backgroundColor: Colors.teal.shade900,
+                              onPressed: () {
+                                showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime.now(),
+                                    lastDate: DateTime.now()
+                                        .add(const Duration(days: 5)))
+                                    .then((value) {
+                                  date1 = value!;
+                                });
+                              },
+                              label: const Padding(padding:EdgeInsets.only(left: 5,right: 5),child: Text('date')),
+                            ),
+                            const Padding(padding: EdgeInsets.all(15),child: Text('to'),),
+                            ActionChip(
+                              labelStyle: const TextStyle(color: Colors.white),
+                              backgroundColor: Colors.teal.shade900,
+                              onPressed: () {
+                                showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime.now(),
+                                    lastDate: DateTime.now()
+                                        .add(const Duration(days: 5)))
+                                    .then((value) {
+                                  date2 = value!;
+                                });
+                              },
+                              label: const Padding(padding:EdgeInsets.only(left: 5,right: 5),child: Text('date')),
+                            ),
+                          ],
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.all(30),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              ActionChip(
-                                onPressed: () {
-                                  showDatePicker(
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime.now(),
-                                          lastDate: DateTime.now()
-                                              .add(const Duration(days: 5)))
-                                      .then((value) {
-                                    date1 = value!;
-                                  });
+                              AddButton(
+                                    () {
+
+                                      if (!(_formKey.currentState!.validate()) ){
+
+                                      }
+                                      else if(
+                                   DateTime.parse(DateFormat('yMMdd').format(date2)).difference(
+                                       DateTime.parse(DateFormat('yMMdd').format(date1))
+                                   ).inDays<0
+
+                                      ){
+                                        date1=DateTime.now();
+                                        date2=date1;
+                                        showDialog(context: context, builder: (ctx){
+                                          return AlertDialog(
+                                            title: Text('End date is before Start date !'),
+                                            actions: [
+                                              TextButton(onPressed: (){
+                                                Navigator.of(ctx).pop();
+                                              }, child: Text('ok, configure again'))
+                                            ],
+                                          );
+                                        });
+
+                                      }
+                                      else{
+                                        onadd(context);
+                                      }
+
+
+
+
                                 },
-                                label: const Text('date'),
                               ),
-                              ActionChip(
-                                onPressed: () {
-                                  showDatePicker(
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime.now(),
-                                          lastDate: DateTime.now()
-                                              .add(const Duration(days: 5)))
-                                      .then((value) {
-                                    date2 = value!;
-                                  });
-                                },
-                                label: const Text('date'),
-                              ),
+                              CancelButton(() {
+                                Navigator.of(ctx).pop(false);
+                              })
                             ],
                           ),
-                          const Expanded(child: SizedBox()),
-                          Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                AddButton(
-                                  () {
-                                    onadd(context);
-                                  },
-                                ),
-                                CancelButton(() {
-                                  Navigator.of(ctx).pop(false);
-                                })
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     ),
                   ),
                 ),

@@ -30,7 +30,7 @@ class DoneButton extends StatelessWidget {
                 : const SizedBox(),
             const Text(
               ' done',
-              style: TextStyle(fontSize: 14, color: Colors.white),
+              style: TextStyle(color: Colors.white),
             ),
           ],
         ));

@@ -16,7 +16,7 @@ class AddButton extends StatelessWidget{
           shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
           backgroundColor: MaterialStateProperty.all( Colors.orange.shade300),
           // maximumSize: MaterialStateProperty.all(const Size(50, 50)),
-          minimumSize: MaterialStateProperty.all(const Size(35, 35)),
+          minimumSize: MaterialStateProperty.all(const Size(80, 35)),
         ),
         child:  const Text('add',  style: TextStyle(fontSize: 14, color:Colors.black),)
     );
