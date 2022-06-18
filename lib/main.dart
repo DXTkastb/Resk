@@ -208,9 +208,9 @@ class MainAppState extends State<MainApp> {
                 bottomRight: Radius.circular(30),
                 bottomLeft: Radius.circular(30))),
         backgroundColor: (_currentindex == 1) ? Colors.deepPurple : Colors.teal,
-        title: const Text(
+        title:  Text(
           'Resk',
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize:height/28, fontWeight: FontWeight.bold),
         ),
       ),
     );

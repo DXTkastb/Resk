@@ -13,7 +13,8 @@ class CustomDrawerColumn extends StatelessWidget {
       children: [
         // const Expanded(child: SizedBox()),
         Padding(
-          padding: const EdgeInsets.all(20),
+          padding:
+              const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 14),
           child: TextButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -30,11 +31,11 @@ class CustomDrawerColumn extends StatelessWidget {
                   MaterialStateProperty.all(Colors.deepOrange.shade400),
             ),
             child: Padding(
-                padding: const EdgeInsets.only(top: 22, bottom: 22),
+                padding: EdgeInsets.only(top: height / 50, bottom: height / 50),
                 child: Text(
                   'Reminders',
                   style: TextStyle(
-                      fontSize: height / 48,
+                      fontSize: height / 43,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                   textAlign: TextAlign.center,
@@ -49,17 +50,25 @@ class CustomDrawerColumn extends StatelessWidget {
         ),
         Expanded(
             child: Container(
-          decoration:  BoxDecoration(
-            gradient: LinearGradient(colors: [Colors.red,Colors.deepOrange.shade800],begin: Alignment.topCenter,end: Alignment.bottomCenter),
-
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.red, Colors.deepOrange.shade800],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter),
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(40), topRight: Radius.circular(40))),
-          margin: const EdgeInsets.only( top: 20),
+          margin: const EdgeInsets.only(top: 14),
+          child: Column(children: [
+            Container(
+              margin: const EdgeInsets.only(top: 28, left: 28, right: 28),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(40)),
+              child: const SizedBox(width: 250,height: 350,),
+            ),
+          ],)
         )),
         Padding(
-          padding: const EdgeInsets.only(
-
-          ),
+          padding: const EdgeInsets.only(),
           child: TextButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -87,7 +96,6 @@ class CustomDrawerColumn extends StatelessWidget {
                 )),
           ),
         ),
-
       ],
     );
   }
