@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../buttons/del_button.dart';
 import '../buttons/done_button.dart';
 import '../dbhelper/databaseManager.dart';
 import '../tasks/btask_list_fetch.dart';
 import '../tasks/btaskdata.dart';
-
-import '../buttons/del_button.dart';
 
 class BriefTaskPage extends StatelessWidget {
   final Future btasklist;
@@ -30,31 +30,15 @@ class BriefTaskPage extends StatelessWidget {
               }
 
               return ListView.builder(
-                      itemCount: blist.listtaskdata.length,
-                      itemBuilder: (ctx, index) {
-                        return ChangeNotifierProvider<BTaskData>.value(
-                          value: blist.listtaskdata[index],
-                          builder: (ctx, element) {
-                            return BTaskCard();
-                          },
-                        );
-                      })
-
-                  //   ListView(
-                  //   children: [
-                  //     const SizedBox(height: 15,),
-                  //     ...blist.listtaskdata.map((e) {
-                  //       return
-                  //         ChangeNotifierProvider<BTaskData>.value(value: e,
-                  //       builder: (ctx,element){
-                  //         return BTaskCard();
-                  //       },
-                  //       );
-                  //     }).toList(),
-                  //   ],
-                  // );
-
-                  ;
+                  itemCount: blist.listtaskdata.length,
+                  itemBuilder: (ctx, index) {
+                    return ChangeNotifierProvider<BTaskData>.value(
+                      value: blist.listtaskdata[index],
+                      builder: (ctx, element) {
+                        return BTaskCard();
+                      },
+                    );
+                  });
             });
           }
           return const CircularProgressIndicator();
@@ -82,8 +66,8 @@ class BTaskCard extends StatelessWidget {
           elevation: 5,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          color: Colors.teal.shade200,
-          margin: const EdgeInsets.only(left: 15, right: 15, top: 12),
+          color: Colors.teal.shade100,
+          margin: const EdgeInsets.only(left: 17, right: 17, top: 15),
           child: Padding(
             padding:
                 const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),

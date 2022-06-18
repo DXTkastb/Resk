@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../buttons/cancel_button.dart';
 import '../buttons/done_button.dart';
 import '../buttons/update_button.dart';
@@ -54,98 +55,103 @@ class _UpdateScreenState extends State<UpdateScreen> {
   @override
   Widget build(BuildContext context) {
     return (!updating)
-        ? Scaffold(
-            backgroundColor: Colors.deepPurpleAccent.shade100,
-            body: Center(
-              child: Container(
-                padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
-                width: 300,
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'TITLE',
+        ?  Scaffold(
+      backgroundColor: Colors.deepPurpleAccent.shade100,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+
+
+              child: Form(
+                key: _formKey,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'TITLE',
+                          focusedBorder: const UnderlineInputBorder(),
+                          labelStyle: TextStyle(
+                              fontSize: 14,
+                              color: Colors.deepPurple.shade800),
+                          focusColor: Colors.deepPurple.shade800,
+                          hoverColor: Colors.deepPurple.shade800,
+                        ),
+                        controller: tx1,
+                        maxLength: 30,
+                        style: Theme.of(context).textTheme.headline6,
+                        textInputAction: TextInputAction.next,
+
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(
                             focusedBorder: const UnderlineInputBorder(),
-                            labelStyle: TextStyle(
-                                fontSize: 14,
-                                color: Colors.deepPurple.shade800),
                             focusColor: Colors.deepPurple.shade800,
                             hoverColor: Colors.deepPurple.shade800,
+                            labelText: 'DESCRIPTION',
+                            labelStyle: TextStyle(
+                                fontSize: 14,
+                                color: Colors.deepPurple.shade800)),
+                        controller: tx2,
+                        style: Theme.of(context).textTheme.headline6,
+                        keyboardType: TextInputType.multiline,
+                        minLines: 2,
+                        maxLines: 2,
+                        maxLength: 100,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter some text';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      FittedBox(
+                        child: DoneButton(() {
+                          setState(() {
+                            donebutton = (donebutton == 0) ? 1 : 0;
+                          });
+                        }, donebutton),
+                      ),
+                      const SizedBox(
+                        height: 17,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          UpdateButton(() {
+                            if (_formKey.currentState!.validate()) {
+                              updateTask();
+                            }
+                          }),
+                          const SizedBox(
+                            width: 10,
                           ),
-                          controller: tx1,
-                          maxLength: 30,
-                          style: Theme.of(context).textTheme.headline6,
-                          textInputAction: TextInputAction.next,
-                          autofocus: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter some text';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextFormField(
-                          decoration: InputDecoration(
-                              focusedBorder: const UnderlineInputBorder(),
-                              focusColor: Colors.deepPurple.shade800,
-                              hoverColor: Colors.deepPurple.shade800,
-                              labelText: 'DESCRIPTION',
-                              labelStyle: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.deepPurple.shade800)),
-                          controller: tx2,
-                          style: Theme.of(context).textTheme.headline6,
-                          keyboardType: TextInputType.multiline,
-                          minLines: 2,
-                          maxLines: 2,
-                          maxLength: 100,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter some text';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        FittedBox(
-                          child: DoneButton(() {
-                            setState(() {
-                              donebutton = (donebutton == 0) ? 1 : 0;
-                            });
-                          }, donebutton),
-                        ),
-                        const SizedBox(
-                          height: 17,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            UpdateButton(() {
-                              if (_formKey.currentState!.validate()) {
-                                updateTask();
-                              }
-                            }),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            CancelButton(() {
-                              Navigator.of(context).pop(false);
-                            })
-                          ],
-                        )
-                      ]),
-                ),
+                          CancelButton(() {
+                            Navigator.of(context).pop(false);
+                          })
+                        ],
+                      )
+                    ]),
               ),
             ),
-          )
+          ),
+        ),
+      ),
+    )
         : Container(
             color: Colors.deepPurple.shade700,
             child: const Center(

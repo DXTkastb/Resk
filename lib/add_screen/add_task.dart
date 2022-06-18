@@ -58,96 +58,91 @@ class TaskForm extends State<AddTask> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return (!processing)
-        ? Builder(
-            builder: (BuildContext ctx) {
-              return Scaffold(
-                backgroundColor: Colors.deepPurple.shade100,
-                body: Center(
-                  child: Container(
-                    // decoration:  BoxDecoration(border: Border.all(width: 0) ,
-                    // color: Colors.white,
-                    // borderRadius:const  BorderRadius.all(Radius.circular(10)),
-                    //   boxShadow: const [BoxShadow(offset: Offset(0, 9),blurRadius: 18,spreadRadius: 0.2)],
-                    // ),
-                    padding:
-                        const EdgeInsets.only(top: 20, left: 50, right: 50),
+        ? Scaffold(
+      backgroundColor: Colors.deepPurple.shade100,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
 
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+              padding:
+              const EdgeInsets.only(top: 20, left: 50, right: 50),
+
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      maxLength: 30,
+                      decoration: InputDecoration(
+                          focusedBorder: const UnderlineInputBorder(),
+                          focusColor: Colors.teal.shade900,
+                          hoverColor: Colors.teal.shade900,
+                          labelText: 'TITLE',
+                          labelStyle: TextStyle(
+                              fontSize: 14, color: Colors.teal.shade900)),
+                      style: const TextStyle(
+                          fontSize: 22, decoration: TextDecoration.none),
+                      textInputAction: TextInputAction.next,
+                      controller: tx1,
+                      keyboardType: TextInputType.text,
+                      onFieldSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(myFocusNode);
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'enter title!';
+                        }
+                      },
+                    ),
+                    TextFormField(
+                      maxLength: 100,
+                      decoration: InputDecoration(
+                          focusedBorder: const UnderlineInputBorder(),
+                          focusColor: Colors.teal.shade900,
+                          hoverColor: Colors.teal.shade900,
+                          labelText: 'DESCRIPTION',
+                          labelStyle: TextStyle(
+                              fontSize: 14, color: Colors.teal.shade900)),
+                      style: const TextStyle(
+                          fontSize: 22, decoration: TextDecoration.none),
+                      focusNode: myFocusNode,
+                      controller: tx2,
+                      keyboardType: TextInputType.multiline,
+                      validator: (value) {
+                        if (value != null && value.isNotEmpty) {
+                          return null;
+                        }
+                        return 'enter description!';
+                      },
+                      minLines: 2,
+                      maxLines: 2,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          TextFormField(
-                            maxLength: 30,
-                            decoration: InputDecoration(
-                                focusedBorder: const UnderlineInputBorder(),
-                                focusColor: Colors.teal.shade900,
-                                hoverColor: Colors.teal.shade900,
-                                labelText: 'TITLE',
-                                labelStyle: TextStyle(
-                                    fontSize: 14, color: Colors.teal.shade900)),
-                            style: const TextStyle(
-                                fontSize: 22, decoration: TextDecoration.none),
-                            textInputAction: TextInputAction.next,
-                            controller: tx1,
-                            keyboardType: TextInputType.text,
-                            onFieldSubmitted: (_) {
-                              FocusScope.of(context).requestFocus(myFocusNode);
-                            },
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'enter title!';
-                              }
-                            },
-                          ),
-                          TextFormField(
-                            maxLength: 100,
-                            decoration: InputDecoration(
-                                focusedBorder: const UnderlineInputBorder(),
-                                focusColor: Colors.teal.shade900,
-                                hoverColor: Colors.teal.shade900,
-                                labelText: 'DESCRIPTION',
-                                labelStyle: TextStyle(
-                                    fontSize: 14, color: Colors.teal.shade900)),
-                            style: const TextStyle(
-                                fontSize: 22, decoration: TextDecoration.none),
-                            focusNode: myFocusNode,
-                            controller: tx2,
-                            keyboardType: TextInputType.multiline,
-                            validator: (value) {
-                              if (value != null && value.isNotEmpty) {
-                                return null;
-                              }
-                              return 'enter description!';
-                            },
-                            minLines: 2,
-                            maxLines: 2,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(30),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                AddButton(() {
-                                  if ((_formKey.currentState!.validate())) {
-                                    onadd(context);
-                                  }
-                                }),
-                                CancelButton(() {
-                                  Navigator.of(ctx).pop(false);
-                                })
-                              ],
-                            ),
-                          )
+                          AddButton(() {
+                            if ((_formKey.currentState!.validate())) {
+                              onadd(context);
+                            }
+                          }),
+                          CancelButton(() {
+                            Navigator.of(context).pop(false);
+                          })
                         ],
                       ),
-                    ),
-                  ),
+                    )
+                  ],
                 ),
-              );
-            },
-          )
-        : Container(
+              ),
+            ),
+          ),
+        ),
+      ),
+    ): Container(
             color: Colors.deepPurple,
             child: const Center(
               child: CircularProgressIndicator(
