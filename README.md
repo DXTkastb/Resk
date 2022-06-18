@@ -1,16 +1,9 @@
-# reminder_app
+# Resk
 
-A new Flutter project.
+Flutter App for **everyday tasks** and **reminders**.
 
-## Getting Started
+### :wave: Hi, 
 
-This project is a starting point for a Flutter application.
+Installation (On Device) : [APK Build and Install](https://docs.flutter.dev/deployment/android#:~:text=the%20Play%20Store.-,Build%20an%20APK,-Although%20app%20bundles)
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+For Testing (on Emulator/Connected Physical Device) : [flutter run](https://docs.flutter.dev/reference/flutter-cli#flutter-commands) 
