@@ -61,7 +61,7 @@ class TaskForm extends State<AddTask> {
         ? Builder(
             builder: (BuildContext ctx) {
               return Scaffold(
-                backgroundColor: Colors.deepPurpleAccent.shade100,
+                backgroundColor: Colors.deepPurple.shade100,
                 body: Center(
                   child: Container(
                     // decoration:  BoxDecoration(border: Border.all(width: 0) ,
@@ -121,7 +121,7 @@ class TaskForm extends State<AddTask> {
                               return 'enter description!';
                             },
                             minLines: 2,
-                            maxLines: 3,
+                            maxLines: 2,
                           ),
                           Padding(
                             padding: const EdgeInsets.all(30),

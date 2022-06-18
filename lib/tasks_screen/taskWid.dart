@@ -45,81 +45,81 @@ class _TaskWidgetState extends State<TaskWidget> {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CardText(taskData.title, true),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CardText(taskData.description, false),
-                        const SizedBox(
-                          height: 17,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            DoneButton(() async {
-                              taskData.didupdate(taskData.title,
-                                  taskData.description, toggleReach);
-                            }, (taskData.reached)),
-                            const SizedBox(
-                              width: 4,
-                            ),
-                            UpdateButtonIco(() {
-                              removeAnyScaffoldSnack(context);
-                              Navigator.of(context).pushNamed('/updatetask',
-                                  arguments: taskData);
-                              //     .then((value) async {
-                              //   if (value is List) {
-                              //     await taskData.didupdate(
-                              //       value[0],
-                              //       value[1],
-                              //       value[2],
-                              //     );
-                              //     // Provider.of<TaskData>(context,listen: false).didupdate(value[0],value[1],value[2]);
-                              //   }
-                              // })
-                              // ;
-                            }),
-                            const SizedBox(
-                              width: 4,
-                            ),
-                            DeleteButton(() {
-                              removeAnyScaffoldSnack(context);
-                              showDialog(
-                                  context: context,
-                                  builder: (_) => AlertDialog(
-                                        title: const Text('delete task?'),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () {
-                                                Provider.of<TaskListFetch>(
-                                                        context,
-                                                        listen: false)
-                                                    .removeTask(taskData)
-                                                    .then((_) {
-                                                  Navigator.of(context).pop();
-                                                });
-                                              },
-                                              child: const Text('delete')),
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: const Text('cancel')),
-                                        ],
-                                      ));
+                 Expanded(child: Padding(
+                   padding: const EdgeInsets.only(right: 20,top: 5),
+                   child: Column(
+                     crossAxisAlignment: CrossAxisAlignment.start,
+                     children: [
+                       CardText(taskData.title, true),
+                       const SizedBox(
+                         height: 10,
+                       ),
+                       CardText(taskData.description, false),
+                       const SizedBox(
+                         height: 17,
+                       ),
+                       Row(
+                         mainAxisAlignment: MainAxisAlignment.start,
+                         children: [
+                           DoneButton(() async {
+                             taskData.didupdate(taskData.title,
+                                 taskData.description, toggleReach);
+                           }, (taskData.reached)),
+                           const SizedBox(
+                             width: 4,
+                           ),
+                           UpdateButtonIco(() {
+                             removeAnyScaffoldSnack(context);
+                             Navigator.of(context).pushNamed('/updatetask',
+                                 arguments: taskData);
+                             //     .then((value) async {
+                             //   if (value is List) {
+                             //     await taskData.didupdate(
+                             //       value[0],
+                             //       value[1],
+                             //       value[2],
+                             //     );
+                             //     // Provider.of<TaskData>(context,listen: false).didupdate(value[0],value[1],value[2]);
+                             //   }
+                             // })
+                             // ;
+                           }),
+                           const SizedBox(
+                             width: 4,
+                           ),
+                           DeleteButton(() {
+                             removeAnyScaffoldSnack(context);
+                             showDialog(
+                                 context: context,
+                                 builder: (_) => AlertDialog(
+                                   title: const Text('delete task?'),
+                                   actions: [
+                                     TextButton(
+                                         onPressed: () {
+                                           Provider.of<TaskListFetch>(
+                                               context,
+                                               listen: false)
+                                               .removeTask(taskData)
+                                               .then((_) {
+                                             Navigator.of(context).pop();
+                                           });
+                                         },
+                                         child: const Text('delete')),
+                                     TextButton(
+                                         onPressed: () {
+                                           Navigator.of(context).pop();
+                                         },
+                                         child: const Text('cancel')),
+                                   ],
+                                 ));
 
-                              // async {
-                            }, Colors.deepPurple),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
+                             // async {
+                           }, Colors.deepPurple),
+                         ],
+                       )
+                     ],
+                   ),
+                 ),),
                   Container(
                     // width: width*0.2,
                     decoration: BoxDecoration(

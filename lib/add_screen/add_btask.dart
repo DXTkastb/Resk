@@ -65,7 +65,7 @@ class TaskForm extends State<AddBTask> {
               return Scaffold(
                 body: Container(
                   decoration: BoxDecoration(
-                    color: Colors.teal.shade200,
+                    color: Colors.teal.shade100,
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                   ),
                   padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
