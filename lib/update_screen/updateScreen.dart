@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:reminder_app/buttons/cancel_button.dart';
-import 'package:reminder_app/buttons/done_button.dart';
-import 'package:reminder_app/buttons/update_button.dart';
-import 'package:reminder_app/dbhelper/databaseManager.dart';
-import 'package:reminder_app/tasks/taskData.dart';
+import '../buttons/cancel_button.dart';
+import '../buttons/done_button.dart';
+import '../buttons/update_button.dart';
+import '../tasks/taskData.dart';
 
 class UpdateScreen extends StatefulWidget {
   @override
@@ -70,7 +69,9 @@ class _UpdateScreenState extends State<UpdateScreen> {
                           decoration: InputDecoration(
                             labelText: 'TITLE',
                             focusedBorder: const UnderlineInputBorder(),
-                            labelStyle:  TextStyle(fontSize: 14,color: Colors.deepPurple.shade800),
+                            labelStyle: TextStyle(
+                                fontSize: 14,
+                                color: Colors.deepPurple.shade800),
                             focusColor: Colors.deepPurple.shade800,
                             hoverColor: Colors.deepPurple.shade800,
                           ),

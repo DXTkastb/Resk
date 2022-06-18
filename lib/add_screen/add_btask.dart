@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:reminder_app/buttons/cancel_button.dart';
-import 'package:reminder_app/tasks/btask_list_fetch.dart';
-import 'package:reminder_app/tasks/task_list_fetch.dart';
-
+import '../buttons/cancel_button.dart';
+import '../tasks/btask_list_fetch.dart';
 import '../buttons/add_button.dart';
 
 class AddBTask extends StatefulWidget {
@@ -60,8 +58,6 @@ class TaskForm extends State<AddBTask> {
 
   @override
   Widget build(BuildContext context) {
-
-
     // TODO: implement build
     return (!processing)
         ? Builder(
@@ -72,13 +68,10 @@ class TaskForm extends State<AddBTask> {
                     color: Colors.teal.shade200,
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                   ),
-                  padding:
-                      const EdgeInsets.only(top: 20, left: 50, right: 50),
-
-
+                  padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
                   child: Form(
                     key: _formKey,
-                    child:Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         TextFormField(
@@ -89,9 +82,9 @@ class TaskForm extends State<AddBTask> {
                               hoverColor: Colors.teal.shade900,
                               labelText: 'DESCRIPTION',
                               labelStyle: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.teal.shade900)),
-                          style: const TextStyle(fontSize: 22,decoration: TextDecoration.none),
+                                  fontSize: 14, color: Colors.teal.shade900)),
+                          style: const TextStyle(
+                              fontSize: 22, decoration: TextDecoration.none),
                           textInputAction: TextInputAction.done,
                           controller: tx1,
                           keyboardType: TextInputType.text,
@@ -99,11 +92,15 @@ class TaskForm extends State<AddBTask> {
                             FocusScope.of(context).requestFocus(myFocusNode);
                           },
                           validator: (value) {
-                            if (value == null || value.isEmpty) { return 'enter title!';}
-                           return null;
+                            if (value == null || value.isEmpty) {
+                              return 'enter title!';
+                            }
+                            return null;
                           },
                         ),
-                        const SizedBox(height: 20,),
+                        const SizedBox(
+                          height: 20,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -112,75 +109,79 @@ class TaskForm extends State<AddBTask> {
                               backgroundColor: Colors.teal.shade900,
                               onPressed: () {
                                 showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime.now(),
-                                    lastDate: DateTime.now()
-                                        .add(const Duration(days: 5)))
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime.now(),
+                                        lastDate: DateTime.now()
+                                            .add(const Duration(days: 5)))
                                     .then((value) {
                                   date1 = value!;
                                 });
                               },
-                              label: const Padding(padding:EdgeInsets.only(left: 5,right: 5),child: Text('date')),
+                              label: const Padding(
+                                  padding: EdgeInsets.only(left: 5, right: 5),
+                                  child: Text('date')),
                             ),
-                            const Padding(padding: EdgeInsets.all(15),child: Text('to'),),
+                            const Padding(
+                              padding: EdgeInsets.all(15),
+                              child: Text('to'),
+                            ),
                             ActionChip(
                               labelStyle: const TextStyle(color: Colors.white),
                               backgroundColor: Colors.teal.shade900,
                               onPressed: () {
                                 showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime.now(),
-                                    lastDate: DateTime.now()
-                                        .add(const Duration(days: 5)))
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime.now(),
+                                        lastDate: DateTime.now()
+                                            .add(const Duration(days: 5)))
                                     .then((value) {
                                   date2 = value!;
                                 });
                               },
-                              label: const Padding(padding:EdgeInsets.only(left: 5,right: 5),child: Text('date')),
+                              label: const Padding(
+                                  padding: EdgeInsets.only(left: 5, right: 5),
+                                  child: Text('date')),
                             ),
                           ],
                         ),
-
                         Padding(
                           padding: const EdgeInsets.all(30),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               AddButton(
-                                    () {
-
-                                      if (!(_formKey.currentState!.validate()) ){
-
-                                      }
-                                      else if(
-                                   DateTime.parse(DateFormat('yMMdd').format(date2)).difference(
-                                       DateTime.parse(DateFormat('yMMdd').format(date1))
-                                   ).inDays<0
-
-                                      ){
-                                        date1=DateTime.now();
-                                        date2=date1;
-                                        showDialog(context: context, builder: (ctx){
+                                () {
+                                  if (!(_formKey.currentState!.validate())) {
+                                  } else if (DateTime.parse(
+                                              DateFormat('yMMdd').format(date2))
+                                          .difference(DateTime.parse(
+                                              DateFormat('yMMdd')
+                                                  .format(date1)))
+                                          .inDays <
+                                      0) {
+                                    date1 = DateTime.now();
+                                    date2 = date1;
+                                    showDialog(
+                                        context: context,
+                                        builder: (ctx) {
                                           return AlertDialog(
-                                            title: Text('End date is before Start date !'),
+                                            title: Text(
+                                                'End date is before Start date !'),
                                             actions: [
-                                              TextButton(onPressed: (){
-                                                Navigator.of(ctx).pop();
-                                              }, child: Text('ok, configure again'))
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(ctx).pop();
+                                                  },
+                                                  child: Text(
+                                                      'ok, configure again'))
                                             ],
                                           );
                                         });
-
-                                      }
-                                      else{
-                                        onadd(context);
-                                      }
-
-
-
-
+                                  } else {
+                                    onadd(context);
+                                  }
                                 },
                               ),
                               CancelButton(() {

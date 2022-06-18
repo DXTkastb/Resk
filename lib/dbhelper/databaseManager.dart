@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
-import 'package:reminder_app/tasks/taskData.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import '../tasks/taskData.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../tasks/btaskdata.dart';
 

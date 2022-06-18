@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reminder_app/buttons/add_button.dart';
-import 'package:reminder_app/buttons/cancel_button.dart';
-import 'package:reminder_app/tasks/task_list_fetch.dart';
+import '../buttons/add_button.dart';
+import '../buttons/cancel_button.dart';
+import '../tasks/task_list_fetch.dart';
 
 class AddTask extends StatefulWidget {
   @override
@@ -56,8 +56,6 @@ class TaskForm extends State<AddTask> {
 
   @override
   Widget build(BuildContext context) {
-
-
     // TODO: implement build
     return (!processing)
         ? Builder(
@@ -66,7 +64,6 @@ class TaskForm extends State<AddTask> {
                 backgroundColor: Colors.deepPurpleAccent.shade100,
                 body: Center(
                   child: Container(
-
                     // decoration:  BoxDecoration(border: Border.all(width: 0) ,
                     // color: Colors.white,
                     // borderRadius:const  BorderRadius.all(Radius.circular(10)),
@@ -75,21 +72,22 @@ class TaskForm extends State<AddTask> {
                     padding:
                         const EdgeInsets.only(top: 20, left: 50, right: 50),
 
-
                     child: Form(
                       key: _formKey,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextFormField(     maxLength: 30,                       decoration: InputDecoration(
-                              focusedBorder: const UnderlineInputBorder(),
-                              focusColor: Colors.teal.shade900,
-                              hoverColor: Colors.teal.shade900,
-                              labelText: 'TITLE',
-                              labelStyle: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.teal.shade900)),
-                            style: const TextStyle(fontSize: 22,decoration: TextDecoration.none),
+                          TextFormField(
+                            maxLength: 30,
+                            decoration: InputDecoration(
+                                focusedBorder: const UnderlineInputBorder(),
+                                focusColor: Colors.teal.shade900,
+                                hoverColor: Colors.teal.shade900,
+                                labelText: 'TITLE',
+                                labelStyle: TextStyle(
+                                    fontSize: 14, color: Colors.teal.shade900)),
+                            style: const TextStyle(
+                                fontSize: 22, decoration: TextDecoration.none),
                             textInputAction: TextInputAction.next,
                             controller: tx1,
                             keyboardType: TextInputType.text,
@@ -97,38 +95,43 @@ class TaskForm extends State<AddTask> {
                               FocusScope.of(context).requestFocus(myFocusNode);
                             },
                             validator: (value) {
-                              if (value != null && value.isNotEmpty) {}
-                              return 'enter title!';
+                              if (value == null || value.isEmpty) {
+                                return 'enter title!';
+                              }
                             },
                           ),
-                          TextFormField(maxLength: 100,
+                          TextFormField(
+                            maxLength: 100,
                             decoration: InputDecoration(
                                 focusedBorder: const UnderlineInputBorder(),
                                 focusColor: Colors.teal.shade900,
                                 hoverColor: Colors.teal.shade900,
                                 labelText: 'DESCRIPTION',
                                 labelStyle: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.teal.shade900)),
-                            style: const TextStyle(fontSize: 22,decoration: TextDecoration.none),
+                                    fontSize: 14, color: Colors.teal.shade900)),
+                            style: const TextStyle(
+                                fontSize: 22, decoration: TextDecoration.none),
                             focusNode: myFocusNode,
                             controller: tx2,
                             keyboardType: TextInputType.multiline,
                             validator: (value) {
-                              if (value != null && value.isNotEmpty) {}
+                              if (value != null && value.isNotEmpty) {
+                                return null;
+                              }
                               return 'enter description!';
                             },
                             minLines: 2,
                             maxLines: 3,
                           ),
-
                           Padding(
                             padding: const EdgeInsets.all(30),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 AddButton(() {
-                                  onadd(context);
+                                  if ((_formKey.currentState!.validate())) {
+                                    onadd(context);
+                                  }
                                 }),
                                 CancelButton(() {
                                   Navigator.of(ctx).pop(false);

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:reminder_app/add_screen/add_task.dart';
-import 'package:reminder_app/dbhelper/databaseManager.dart';
-import 'package:reminder_app/reminder_screen/remiderpage.dart';
-import 'package:reminder_app/tasks/btask_list_fetch.dart';
-import 'package:reminder_app/tasks/task_list_fetch.dart';
-import 'package:reminder_app/tasks_screen/brieftaskspage.dart';
-import 'package:reminder_app/tasks_screen/taskspage.dart';
-import 'package:reminder_app/update_screen/updateScreen.dart';
+import '../add_screen/add_task.dart';
+import '../dbhelper/databaseManager.dart';
+import '../reminder_screen/remiderpage.dart';
+import '../tasks/btask_list_fetch.dart';
+import '../tasks/task_list_fetch.dart';
+import '../tasks_screen/brieftaskspage.dart';
+import '../tasks_screen/taskspage.dart';
+import '../update_screen/updateScreen.dart';
 
-import 'add_screen/add_btask.dart';
+import './add_screen/add_btask.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -101,7 +101,6 @@ class MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-
     // TODO: implement build
     return Scaffold(
       drawer: SafeArea(
@@ -170,27 +169,28 @@ class MainAppState extends State<MainApp> {
               data: ThemeData(
                   textTheme: TextTheme(
                 headline1: TextStyle(
-                    fontSize: cons.maxHeight/25,
+                    fontSize: cons.maxHeight / 25,
                     fontWeight: FontWeight.bold,
                     color: Colors.black.withOpacity(1)),
-                headline2:  TextStyle(
-                    fontSize: cons.maxHeight/26,
+                headline2: TextStyle(
+                    fontSize: cons.maxHeight / 26,
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
                 headline3: TextStyle(
-                    fontSize: cons.maxHeight/32,
+                    fontSize: cons.maxHeight / 32,
                     fontWeight: FontWeight.bold,
                     color: Colors.black.withOpacity(0.6)),
-                    headline4:  TextStyle(color: Colors.deepPurple,
-                        fontSize: cons.maxHeight/28,
-                        fontWeight: FontWeight.bold,
-                        ),
+                headline4: TextStyle(
+                  color: Colors.deepPurple,
+                  fontSize: cons.maxHeight / 28,
+                  fontWeight: FontWeight.bold,
+                ),
                 headline5: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
-                headline6:  TextStyle(
-                    fontSize: cons.maxHeight/28,
+                headline6: TextStyle(
+                    fontSize: cons.maxHeight / 28,
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
               )),
@@ -234,9 +234,8 @@ class MainAppState extends State<MainApp> {
         ),
       ),
       bottomNavigationBar: SizedBox(
-        height: size.height/10,
+        height: size.height / 10,
         child: BottomNavigationBar(
-
           type: BottomNavigationBarType.shifting,
           currentIndex: _currentindex,
           onTap: (x) {
@@ -266,14 +265,16 @@ class MainAppState extends State<MainApp> {
         ),
       ),
       appBar: AppBar(
-        toolbarHeight: size.height/10,
-        shape: const ContinuousRectangleBorder(borderRadius: BorderRadius.only(bottomRight: Radius.circular(30),bottomLeft: Radius.circular(30))),
+        toolbarHeight: size.height / 10,
+        shape: const ContinuousRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(30),
+                bottomLeft: Radius.circular(30))),
         backgroundColor: (_currentindex == 1) ? Colors.deepPurple : Colors.teal,
         title: Text(
           'Resk',
           style: TextStyle(
               fontSize: size.height / 28, fontWeight: FontWeight.bold),
-
         ),
       ),
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reminder_app/tasks/taskData.dart';
+import '../tasks/taskData.dart';
 
 import '../dbhelper/databaseManager.dart';
 
@@ -32,10 +32,11 @@ class TaskListFetch extends ChangeNotifier {
   List<TaskData> get listtaskdata => _listtaskdata;
 
   Future<void> setTasks() async {
-    await Future.delayed(Duration(seconds: 3))
-;    TaskListFetch._rowList.addAll(trueList);
+    await Future.delayed(Duration(seconds: 3));
+    TaskListFetch._rowList.addAll(trueList);
     _listtaskdata =
-        (await DatabaseManager.databaseManagerInstance.queryDailyTaskRows()).map((e) {
+        (await DatabaseManager.databaseManagerInstance.queryDailyTaskRows())
+            .map((e) {
       TaskListFetch._rowList.remove(e['ID']);
       return TaskData(
           e['ID'], e['TITLE'], e['DESCRIPTION'], e['REACH'], e['SCORE']);
@@ -44,11 +45,14 @@ class TaskListFetch extends ChangeNotifier {
   }
 
   Future<void> addTask(
-      String title, String description,) async {
+    String title,
+    String description,
+  ) async {
     if (TaskListFetch._rowList.isNotEmpty) {
-      var tsk = TaskData(
-          TaskListFetch._rowList.last, title, description, 0, 0);
-      (await DatabaseManager.databaseManagerInstance.addDailyTask(tsk).then((_) {
+      var tsk = TaskData(TaskListFetch._rowList.last, title, description, 0, 0);
+      (await DatabaseManager.databaseManagerInstance
+          .addDailyTask(tsk)
+          .then((_) {
         _listtaskdata.add(tsk);
         TaskListFetch._rowList.removeLast();
         notifyListeners();

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reminder_app/buttons/del_button.dart';
-import 'package:reminder_app/buttons/done_button.dart';
-import 'package:reminder_app/buttons/update_button.dart';
-import 'package:reminder_app/dbhelper/databaseManager.dart';
-import 'package:reminder_app/tasks/task_list_fetch.dart';
-
+import '../buttons/del_button.dart';
+import '../buttons/done_button.dart';
+import '../buttons/update_button.dart';
+import '../tasks/task_list_fetch.dart';
 import '../tasks/taskData.dart';
 
 class TaskWidget extends StatefulWidget {
@@ -18,15 +16,12 @@ class TaskWidget extends StatefulWidget {
 }
 
 class _TaskWidgetState extends State<TaskWidget> {
-
-  List<Color> getColors(int value){
+  List<Color> getColors(int value) {
     return const [
-
-      Color.fromRGBO(
-        255, 203, 35, 1.0),
-      Color.fromRGBO( 255, 215, 111, 1.0)];
+      Color.fromRGBO(255, 203, 35, 1.0),
+      Color.fromRGBO(255, 215, 111, 1.0)
+    ];
   }
-
 
   void removeAnyScaffoldSnack(BuildContext context) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -36,31 +31,30 @@ class _TaskWidgetState extends State<TaskWidget> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Padding(
-      padding: const EdgeInsets.only(top: 2.5, bottom: 3.5, left: 15, right: 15),
+      padding: const EdgeInsets.only(top: 12, left: 15, right: 15),
       child: Card(
         elevation: 5,
         color: Colors.deepPurple.shade100,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: Padding(
-          padding: const EdgeInsets.only(top:20,left: 20,right: 20,bottom: 15),
+          padding:
+              const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 15),
           child: Consumer<TaskData>(
             builder: (ctx, taskData, child) {
-
               int toggleReach = (taskData.reached == 0) ? 1 : 0;
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
                     padding: const EdgeInsets.only(top: 5),
-
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CardText(taskData.title,true),
+                        CardText(taskData.title, true),
                         const SizedBox(
                           height: 10,
                         ),
-                        CardText(taskData.description,false),
+                        CardText(taskData.description, false),
                         const SizedBox(
                           height: 17,
                         ),
@@ -70,15 +64,14 @@ class _TaskWidgetState extends State<TaskWidget> {
                             DoneButton(() async {
                               taskData.didupdate(taskData.title,
                                   taskData.description, toggleReach);
-                            },
-                                (taskData.reached )),
+                            }, (taskData.reached)),
                             const SizedBox(
                               width: 4,
                             ),
                             UpdateButtonIco(() {
                               removeAnyScaffoldSnack(context);
-                              Navigator.of(context)
-                                  .pushNamed('/updatetask', arguments: taskData);
+                              Navigator.of(context).pushNamed('/updatetask',
+                                  arguments: taskData);
                               //     .then((value) async {
                               //   if (value is List) {
                               //     await taskData.didupdate(
@@ -131,8 +124,12 @@ class _TaskWidgetState extends State<TaskWidget> {
                     // width: width*0.2,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
-                    gradient:  LinearGradient(begin: Alignment.topCenter,end: Alignment.bottomCenter, colors: getColors(taskData.score),) ,
-           ),
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: getColors(taskData.score),
+                      ),
+                    ),
 
                     child: Center(
                         child: Padding(
@@ -156,17 +153,16 @@ class CardText extends StatelessWidget {
   final String text;
   final bool istitle;
 
-
-  const CardText(this.text,this.istitle);
+  const CardText(this.text, this.istitle);
 
   @override
   Widget build(BuildContext context) {
-
-
     // TODO: implement build
     return Text(
       text,
-      style:(istitle)?Theme.of(context).textTheme.headline1:Theme.of(context).textTheme.headline3,
+      style: (istitle)
+          ? Theme.of(context).textTheme.headline1
+          : Theme.of(context).textTheme.headline3,
     );
   }
 }

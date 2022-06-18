@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../dbhelper/databaseManager.dart';
-import 'btaskdata.dart';
+import './btaskdata.dart';
 
 class BtaskListFetch extends ChangeNotifier {
   late List<BTaskData> _listtaskdata;

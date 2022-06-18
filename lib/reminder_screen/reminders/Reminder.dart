@@ -20,7 +20,6 @@ class ReminderState extends State<Reminder> {
 
   @override
   void initState() {
-
     if (!timecheck()) {
       run();
     } else {
@@ -41,8 +40,6 @@ class ReminderState extends State<Reminder> {
   bool timecheck() {
     return DateTime.now().hour >= widget.t;
   }
-
-
 
   void run() {
     time = Timer.periodic(const Duration(seconds: 2), (timer) {
