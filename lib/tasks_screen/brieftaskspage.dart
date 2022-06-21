@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reminder_app/drawer/alert_d.dart';
+import '../drawer/alert_d.dart';
 
 import '../buttons/del_button.dart';
 import '../buttons/done_button.dart';

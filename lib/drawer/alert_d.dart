@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reminder_app/buttons/cancel_button.dart';
-import 'package:reminder_app/buttons/del_button.dart';
+import '../buttons/cancel_button.dart';
+import '../buttons/del_button.dart';
 
 
 
