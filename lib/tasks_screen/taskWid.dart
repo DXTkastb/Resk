@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reminder_app/drawer/alert_d.dart';
 
 import '../buttons/del_button.dart';
 import '../buttons/done_button.dart';
@@ -81,28 +82,15 @@ class _TaskWidgetState extends State<TaskWidget> {
                               DeleteButton(() {
                                 removeAnyScaffoldSnack(context);
                                 showDialog(
-                                    context: context,
-                                    builder: (_) => AlertDialog(
-                                          title: const Text('delete task?'),
-                                          actions: [
-                                            TextButton(
-                                                onPressed: () {
-                                                  Provider.of<TaskListFetch>(
-                                                          context,
-                                                          listen: false)
-                                                      .removeTask(taskData)
-                                                      .then((_) {
-                                                    Navigator.of(context).pop();
-                                                  });
-                                                },
-                                                child: const Text('delete')),
-                                            TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: const Text('cancel')),
-                                          ],
-                                        ));
+                                  context: context,
+                                  builder: (_) => CustomAlertD(Colors.deepPurple.shade100,         () {
+                                    Provider.of<TaskListFetch>(context, listen: false)
+                                        .removeTask(taskData)
+                                        .then((_) {
+                                      Navigator.of(context).pop();
+                                    });
+                                  },false),
+                                );
 
                                 // async {
                               }, Colors.deepPurple),

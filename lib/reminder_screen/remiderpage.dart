@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reminder_app/sync_tasks/taskSyncUpdate.dart';
+import '../sync_tasks/taskSyncUpdate.dart';
 import '../reminder_screen/reminders/Reminder.dart';
 
 class ReminderPage extends StatelessWidget {
@@ -32,24 +32,15 @@ class ReminderPage extends StatelessWidget {
           ),
         ),
         body: ListView(children: [
-          Consumer<SyncTaskUpdate>(
-            builder: (_,f,g){
-              return Builder(builder:(_){
-
-                return Text('dfdf');
-              } );
-            },
-          ),
+          const Text('Coming Soon'),
           Reminder(15),
-          Reminder(13),
-          Reminder(14),
         ])
     ,
     floatingActionButton:  FloatingActionButton(onPressed: () {
 
 
       Provider.of<SyncTaskUpdate>(context, listen: false).syncUpdate(true);Navigator.of(context).pop(); },
-    child: const Text('Press'),),
+    child: const Text('ADD'),),
     );
   }
 }

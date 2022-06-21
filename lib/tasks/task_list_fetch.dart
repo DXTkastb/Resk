@@ -32,7 +32,6 @@ class TaskListFetch extends ChangeNotifier {
   List<TaskData> get listtaskdata => _listtaskdata;
 
   Future<void> setTasks() async {
-    await Future.delayed(Duration(seconds: 3));
     TaskListFetch._rowList.addAll(trueList);
     _listtaskdata =
         (await DatabaseManager.databaseManagerInstance.queryDailyTaskRows())

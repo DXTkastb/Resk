@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reminder_app/drawer/alert_d.dart';
 
 import '../buttons/del_button.dart';
 import '../buttons/done_button.dart';
@@ -100,27 +101,17 @@ class BTaskCard extends StatelessWidget {
                               removeAnyScaffoldSnack(context);
                               showDialog(
                                   context: context,
-                                  builder: (_) => AlertDialog(
-                                        title: const Text('delete task?'),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () {
-                                                Provider.of<BtaskListFetch>(
-                                                        context,
-                                                        listen: false)
-                                                    .removeTask(bTaskData)
-                                                    .then((value) {
-                                                  Navigator.of(context).pop();
-                                                });
-                                              },
-                                              child: const Text('delete')),
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: const Text('cancel')),
-                                        ],
-                                      ));
+                                  builder: (_) => CustomAlertD(
+                                          Colors.teal.shade100, () {
+                                        () {
+                                          Provider.of<BtaskListFetch>(context,
+                                                  listen: false)
+                                              .removeTask(bTaskData)
+                                              .then((value) {
+                                            Navigator.of(context).pop();
+                                          });
+                                        };
+                                      }));
 
                               // async {
                             }, Colors.teal.shade800),
@@ -133,7 +124,9 @@ class BTaskCard extends StatelessWidget {
                     flex: 1,
                     child: Align(
                       alignment: Alignment.centerRight,
-                      child: DaysPoints(bTaskData.days, bTaskData.done),
+                      child: (bTaskData.days > 0)
+                          ? DaysPoints(bTaskData.days, bTaskData.done)
+                          : const SizedBox(),
                     ),
                   )
                 ],
@@ -153,7 +146,7 @@ class DaysPoints extends StatelessWidget {
   List<Widget> getWids() {
     List<Widget> list = [];
 
-    for (int i = 1; i <= days; i++) {
+    for (int i = 1; i <= days && i < 4; i++) {
       list.add(Container(
         width: 10,
         height: 10,
@@ -163,7 +156,14 @@ class DaysPoints extends StatelessWidget {
           color: Colors.yellow,
         ),
       ));
-
+    }
+    if (days > 4) {
+      list.add(Padding(
+          padding: const EdgeInsets.all(2),
+          child: Text(
+            '+${days - 4}',
+            style: const TextStyle(fontSize: 12),
+          )));
     }
 
     return list;

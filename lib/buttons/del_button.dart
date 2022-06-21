@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class DeleteButton extends StatelessWidget {
-  void Function()? onpressed;
+  final void Function()? onpressed;
   final Color color;
+  late final bool withText;
 
-  DeleteButton(this.onpressed, this.color);
+  DeleteButton(this.onpressed, this.color,[this.withText=false]);
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +17,8 @@ class DeleteButton extends StatelessWidget {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
           backgroundColor: MaterialStateProperty.all(color),
           // maximumSize: MaterialStateProperty.all(const Size(50, 50)),
-          minimumSize: MaterialStateProperty.all(const Size(35, 35)),
+          minimumSize: MaterialStateProperty.all( Size((withText)?80:35, 35)),
         ),
-        child: const Icon(Icons.delete, size: 13, color: Colors.white));
+        child: (withText)?const Text('delete'):const Icon(Icons.delete, size: 13, color: Colors.white));
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:reminder_app/sync_tasks/taskSyncUpdate.dart';
+import '../sync_tasks/taskSyncUpdate.dart';
 import '../drawer/custom_drawer.dart';
 import './add_screen/add_btask.dart';
 import '../add_screen/add_task.dart';
@@ -50,6 +50,7 @@ class MyApp extends StatelessWidget {
       ],
       builder: (a, b) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           routes: {
             '/addtask': (_) {
               return AddTask();

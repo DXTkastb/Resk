@@ -111,10 +111,11 @@ class TaskForm extends State<AddBTask> {
                                 initialDate: DateTime.now(),
                                 firstDate: DateTime.now(),
                                 lastDate: DateTime.now()
-                                    .add(const Duration(days: 5)))
+                                    .add(const Duration(days: 30)))
                                 .then((value) {
-                                  if(value!=null)
-                              date1 = value;
+
+                                    date1 = value??date1;
+
                             });
                           },
                           label: const Padding(
@@ -134,10 +135,10 @@ class TaskForm extends State<AddBTask> {
                                 initialDate: DateTime.now(),
                                 firstDate: DateTime.now(),
                                 lastDate: DateTime.now()
-                                    .add(const Duration(days: 5)))
+                                    .add(const Duration(days: 30)))
                                 .then((value) {
-                                  if(value!=null)
-                              date2 = value;
+
+                              date2 = value??date2;
                             });
                           },
                           label: const Padding(
@@ -174,7 +175,7 @@ class TaskForm extends State<AddBTask> {
                                               onPressed: () {
                                                 Navigator.of(ctx).pop();
                                               },
-                                              child: Text(
+                                              child: const Text(
                                                   'ok, configure again'))
                                         ],
                                       );
