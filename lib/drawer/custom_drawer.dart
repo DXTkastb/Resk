@@ -18,7 +18,7 @@ class CustomDrawerColumn extends StatelessWidget {
           child: TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pushNamed('/reminderpage');
+              // Navigator.of(context).pushNamed('/reminderpage');
             },
             style: ButtonStyle(
               shape: MaterialStateProperty.all(ContinuousRectangleBorder(

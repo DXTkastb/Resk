@@ -115,7 +115,6 @@ class MainAppState extends State<MainApp> {
 
   @override
   void didChangeDependencies() {
-    print('did change dependencies');
     super.didChangeDependencies();
   }
 
