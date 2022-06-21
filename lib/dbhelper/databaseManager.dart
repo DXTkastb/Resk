@@ -25,11 +25,11 @@ class DatabaseManager {
         onCreate: (db, version) async {
       return await db
           .execute(
-        'CREATE TABLE  IF NOT EXISTS BTASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DONE INTEGER NOT NULL, TDATE DATE)',
+        'CREATE TABLE  IF NOT EXISTS BTASK(ID INTEGER PRIMARY KEY,DAYS INTEGER DEFAULT 0 NOT NULL,TITLE TEXT NOT NULL, DONE INTEGER DEFAULT 0 NOT NULL, TDATE DATE)',
       )
           .then((value) async {
         return await db.execute(
-            'CREATE TABLE IF NOT EXISTS TASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DESCRIPTION TEXT NOT NULL, REACH INTEGER NOT NULL, SCORE INTEGER NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS TASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DESCRIPTION TEXT NOT NULL, REACH INTEGER DEFAULT 0 NOT NULL, SCORE INTEGER DEFAULT 0 NOT NULL)');
       }).then((value) async {
         return db
             .execute('CREATE TABLE CDATE(CD DATE NOT NULL)')
@@ -59,13 +59,13 @@ class DatabaseManager {
         .query('BTASK', where: 'TDATE = ?', whereArgs: ['DATE(\'$date\')']);
   }
 
-  Future<void> addBriefTask(List<BData> data) async {
+  Future<void> addBriefTask(List<BData> data,) async {
     Database db = await databaseManagerInstance.db;
 
     for (var element in data) {
       await db.insert('BTASK', {
+        'DAYS':element.x,
         'TITLE': element.title,
-        'DONE': 0,
         'TDATE': 'DATE(\'${element.date}\')'
       });
     }
@@ -86,7 +86,7 @@ class DatabaseManager {
 
   Future<List<Map<String, dynamic>>> queryDailyTaskRows() async {
     Database db = await databaseManagerInstance.db;
-    return await db.query('TASK');
+    return await db.query('TASK',orderBy: 'REACH');
   }
 
   Future<int> addDailyTask(TaskData taskData) async {
@@ -96,8 +96,6 @@ class DatabaseManager {
       'ID': taskData.index,
       'TITLE': taskData.title,
       'DESCRIPTION': taskData.description,
-      'REACH': 0,
-      'SCORE': 0,
     });
   }
 

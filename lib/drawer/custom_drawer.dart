@@ -57,15 +57,8 @@ class CustomDrawerColumn extends StatelessWidget {
                   end: Alignment.bottomCenter),
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(40), topRight: Radius.circular(40))),
-          margin: const EdgeInsets.only(top: 14),
-          child: Column(children: [
-            Container(
-              margin: const EdgeInsets.only(top: 28, left: 28, right: 28),
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(40)),
-              child: const SizedBox(width: 250,height: 350,),
-            ),
-          ],)
+          margin: const EdgeInsets.only(top: 14),alignment: Alignment.center,
+          child: const Text('Coming soon',style : TextStyle(color: Colors.white,fontSize: 12,fontWeight: FontWeight.bold)),
         )),
         Padding(
           padding: const EdgeInsets.only(),

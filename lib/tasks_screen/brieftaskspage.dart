@@ -69,63 +69,122 @@ class BTaskCard extends StatelessWidget {
           color: Colors.teal.shade100,
           margin: const EdgeInsets.only(left: 17, right: 17, top: 15),
           child: Padding(
-            padding:
-                const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  bTaskData.title,
-                  style: Theme.of(context).textTheme.headline1,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    DoneButton(() {
-                      Future.delayed(Duration.zero, () async {
-                        await updateTask(bTaskData.id, bTaskData.done);
-                        bTaskData.onUpdate();
-                      });
-                    }, (bTaskData.done) ? 1 : 0),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    DeleteButton(() {
-                      removeAnyScaffoldSnack(context);
-                      showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                                title: const Text('delete task?'),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Provider.of<BtaskListFetch>(context,
-                                                listen: false)
-                                            .removeTask(bTaskData)
-                                            .then((value) {
-                                          Navigator.of(context).pop();
-                                        });
-                                      },
-                                      child: const Text('delete')),
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('cancel')),
-                                ],
-                              ));
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 20, bottom: 10),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          bTaskData.title,
+                          style: Theme.of(context).textTheme.headline1,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            DoneButton(() {
+                              Future.delayed(Duration.zero, () async {
+                                await updateTask(bTaskData.id, bTaskData.done);
+                                bTaskData.onUpdate();
+                              });
+                            }, (bTaskData.done) ? 1 : 0),
+                            const SizedBox(
+                              width: 4,
+                            ),
+                            DeleteButton(() {
+                              removeAnyScaffoldSnack(context);
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                        title: const Text('delete task?'),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Provider.of<BtaskListFetch>(
+                                                        context,
+                                                        listen: false)
+                                                    .removeTask(bTaskData)
+                                                    .then((value) {
+                                                  Navigator.of(context).pop();
+                                                });
+                                              },
+                                              child: const Text('delete')),
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('cancel')),
+                                        ],
+                                      ));
 
-                      // async {
-                    }, Colors.teal.shade800),
-                  ],
-                )
-              ],
-            ),
-          ),
+                              // async {
+                            }, Colors.teal.shade800),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: DaysPoints(bTaskData.days, bTaskData.done),
+                    ),
+                  )
+                ],
+              )),
         );
       },
+    );
+  }
+}
+
+class DaysPoints extends StatelessWidget {
+  final bool done;
+  final int days;
+
+  const DaysPoints(this.days, this.done);
+
+  List<Widget> getWids() {
+    List<Widget> list = [];
+
+    for (int i = 1; i <= days; i++) {
+      list.add(Container(
+        width: 10,
+        height: 10,
+        margin: const EdgeInsets.all(2.5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          color: Colors.yellow,
+        ),
+      ));
+
+    }
+
+    return list;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Column(
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          margin: const EdgeInsets.all(2.5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            color: (!done) ? Colors.red : Colors.green,
+          ),
+        ),
+        ...getWids()
+      ],
     );
   }
 }

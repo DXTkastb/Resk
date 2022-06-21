@@ -113,7 +113,8 @@ class TaskForm extends State<AddBTask> {
                                 lastDate: DateTime.now()
                                     .add(const Duration(days: 5)))
                                 .then((value) {
-                              date1 = value!;
+                                  if(value!=null)
+                              date1 = value;
                             });
                           },
                           label: const Padding(
@@ -135,7 +136,8 @@ class TaskForm extends State<AddBTask> {
                                 lastDate: DateTime.now()
                                     .add(const Duration(days: 5)))
                                 .then((value) {
-                              date2 = value!;
+                                  if(value!=null)
+                              date2 = value;
                             });
                           },
                           label: const Padding(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:reminder_app/sync_tasks/taskSyncUpdate.dart';
 import '../drawer/custom_drawer.dart';
 import './add_screen/add_btask.dart';
 import '../add_screen/add_task.dart';
@@ -30,11 +31,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<SyncTaskUpdate>(
+          create: (BuildContext context) {
+            return SyncTaskUpdate();
+          },
+        ),
         ChangeNotifierProvider<TaskListFetch>(
           create: (BuildContext context) {
             return TaskListFetch();
           },
         ),
+
         ChangeNotifierProvider<BtaskListFetch>(
           create: (BuildContext context) {
             return BtaskListFetch();
@@ -57,14 +64,25 @@ class MyApp extends StatelessWidget {
               return ReminderPage();
             }
           },
-          home: LayoutBuilder(builder: (ctx, cons) {
-            return MainApp(cons);
-          }),
+          home: TT()
         );
       },
     );
   }
 }
+class TT extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement createState
+return LayoutBuilder(builder: (ctx, cons) {
+  return Consumer<SyncTaskUpdate>(builder: (ctx,stu,_){
+    return (MainApp(cons));
+  });
+});
+  }
+
+}
+
 
 class MainApp extends StatefulWidget {
   final BoxConstraints box;
@@ -73,6 +91,7 @@ class MainApp extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
+
     // TODO: implement createState
     return MainAppState();
   }
@@ -87,6 +106,7 @@ class MainAppState extends State<MainApp> {
 
   @override
   void initState() {
+    setFutures();
     height = widget.box.maxHeight;
 
     super.initState();
@@ -94,8 +114,7 @@ class MainAppState extends State<MainApp> {
 
   @override
   void didChangeDependencies() {
-    tasklist = Provider.of<TaskListFetch>(context, listen: false).setTasks();
-    btasklist = Provider.of<BtaskListFetch>(context, listen: false).setTasks();
+    print('did change dependencies');
     super.didChangeDependencies();
   }
 
@@ -103,8 +122,22 @@ class MainAppState extends State<MainApp> {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
   }
 
+  void setFutures(){
+    tasklist = Provider.of<TaskListFetch>(context, listen: false).setTasks();
+    btasklist = Provider.of<BtaskListFetch>(context, listen: false).setTasks();
+  }
+
+  void upFutures(){
+   bool x = Provider.of<SyncTaskUpdate>(context,listen: false).updateCall;
+  if(x){
+      setFutures();
+      Provider.of<SyncTaskUpdate>(context,listen: false).noUpdate();
+  }
+  }
+
   @override
   Widget build(BuildContext context) {
+    upFutures();
     // TODO: implement build
     return Scaffold(
       drawer:  SafeArea(
