@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../drawer/alert_d.dart';
 
 import '../buttons/del_button.dart';
 import '../buttons/done_button.dart';
 import '../dbhelper/databaseManager.dart';
+import '../drawer/alert_d.dart';
 import '../tasks/btask_list_fetch.dart';
 import '../tasks/btaskdata.dart';
 
@@ -101,16 +101,14 @@ class BTaskCard extends StatelessWidget {
                               removeAnyScaffoldSnack(context);
                               showDialog(
                                   context: context,
-                                  builder: (_) => CustomAlertD(
-                                          Colors.teal.shade100, () {
-                                        () {
-                                          Provider.of<BtaskListFetch>(context,
-                                                  listen: false)
-                                              .removeTask(bTaskData)
-                                              .then((value) {
-                                            Navigator.of(context).pop();
-                                          });
-                                        };
+                                  builder: (_) =>
+                                      CustomAlertD(Colors.teal.shade100, () {
+                                        Provider.of<BtaskListFetch>(context,
+                                                listen: false)
+                                            .removeTask(bTaskData)
+                                            .then((value) {
+                                          Navigator.of(context).pop();
+                                        });
                                       }));
 
                               // async {

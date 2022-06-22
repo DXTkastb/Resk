@@ -56,7 +56,7 @@ class DatabaseManager {
     Database db = await databaseManagerInstance.db;
     String date = DateFormat('yMMdd').format(DateTime.now());
     return await db
-        .query('BTASK', where: 'TDATE = ?', whereArgs: ['DATE(\'$date\')']);
+        .query('BTASK', where: 'TDATE = ?', whereArgs: ['DATE(\'$date\')'],orderBy: 'DONE');
   }
 
   Future<void> addBriefTask(List<BData> data,) async {

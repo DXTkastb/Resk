@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+
 import '../buttons/cancel_button.dart';
 import '../buttons/del_button.dart';
 
-
-
 class CustomAlertD extends StatelessWidget {
-  final bool isB ;
+  final bool isB;
+
   final Color color;
   final void Function()? onpressed;
-  const CustomAlertD(this.color,this.onpressed,[this.isB=true]);
+
+  const CustomAlertD(this.color, this.onpressed, [this.isB = true]);
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +29,7 @@ class CustomAlertD extends StatelessWidget {
       ),
       actions: [
         DeleteButton(
-       onpressed
-        , (isB)?Colors.teal.shade900:Colors.deepPurple, true),
+            onpressed, (isB) ? Colors.teal.shade900 : Colors.deepPurple, true),
         CancelButton(() {
           Navigator.of(context).pop();
         }),
