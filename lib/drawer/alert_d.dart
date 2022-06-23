@@ -29,7 +29,8 @@ class CustomAlertD extends StatelessWidget {
       ),
       actions: [
         DeleteButton(
-            onpressed, (isB) ? Colors.teal.shade900 : Colors.deepPurple, true),
+            onpressed, (isB) ? Colors.teal.shade900 : Colors.deepPurple,(){
+              }, true),
         CancelButton(() {
           Navigator.of(context).pop();
         }),

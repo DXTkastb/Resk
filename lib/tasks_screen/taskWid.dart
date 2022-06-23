@@ -79,7 +79,8 @@ class _TaskWidgetState extends State<TaskWidget> {
                               const SizedBox(
                                 width: 4,
                               ),
-                              DeleteButton(() {
+                              DeleteButton(
+                                      () {
                                 removeAnyScaffoldSnack(context);
                                 showDialog(
                                   context: context,
@@ -93,7 +94,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                                 );
 
                                 // async {
-                              }, Colors.deepPurple),
+                              }, Colors.deepPurple,(){}),
                             ],
                           )
                         ],

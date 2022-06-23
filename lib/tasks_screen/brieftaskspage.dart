@@ -97,22 +97,33 @@ class BTaskCard extends StatelessWidget {
                             const SizedBox(
                               width: 4,
                             ),
-                            DeleteButton(() {
-                              removeAnyScaffoldSnack(context);
-                              showDialog(
-                                  context: context,
-                                  builder: (_) =>
-                                      CustomAlertD(Colors.teal.shade100, () {
-                                        Provider.of<BtaskListFetch>(context,
-                                                listen: false)
-                                            .removeTask(bTaskData)
-                                            .then((value) {
-                                          Navigator.of(context).pop();
-                                        });
-                                      }));
+                            DeleteButton(
+                              () {
+                                removeAnyScaffoldSnack(context);
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        CustomAlertD(Colors.teal.shade100, () {
+                                          Provider.of<BtaskListFetch>(context,
+                                                  listen: false)
+                                              .removeTask(bTaskData)
+                                              .then((value) {
+                                            Navigator.of(context).pop();
+                                          });
+                                        }));
 
-                              // async {
-                            }, Colors.teal.shade800),
+                                // async {
+                              },
+                              Colors.teal.shade800,
+                              () {
+                                Provider.of<BtaskListFetch>(context,
+                                    listen: false)
+                                    .removeTasks(bTaskData.crid)
+                                   ;
+
+
+                              },
+                            ),
                           ],
                         )
                       ],

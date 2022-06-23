@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 
 class DeleteButton extends StatelessWidget {
   final void Function()? onpressed;
+  final void Function()? longPress;
   final Color color;
   late final bool withText;
 
-  DeleteButton(this.onpressed, this.color,[this.withText=false]);
+
+  DeleteButton(this.onpressed, this.color,this.longPress,[this.withText=false,]);
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return ElevatedButton(
+      onLongPress: longPress,
         onPressed: onpressed,
         style: ButtonStyle(
           shape: MaterialStateProperty.all(
