@@ -8,7 +8,7 @@ import '../tasks/taskData.dart';
 class DatabaseManager {
   static int firsttime = 0;
   static late final _db;
-  DateTime testDate = DateTime.now();
+
   static const taskDbName = 'Tasks.db';
 
   static const version = 1;
@@ -40,6 +40,7 @@ class DatabaseManager {
         });
       });
     }, onOpen: (db) async {
+      DateTime testDate = DateTime.now();
       List cdate = await db.query('CDATE');
 
       String nowtime = DateFormat('yMMdd').format(testDate);
@@ -55,6 +56,7 @@ class DatabaseManager {
   }
 
   Future<List<Map<String, dynamic>>> queryBriefTaskRows() async {
+    DateTime testDate = DateTime.now();
     Database db = await databaseManagerInstance.db;
     String date = DateFormat('yMMdd').format(testDate);
     return await db.query('BTASK',
