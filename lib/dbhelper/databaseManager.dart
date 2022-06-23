@@ -56,7 +56,7 @@ class DatabaseManager {
   }
 
   Future<List<Map<String, dynamic>>> queryBriefTaskRows() async {
-    DateTime testDate = DateTime.now();
+    DateTime testDate =  DateTime.now();
     Database db = await databaseManagerInstance.db;
     String date = DateFormat('yMMdd').format(testDate);
     return await db.query('BTASK',

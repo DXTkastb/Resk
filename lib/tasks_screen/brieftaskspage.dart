@@ -105,11 +105,13 @@ class BTaskCard extends StatelessWidget {
                                     builder: (_) =>
                                         CustomAlertD(Colors.teal.shade100, () {
                                           Provider.of<BtaskListFetch>(context,
-                                                  listen: false)
-                                              .removeTask(bTaskData)
-                                              .then((value) {
+                                              listen: false)
+                                              .removeTasks(bTaskData.crid) .then((value) {
                                             Navigator.of(context).pop();
-                                          });
+                                          })
+                                          ;
+
+
                                         }));
 
                                 // async {
@@ -118,8 +120,8 @@ class BTaskCard extends StatelessWidget {
                               () {
                                 Provider.of<BtaskListFetch>(context,
                                     listen: false)
-                                    .removeTasks(bTaskData.crid)
-                                   ;
+                                    .removeTask(bTaskData)
+                                ;
 
 
                               },
