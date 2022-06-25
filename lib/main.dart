@@ -172,7 +172,7 @@ class MainAppState extends State<MainApp> {
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
               )),
-              child: (_currentindex == 0)
+              child: (_currentindex == 1)
                   ? BriefTaskPage(
                       btasklist,
                     )
@@ -183,7 +183,7 @@ class MainAppState extends State<MainApp> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if (_currentindex == 1) {
+          if (_currentindex == 0) {
             removeAnyScaffoldSnack();
             Navigator.of(context).pushNamed('/addtask').then((value) {
               if (value == true) {
@@ -201,7 +201,7 @@ class MainAppState extends State<MainApp> {
             });
           }
         },
-        backgroundColor: (_currentindex == 0) ? Colors.teal : Colors.deepPurple,
+        backgroundColor: (_currentindex == 1) ? Colors.teal : Colors.deepPurple,
         child: const Icon(
           Icons.add_box_rounded,
         ),
@@ -217,7 +217,13 @@ class MainAppState extends State<MainApp> {
             });
           }
         },
-        items: [
+        items: [          BottomNavigationBarItem(
+            backgroundColor: Colors.deepPurple,
+            icon: Icon(
+              Icons.alarm_rounded,
+              size: height / 27,
+            ),
+            label: 'Daily Tasks'),
           BottomNavigationBarItem(
               backgroundColor: Colors.teal,
               icon: Icon(
@@ -225,13 +231,7 @@ class MainAppState extends State<MainApp> {
                 size: height / 27,
               ),
               label: 'Brief Tasks'),
-          BottomNavigationBarItem(
-              backgroundColor: Colors.deepPurple,
-              icon: Icon(
-                Icons.alarm_rounded,
-                size: height / 27,
-              ),
-              label: 'Daily Tasks'),
+
         ],
       ),
       appBar: AppBar(
@@ -240,7 +240,7 @@ class MainAppState extends State<MainApp> {
             borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(30),
                 bottomLeft: Radius.circular(30))),
-        backgroundColor: (_currentindex == 1) ? Colors.deepPurple : Colors.teal,
+        backgroundColor: (_currentindex == 0) ? Colors.deepPurple : Colors.teal,
         title:  Text(
           'Resk',
           style: TextStyle(fontSize:height/28, fontWeight: FontWeight.bold),

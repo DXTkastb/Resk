@@ -57,7 +57,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                           const SizedBox(
                             height: 10,
                           ),
-                          CardText(taskData.description, false),
+                          (taskData.description.isNotEmpty)?CardText(taskData.description, false):const SizedBox(),
                           const SizedBox(
                             height: 17,
                           ),

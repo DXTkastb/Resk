@@ -109,12 +109,6 @@ class TaskForm extends State<AddTask> {
                       focusNode: myFocusNode,
                       controller: tx2,
                       keyboardType: TextInputType.multiline,
-                      validator: (value) {
-                        if (value != null && value.isNotEmpty) {
-                          return null;
-                        }
-                        return 'enter description!';
-                      },
                       minLines: 2,
                       maxLines: 2,
                     ),
