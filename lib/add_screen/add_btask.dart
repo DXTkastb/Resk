@@ -57,7 +57,6 @@ class TaskForm extends State<AddBTask> {
       await Provider.of<BtaskListFetch>(ctx, listen: false)
           .addTask(tx1.text, date1, date2);
     }).then((value) async {
-      await Future.delayed(const Duration(seconds: 2));
       if (mounted) {
         Navigator.of(ctx).pop(true);
       }
