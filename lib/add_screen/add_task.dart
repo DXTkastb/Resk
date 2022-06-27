@@ -58,7 +58,7 @@ class TaskForm extends State<AddTask> {
     // TODO: implement build
     return (!processing)
         ? Scaffold(
-      backgroundColor: Colors.deepPurple.shade100,
+      backgroundColor: const Color.fromRGBO(197, 179, 255 , 1),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -74,13 +74,13 @@ class TaskForm extends State<AddTask> {
                   children: [
                     TextFormField(
                       maxLength: 30,
-                      decoration: InputDecoration(
-                          focusedBorder: const UnderlineInputBorder(),
-                          focusColor: Colors.teal.shade900,
-                          hoverColor: Colors.teal.shade900,
+                      decoration: const InputDecoration(
+                          focusedBorder: UnderlineInputBorder(),
+                          focusColor: Color.fromRGBO(42, 27, 60, 1),
+                          hoverColor: Color.fromRGBO(42, 27, 60, 1),
                           labelText: 'TITLE',
                           labelStyle: TextStyle(
-                              fontSize: 14, color: Colors.teal.shade900)),
+                              fontSize: 14, color: Color.fromRGBO(42, 27, 60, 1),)),
                       style: const TextStyle(
                           fontSize: 22, decoration: TextDecoration.none),
                       textInputAction: TextInputAction.next,
@@ -97,13 +97,13 @@ class TaskForm extends State<AddTask> {
                     ),
                     TextFormField(
                       maxLength: 100,
-                      decoration: InputDecoration(
-                          focusedBorder: const UnderlineInputBorder(),
-                          focusColor: Colors.teal.shade900,
-                          hoverColor: Colors.teal.shade900,
+                      decoration: const InputDecoration(
+                          focusedBorder: UnderlineInputBorder(),
+                          focusColor: Color.fromRGBO(42, 27, 70, 1),
+                          hoverColor:  Color.fromRGBO(42, 27, 70, 1),
                           labelText: 'DESCRIPTION',
-                          labelStyle: TextStyle(
-                              fontSize: 14, color: Colors.teal.shade900)),
+                          labelStyle:  TextStyle(
+                              fontSize: 14, color:Color.fromRGBO(42, 27, 70, 1),)),
                       style: const TextStyle(
                           fontSize: 22, decoration: TextDecoration.none),
                       focusNode: myFocusNode,

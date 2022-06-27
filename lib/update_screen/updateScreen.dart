@@ -56,7 +56,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
   Widget build(BuildContext context) {
     return (!updating)
         ?  Scaffold(
-      backgroundColor: Colors.deepPurpleAccent.shade100,
+      backgroundColor:  const Color.fromRGBO(197, 179, 255 , 1),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -70,14 +70,14 @@ class _UpdateScreenState extends State<UpdateScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextFormField(
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           labelText: 'TITLE',
-                          focusedBorder: const UnderlineInputBorder(),
+                          focusedBorder: UnderlineInputBorder(),
                           labelStyle: TextStyle(
                               fontSize: 14,
-                              color: Colors.deepPurple.shade800),
-                          focusColor: Colors.deepPurple.shade800,
-                          hoverColor: Colors.deepPurple.shade800,
+                              color: Color.fromRGBO(42, 27, 70, 1)),
+                          focusColor: Color.fromRGBO(42, 27, 70, 1),
+                          hoverColor: Color.fromRGBO(42, 27, 70, 1),
                         ),
                         controller: tx1,
                         maxLength: 30,
@@ -95,26 +95,20 @@ class _UpdateScreenState extends State<UpdateScreen> {
                         height: 10,
                       ),
                       TextFormField(
-                        decoration: InputDecoration(
-                            focusedBorder: const UnderlineInputBorder(),
-                            focusColor: Colors.deepPurple.shade800,
-                            hoverColor: Colors.deepPurple.shade800,
+                        decoration: const InputDecoration(
+                            focusedBorder: UnderlineInputBorder(),
+                            focusColor: Color.fromRGBO(42, 27, 70, 1),
+                            hoverColor: Color.fromRGBO(42, 27, 70, 1),
                             labelText: 'DESCRIPTION',
                             labelStyle: TextStyle(
                                 fontSize: 14,
-                                color: Colors.deepPurple.shade800)),
+                                color:Color.fromRGBO(42, 27, 70, 1),)),
                         controller: tx2,
                         style: Theme.of(context).textTheme.headline6,
                         keyboardType: TextInputType.multiline,
                         minLines: 2,
                         maxLines: 2,
                         maxLength: 100,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                          return null;
-                        },
                       ),
                       const SizedBox(
                         height: 10,
