@@ -9,9 +9,9 @@ import '../tasks/btask_list_fetch.dart';
 import '../tasks/btaskdata.dart';
 
 class BriefTaskPage extends StatelessWidget {
-  final Future btasklist;
+   final Future btasklist;
 
-  const BriefTaskPage(this.btasklist);
+   const BriefTaskPage(this.btasklist, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

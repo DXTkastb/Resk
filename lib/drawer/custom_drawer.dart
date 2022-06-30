@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomDrawerColumn extends StatelessWidget {
   final double height;
 
-  const CustomDrawerColumn(this.height);
+  const CustomDrawerColumn(this.height, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +57,13 @@ class CustomDrawerColumn extends StatelessWidget {
                   end: Alignment.bottomCenter),
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(40), topRight: Radius.circular(40))),
-          margin: const EdgeInsets.only(top: 14),alignment: Alignment.center,
-          child: const Text('Coming soon',style : TextStyle(color: Colors.white,fontSize: 12,fontWeight: FontWeight.bold)),
+          margin: const EdgeInsets.only(top: 14),
+          alignment: Alignment.center,
+          child: const Text('Coming soon',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold)),
         )),
         Padding(
           padding: const EdgeInsets.only(),

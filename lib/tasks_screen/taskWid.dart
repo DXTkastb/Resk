@@ -9,9 +9,9 @@ import '../tasks/taskData.dart';
 import '../tasks/task_list_fetch.dart';
 
 class TaskWidget extends StatefulWidget {
-  final double width;
+   final double width;
 
-  const TaskWidget(this.width);
+   const TaskWidget(this.width, {Key? key}) : super(key: key);
 
   @override
   State<TaskWidget> createState() => _TaskWidgetState();

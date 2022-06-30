@@ -4,7 +4,7 @@ class DoneButton extends StatelessWidget {
   void Function()? onpressed;
   final int done;
 
-  DoneButton(this.onpressed, this.done);
+  DoneButton(this.onpressed, this.done, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

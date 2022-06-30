@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CancelButton extends StatelessWidget {
   void Function()? onpressed;
 
-  CancelButton(this.onpressed);
+  CancelButton(this.onpressed, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

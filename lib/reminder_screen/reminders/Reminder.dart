@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class Reminder extends StatefulWidget {
   final int t;
 
-  Reminder(this.t);
+  const Reminder(this.t);
 
   @override
   State<StatefulWidget> createState() {

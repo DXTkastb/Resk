@@ -4,8 +4,8 @@ class AddButton extends StatelessWidget {
   void Function()? onpressed;
 
   AddButton(
-    this.onpressed,
-  );
+    this.onpressed, {Key? key}
+  ) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

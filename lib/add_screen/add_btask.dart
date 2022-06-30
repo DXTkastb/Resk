@@ -7,6 +7,8 @@ import '../buttons/cancel_button.dart';
 import '../tasks/btask_list_fetch.dart';
 
 class AddBTask extends StatefulWidget {
+  const AddBTask({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState

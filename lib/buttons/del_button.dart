@@ -4,10 +4,9 @@ class DeleteButton extends StatelessWidget {
   final void Function()? onpressed;
   final void Function()? longPress;
   final Color color;
-  late final bool withText;
+  final bool withText;
 
-
-  DeleteButton(this.onpressed, this.color,this.longPress,[this.withText=false,]);
+   const DeleteButton(this.onpressed, this.color,this.longPress,[this.withText=false,]);
 
   @override
   Widget build(BuildContext context) {

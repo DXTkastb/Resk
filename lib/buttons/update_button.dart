@@ -4,8 +4,8 @@ class UpdateButton extends StatelessWidget {
   void Function()? onpressed;
 
   UpdateButton(
-    this.onpressed,
-  );
+    this.onpressed, {Key? key}
+  ) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class UpdateButton extends StatelessWidget {
 class UpdateButtonIco extends StatelessWidget {
   void Function()? onpressed;
 
-  UpdateButtonIco(this.onpressed);
+  UpdateButtonIco(this.onpressed, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
