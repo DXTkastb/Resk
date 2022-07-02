@@ -5,15 +5,14 @@ import '../buttons/del_button.dart';
 
 class CustomAlertD extends StatelessWidget {
   final bool isB;
-
   final Color color;
   final void Function()? onpressed;
+  final int x;
 
-  const CustomAlertD(this.color, this.onpressed, [this.isB = true]);
+  const CustomAlertD(this.color, this.onpressed, [this.isB = true, this.x = 0]);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return AlertDialog(
       actionsAlignment: MainAxisAlignment.center,
       backgroundColor: color,
@@ -23,14 +22,18 @@ class CustomAlertD extends StatelessWidget {
           fontSize: 18,
           fontWeight: FontWeight.bold,
           color: Color.fromRGBO(61, 0, 0, 1.0)),
-      title: const Text(
-        'Delete Task?',
-        textAlign: TextAlign.center,
-      ),
+      title: (x == 0)
+          ? const Text(
+              'Delete Task?',
+              textAlign: TextAlign.center,
+            )
+          : const Text(
+              'Delete All Occurrences?',
+              textAlign: TextAlign.center,
+            ),
       actions: [
-        DeleteButton(
-            onpressed, (isB) ? Colors.teal.shade900 : Colors.deepPurple,(){
-              }, true),
+        DeleteButton(onpressed,
+            (isB) ? Colors.teal.shade900 : Colors.deepPurple, () {}, true),
         CancelButton(() {
           Navigator.of(context).pop();
         }),

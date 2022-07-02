@@ -9,9 +9,9 @@ import '../tasks/btask_list_fetch.dart';
 import '../tasks/btaskdata.dart';
 
 class BriefTaskPage extends StatelessWidget {
-   final Future btasklist;
+  final Future btasklist;
 
-   const BriefTaskPage(this.btasklist, {Key? key}) : super(key: key);
+  const BriefTaskPage(this.btasklist, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -101,29 +101,37 @@ class BTaskCard extends StatelessWidget {
                               () {
                                 removeAnyScaffoldSnack(context);
                                 showDialog(
-                                    context: context,
-                                    builder: (_) =>
-                                        CustomAlertD(Colors.teal.shade100, () {
-                                          Provider.of<BtaskListFetch>(context,
+                                  context: context,
+                                  builder: (_) => CustomAlertD(
+                                    Colors.teal.shade100,
+                                    () {
+                                      Provider.of<BtaskListFetch>(context,
                                               listen: false)
-                                              .removeTasks(bTaskData.crid) .then((value) {
-                                            Navigator.of(context).pop();
-                                          })
-                                          ;
-
-
-                                        }));
+                                          .removeTask(bTaskData)
+                                          .then((value) {
+                                        Navigator.of(context).pop();
+                                      });
+                                    },
+                                  ),
+                                );
 
                                 // async {
                               },
                               Colors.teal.shade800,
                               () {
-                                Provider.of<BtaskListFetch>(context,
-                                    listen: false)
-                                    .removeTask(bTaskData)
-                                ;
-
-
+                                showDialog(
+                                    context: context,
+                                    builder: (_) {
+                                      return CustomAlertD(Colors.red.shade200,
+                                          () {
+                                        Provider.of<BtaskListFetch>(context,
+                                                listen: false)
+                                            .removeTasks(bTaskData.crid)
+                                            .then((value) {
+                                          Navigator.of(context).pop();
+                                        });
+                                      }, true, 1);
+                                    });
                               },
                             ),
                           ],
