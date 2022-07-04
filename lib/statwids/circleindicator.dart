@@ -1,0 +1,33 @@
+import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:provider/provider.dart';
+
+import '../statwids/statProvider.dart';
+
+class CircleIndicator extends StatelessWidget {
+  final Future future;
+
+  const CircleIndicator(this.future);
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return FutureBuilder(
+      builder: (ctx, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Consumer<StatProvider>(builder: (ctx2, provider, _) {
+            return CircularPercentIndicator(
+              radius: 12,
+              lineWidth: 4,
+              percent: provider.getPercent(),
+              progressColor: Colors.deepOrangeAccent,
+              circularStrokeCap: CircularStrokeCap.round,
+            );
+          });
+        }
+        return const SizedBox();
+      },
+      future: future,
+    );
+  }
+}

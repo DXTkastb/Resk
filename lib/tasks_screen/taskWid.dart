@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../drawer/alert_d.dart';
 
 import '../buttons/del_button.dart';
 import '../buttons/done_button.dart';
 import '../buttons/update_button.dart';
+import '../drawer/alert_d.dart';
+import '../statwids/statProvider.dart';
 import '../tasks/taskData.dart';
 import '../tasks/task_list_fetch.dart';
 
 class TaskWidget extends StatefulWidget {
-   final double width;
+  final double width;
 
-   const TaskWidget(this.width, {Key? key}) : super(key: key);
+  const TaskWidget(this.width, {Key? key}) : super(key: key);
 
   @override
   State<TaskWidget> createState() => _TaskWidgetState();
@@ -31,7 +32,6 @@ class _TaskWidgetState extends State<TaskWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Padding(
       padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
       child: Card(
@@ -57,7 +57,9 @@ class _TaskWidgetState extends State<TaskWidget> {
                           const SizedBox(
                             height: 10,
                           ),
-                          (taskData.description.isNotEmpty)?CardText(taskData.description, false):const SizedBox(),
+                          (taskData.description.isNotEmpty)
+                              ? CardText(taskData.description, false)
+                              : const SizedBox(),
                           const SizedBox(
                             height: 17,
                           ),
@@ -65,8 +67,26 @@ class _TaskWidgetState extends State<TaskWidget> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               DoneButton(() async {
-                                taskData.didupdate(taskData.title,
-                                    taskData.description, toggleReach);
+                                await taskData
+                                    .didupdate(taskData.title,
+                                        taskData.description, toggleReach)
+                                    .then((_) async {
+                                  int s = Provider.of<StatProvider>(context,
+                                          listen: false)
+                                      .score;
+                                  int ts = Provider.of<StatProvider>(context,
+                                          listen: false)
+                                      .totalScore;
+                                  if (taskData.reached == 1) {
+                                    await Provider.of<StatProvider>(context,
+                                            listen: false)
+                                        .updateScore(s + 1, ts);
+                                  } else {
+                                    await Provider.of<StatProvider>(context,
+                                            listen: false)
+                                        .updateScore(s - 1, ts);
+                                  }
+                                });
                               }, (taskData.reached)),
                               const SizedBox(
                                 width: 4,
@@ -79,22 +99,47 @@ class _TaskWidgetState extends State<TaskWidget> {
                               const SizedBox(
                                 width: 4,
                               ),
-                              DeleteButton(
-                                      () {
+                              DeleteButton(() {
                                 removeAnyScaffoldSnack(context);
                                 showDialog(
                                   context: context,
-                                  builder: (_) => CustomAlertD(Colors.deepPurple.shade100,         () {
-                                    Provider.of<TaskListFetch>(context, listen: false)
-                                        .removeTask(taskData)
-                                        .then((_) {
+                                  builder: (_) => CustomAlertD(
+                                      Colors.deepPurple.shade100, () async {
+                                    await Future.delayed(Duration.zero,
+                                            () async {
                                       Navigator.of(context).pop();
-                                    });
-                                  },false),
-                                );
+                                      int s = Provider.of<StatProvider>(context,
+                                              listen: false)
+                                          .score;
+                                      int ts = Provider.of<StatProvider>(
+                                              context,
+                                              listen: false)
+                                          .totalScore;
 
+                                      if (taskData.reached == 1) {
+                                        await Provider.of<StatProvider>(context,
+                                                listen: false)
+                                            .updateScore(s - 1, ts - 1);
+                                      } else {
+                                        await Provider.of<StatProvider>(context,
+                                                listen: false)
+                                            .updateScore(s, ts - 1);
+                                      }
+                                      if (mounted) {
+                                        await Provider.of<TaskListFetch>(
+                                                context,
+                                                listen: false)
+                                            .removeTask(taskData);
+                                      }
+                                    })
+                                        //     .then((_) {
+                                        //   Navigator.of(context).pop();
+                                        // })
+                                        ;
+                                  }, false),
+                                );
                                 // async {
-                              }, Colors.deepPurple,(){}),
+                              }, Colors.deepPurple, () {}),
                             ],
                           )
                         ],

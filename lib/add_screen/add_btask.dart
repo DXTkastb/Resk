@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:reminder_app/functions/compareDates.dart';
 
 import '../buttons/add_button.dart';
 import '../buttons/cancel_button.dart';
@@ -55,7 +56,6 @@ class TaskForm extends State<AddBTask> {
     });
 
     Future.delayed(Duration.zero).then((_) async {
-      await Future.delayed(Duration.zero);
       await Provider.of<BtaskListFetch>(ctx, listen: false)
           .addTask(tx1.text, date1, date2);
     }).then((value) async {
@@ -101,7 +101,7 @@ class TaskForm extends State<AddBTask> {
                             },
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'enter title!';
+                                return 'enter description!';
                               }
                               return null;
                             },
@@ -126,7 +126,7 @@ class TaskForm extends State<AddBTask> {
                                       .then((value) {
                                     setState(() {
                                       date1 = value ?? date1;
-                                      if((date2.month<date1.month) || (date2.day<date1.day && date2.month==date1.month))
+                                      if(CompareDate.compareDates(date1, date2))
                                       date2 = date1;
                                     });
                                   });

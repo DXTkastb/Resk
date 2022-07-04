@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../sync_tasks/taskSyncUpdate.dart';
-import '../drawer/custom_drawer.dart';
+
 import './add_screen/add_btask.dart';
 import '../add_screen/add_task.dart';
 import '../dbhelper/databaseManager.dart';
+import '../drawer/custom_drawer.dart';
 import '../reminder_screen/remiderpage.dart';
+import '../statwids/circleindicator.dart';
+import '../statwids/statProvider.dart';
 import '../tasks/btask_list_fetch.dart';
 import '../tasks/task_list_fetch.dart';
 import '../tasks_screen/brieftaskspage.dart';
@@ -31,9 +35,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<SyncTaskUpdate>(
+        // ChangeNotifierProvider<SyncTaskUpdate>(
+        //   create: (BuildContext context) {
+        //     return SyncTaskUpdate();
+        //   },
+        // ),
+        ChangeNotifierProvider<StatProvider>(
           create: (BuildContext context) {
-            return SyncTaskUpdate();
+            return StatProvider();
           },
         ),
         ChangeNotifierProvider<TaskListFetch>(
@@ -41,7 +50,6 @@ class MyApp extends StatelessWidget {
             return TaskListFetch();
           },
         ),
-
         ChangeNotifierProvider<BtaskListFetch>(
           create: (BuildContext context) {
             return BtaskListFetch();
@@ -50,40 +58,41 @@ class MyApp extends StatelessWidget {
       ],
       builder: (a, b) {
         return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          routes: {
-            '/addtask': (_) {
-              return AddTask();
+            debugShowCheckedModeBanner: false,
+            routes: {
+              '/addtask': (_) {
+                return AddTask();
+              },
+              '/addbtask': (_) {
+                return AddBTask();
+              },
+              '/updatetask': (_) {
+                return UpdateScreen();
+              },
+              '/reminderpage': (_) {
+                return ReminderPage();
+              }
             },
-            '/addbtask': (_) {
-              return AddBTask();
-            },
-            '/updatetask': (_) {
-              return UpdateScreen();
-            },
-            '/reminderpage': (_) {
-              return ReminderPage();
-            }
-          },
-          home: TT()
-        );
+            home: CentralApp());
       },
     );
   }
 }
-class TT extends StatelessWidget{
+
+class CentralApp extends StatelessWidget {
+  const CentralApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement createState
-return LayoutBuilder(builder: (ctx, cons) {
-  return Consumer<SyncTaskUpdate>(builder: (ctx,stu,_){
-    return (MainApp(cons));
-  });
-});
+    return LayoutBuilder(builder: (ctx, cons) {
+      return (MainApp(cons));
+      // return Consumer<SyncTaskUpdate>(builder: (ctx, stu, _) {
+      //   return (MainApp(cons));
+      // });
+    });
   }
-
 }
-
 
 class MainApp extends StatefulWidget {
   final BoxConstraints box;
@@ -92,7 +101,6 @@ class MainApp extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-
     // TODO: implement createState
     return MainAppState();
   }
@@ -101,15 +109,33 @@ class MainApp extends StatefulWidget {
 class MainAppState extends State<MainApp> {
   late Future tasklist;
   late Future btasklist;
+  late Future stat;
   late double height;
-
+  DateTime today = DateTime.now();
+  late Timer tt;
   int _currentindex = 0;
 
   @override
   void initState() {
     setFutures();
     height = widget.box.maxHeight;
+    height = (height < 500) ? 500 : height;
 
+    var tomorrow = today.add(const Duration(days: 1));
+    Duration diff = DateTime(tomorrow.year, tomorrow.month, (tomorrow.day + 1))
+        .difference(today);
+    print(diff.inSeconds);
+    tt = Timer(diff, () {
+      Future.delayed(Duration.zero, () async {
+        await DatabaseManager.databaseManagerInstance
+            .onNewDay(DatabaseManager.databaseManagerInstance.db);
+      }).then((value) {
+        setState(() {
+          setFutures();
+          today = today;
+        });
+      });
+    });
     super.initState();
   }
 
@@ -122,27 +148,26 @@ class MainAppState extends State<MainApp> {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
   }
 
-  void setFutures(){
+  void setFutures() {
     tasklist = Provider.of<TaskListFetch>(context, listen: false).setTasks();
     btasklist = Provider.of<BtaskListFetch>(context, listen: false).setTasks();
+    stat = Provider.of<StatProvider>(context, listen: false).setScore();
   }
 
-  void upFutures(){
-   bool x = Provider.of<SyncTaskUpdate>(context,listen: false).updateCall;
-  if(x){
-      setFutures();
-      Provider.of<SyncTaskUpdate>(context,listen: false).noUpdate();
-  }
+  @override
+  void dispose() {
+    tt.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    upFutures();
-    // TODO: implement build
+    // upFutures();
+
     return Scaffold(
-      drawer:  SafeArea(
+      drawer: SafeArea(
         child: Drawer(
-          child:CustomDrawerColumn(height),
+          child: CustomDrawerColumn(height),
         ),
       ),
       body: LayoutBuilder(
@@ -217,13 +242,14 @@ class MainAppState extends State<MainApp> {
             });
           }
         },
-        items: [          BottomNavigationBarItem(
-            backgroundColor: Colors.deepPurple,
-            icon: Icon(
-              Icons.alarm_rounded,
-              size: height / 27,
-            ),
-            label: 'Daily Tasks'),
+        items: [
+          BottomNavigationBarItem(
+              backgroundColor: Colors.deepPurple,
+              icon: Icon(
+                Icons.alarm_rounded,
+                size: height / 27,
+              ),
+              label: 'Daily Tasks'),
           BottomNavigationBarItem(
               backgroundColor: Colors.teal,
               icon: Icon(
@@ -231,7 +257,6 @@ class MainAppState extends State<MainApp> {
                 size: height / 27,
               ),
               label: 'Brief Tasks'),
-
         ],
       ),
       appBar: AppBar(
@@ -241,9 +266,17 @@ class MainAppState extends State<MainApp> {
                 bottomRight: Radius.circular(30),
                 bottomLeft: Radius.circular(30))),
         backgroundColor: (_currentindex == 0) ? Colors.deepPurple : Colors.teal,
-        title:  Text(
-          'Resk',
-          style: TextStyle(fontSize:height/28, fontWeight: FontWeight.bold),
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Resk',
+              style:
+                  TextStyle(fontSize: height / 28, fontWeight: FontWeight.bold),
+            ),
+            const Expanded(child: SizedBox()),
+            (_currentindex == 0) ? CircleIndicator(stat) : const SizedBox(),
+          ],
         ),
       ),
     );

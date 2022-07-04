@@ -8,9 +8,7 @@ import '../tasks/taskData.dart';
 class DatabaseManager {
   static int firsttime = 0;
   static late final _db;
-
   static const taskDbName = 'Tasks.db';
-
   static const version = 1;
 
   get db => _db;
@@ -31,32 +29,73 @@ class DatabaseManager {
         return await db.execute(
             'CREATE TABLE IF NOT EXISTS TASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DESCRIPTION TEXT NOT NULL, REACH INTEGER DEFAULT 0 NOT NULL, SCORE INTEGER DEFAULT 0 NOT NULL)');
       }).then((value) async {
-        return db
-            .execute('CREATE TABLE CDATE(CD DATE NOT NULL)')
-            .then((value) async {
-          await db.insert('CDATE', {
-            'CD': 'DATE(\'${DateFormat('yMMdd').format(DateTime.now())}\')'
-          });
+        return db.execute('CREATE TABLE CDATE(CD DATE NOT NULL)');
+      }).then((value) async {
+        await db.insert('CDATE',
+            {'CD': 'DATE(\'${DateFormat('yMMdd').format(DateTime.now())}\')'});
+      }).then((value) async {
+        await db.execute(
+            'CREATE TABLE DAYDATA(SCORE INTEGER DEFAULT 0,TSCORE INTEGER DEFAULT 0,DAYDATE DATE PRIMARY KEY)');
+      }).then((value) async {
+        await db.insert('DAYDATA', {
+          'DAYDATE': 'DATE(\'${DateFormat('yMMdd').format(DateTime.now())}\')',
         });
       });
     }, onOpen: (db) async {
-      DateTime testDate = DateTime.now();
-      List cdate = await db.query('CDATE');
-
-      String nowtime = DateFormat('yMMdd').format(testDate);
-      if ((cdate[0]['CD'] as String).substring(6, 14) != nowtime) {
-        await db.delete('CDATE');
-        await db.insert('CDATE',
-            {'CD': 'DATE(\'${DateFormat('yMMdd').format(testDate)}\')'});
-        await db.update('TASK', {'REACH': 0});
-        await db.delete('BTASK',
-            where: 'TDATE < ?', whereArgs: ['DATE(\'$nowtime\')']);
-      }
+      await onNewDay(db);
     }, version: 3);
   }
 
+  Future<void> onNewDay(dbx) async {
+    DateTime testDate = DateTime.now();
+    List cdate = await dbx.query('CDATE');
+
+    String nowtime = DateFormat('yMMdd').format(testDate);
+    String lastDate = (cdate[0]['CD'] as String).substring(6, 14);
+    if (lastDate != nowtime) {
+      int lastTSCORE = (await dbx.query('DAYDATA',
+          where: 'DAYDATE = ?',
+          whereArgs: ['DATE($lastDate)']))[0]['TSCORE'] as int;
+      await dbx.insert('DAYDATA', {
+        'DAYDATE': 'DATE(\'${DateFormat('yMMdd').format(testDate)}\')',
+        'TSCORE': lastTSCORE
+      });
+      await dbx.update('TASK', {'REACH': 0});
+      await dbx.delete('BTASK',
+          where: 'TDATE < ?', whereArgs: ['DATE(\'$nowtime\')']);
+      await dbx.update(
+          'CDATE', {'CD': 'DATE(\'${DateFormat('yMMdd').format(testDate)}\')'});
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> scoreToday() async {
+    Database db = await databaseManagerInstance.db;
+    DateTime testDate = DateTime.now();
+    String date = DateFormat('yMMdd').format(testDate);
+    return await db.query(
+      'DAYDATA',
+      where: 'DAYDATE = ?',
+      whereArgs: ['DATE(\'$date\')'],
+    );
+  }
+
+  Future<int> upDateTodayScore(int s, int ts) async {
+    Database db = await databaseManagerInstance.db;
+    DateTime testDate = DateTime.now();
+    String date = DateFormat('yMMdd').format(testDate);
+    return await db.update(
+      'DAYDATA',
+      {
+        'SCORE': s,
+        'TSCORE': ts,
+      },
+      where: 'DAYDATE = ?',
+      whereArgs: ['DATE(\'$date\')'],
+    );
+  }
+
   Future<List<Map<String, dynamic>>> queryBriefTaskRows() async {
-    DateTime testDate =  DateTime.now();
+    DateTime testDate = DateTime.now();
     Database db = await databaseManagerInstance.db;
     String date = DateFormat('yMMdd').format(testDate);
     return await db.query('BTASK',
@@ -125,17 +164,11 @@ class DatabaseManager {
         'TASK',
         {
           'TITLE': title,
-          // taskData.title,
           'DESCRIPTION': description,
-          // taskData.description,
           'REACH': reach,
           'SCORE': score,
-          // (taskData.reached) ? 1 : 0,
         },
         where: 'ID = ?',
-        whereArgs: [id]
-        // [taskData.index!]
-
-        );
+        whereArgs: [id]);
   }
 }

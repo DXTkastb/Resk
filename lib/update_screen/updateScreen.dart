@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../buttons/cancel_button.dart';
 import '../buttons/done_button.dart';
 import '../buttons/update_button.dart';
+import '../statwids/statProvider.dart';
 import '../tasks/taskData.dart';
 
 class UpdateScreen extends StatefulWidget {
@@ -24,8 +26,20 @@ class _UpdateScreenState extends State<UpdateScreen> {
       updating = !updating;
     });
     if (mounted) {
-      await task.didupdate(tx1.text, tx2.text, donebutton);
-      Navigator.of(context).pop();
+      int s = Provider.of<StatProvider>(context, listen: false).score;
+      int ts = Provider.of<StatProvider>(context, listen: false).totalScore;
+      if (donebutton != task.reached) {
+        if (donebutton == 1)
+          await Provider.of<StatProvider>(context, listen: false)
+              .updateScore(s + 1, ts);
+        else
+          await Provider.of<StatProvider>(context, listen: false)
+              .updateScore(s - 1, ts);
+      }
+
+      await task
+          .didupdate(tx1.text, tx2.text, donebutton)
+          .then((value) => Navigator.of(context).pop());
     }
   }
 

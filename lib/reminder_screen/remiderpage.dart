@@ -31,8 +31,8 @@ class ReminderPage extends StatelessWidget {
             ),
           ),
         ),
-        body: ListView(children: [
-          const Text('Coming Soon'),
+        body: ListView(children: const [
+          Text('Coming Soon'),
           Reminder(15),
         ])
     ,

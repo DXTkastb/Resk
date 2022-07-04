@@ -48,6 +48,8 @@ class BriefTaskPage extends StatelessWidget {
 }
 
 class BTaskCard extends StatelessWidget {
+  const BTaskCard({Key? key}) : super(key: key);
+
   void removeAnyScaffoldSnack(BuildContext context) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
   }
@@ -105,12 +107,10 @@ class BTaskCard extends StatelessWidget {
                                   builder: (_) => CustomAlertD(
                                     Colors.teal.shade100,
                                     () {
+                                      Navigator.of(context).pop();
                                       Provider.of<BtaskListFetch>(context,
                                               listen: false)
-                                          .removeTask(bTaskData)
-                                          .then((value) {
-                                        Navigator.of(context).pop();
-                                      });
+                                          .removeTask(bTaskData);
                                     },
                                   ),
                                 );
@@ -124,12 +124,10 @@ class BTaskCard extends StatelessWidget {
                                     builder: (_) {
                                       return CustomAlertD(Colors.red.shade200,
                                           () {
+                                        Navigator.of(context).pop();
                                         Provider.of<BtaskListFetch>(context,
                                                 listen: false)
-                                            .removeTasks(bTaskData.crid)
-                                            .then((value) {
-                                          Navigator.of(context).pop();
-                                        });
+                                            .removeTasks(bTaskData.crid);
                                       }, true, 1);
                                     });
                               },
@@ -181,7 +179,7 @@ class DaysPoints extends StatelessWidget {
           padding: const EdgeInsets.all(2),
           child: Text(
             '+${days - 4}',
-            style: const TextStyle(fontSize: 12),
+            style: const TextStyle(fontSize: 11),
           )));
     }
 
