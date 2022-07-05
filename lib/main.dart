@@ -129,6 +129,7 @@ class MainAppState extends State<MainApp> {
     tt = Timer(diff, () async {
       if (_key.currentState!.isDrawerOpen) {
         Navigator.of(context).pop();
+        await Future.delayed(const Duration(milliseconds: 500));
       }
       setState(() {
         loading = true;
