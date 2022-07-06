@@ -27,7 +27,6 @@ class ReminderButton extends StatelessWidget {
                           await NotificationApi.deleteNotifications(taskData.index);
             }
 
-
             await NotificationApi.launchPeriodicNotification(taskData.index, taskData.title, taskData.description, DateTime(dt.year,dt.month,dt.day,timeOfDay.hour,timeOfDay.minute));
 
             if(taskData.rem==0) {
