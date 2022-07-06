@@ -36,7 +36,7 @@ class BriefTaskPage extends StatelessWidget {
                     return ChangeNotifierProvider<BTaskData>.value(
                       value: blist.listtaskdata[index],
                       builder: (ctx, element) {
-                        return BTaskCard();
+                        return const BTaskCard();
                       },
                     );
                   });

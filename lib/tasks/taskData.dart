@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../dbhelper/databaseManager.dart';
 
 class TaskData extends ChangeNotifier {
@@ -7,14 +8,22 @@ class TaskData extends ChangeNotifier {
   String description;
   int reached;
   int score;
+  int rem;
 
-  TaskData(this.index, this.title, this.description, this.reached, this.score);
+  TaskData(this.index, this.title, this.description, this.reached, this.score,
+      this.rem);
 
-  Future<void> didupdate(
-    String titl,
-    String descriptio,
-    int reach,
-  ) async {
+  Future<void> didAddReminder(int r) async {
+    if(r!=rem)
+    {
+      await DatabaseManager.databaseManagerInstance
+          .updateDailyTaskRem(index, r);
+      rem=r;
+      notifyListeners();
+    }
+  }
+
+  Future<void> didupdate(String titl, String descriptio, int reach) async {
     if (reach == 1 && reached == 0) {
       score++;
     } else if (reach == 0 && reached == 1) {
@@ -22,13 +31,12 @@ class TaskData extends ChangeNotifier {
     }
 
     await DatabaseManager.databaseManagerInstance
-        .updateDailyTask(index, titl, descriptio, reach, score)
-        .then((value) {
-      title = titl;
-      description = descriptio;
-      reached = reach;
-      score = score;
-      notifyListeners();
-    });
+        .updateDailyTask(index, titl, descriptio, reach, score);
+
+    title = titl;
+    description = descriptio;
+    reached = reach;
+    score = score;
+    notifyListeners();
   }
 }

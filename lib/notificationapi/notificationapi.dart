@@ -42,8 +42,7 @@ class NotificationApi {
         android: AndroidNotificationDetails(
           'taskChannel',
           'task',
-          priority: Priority.high,
-          ongoing: true,
+          priority: Priority.high, ,
           colorized: true,
           subText: 'keep going!',
           color: const Color.fromARGB(255, 66, 165, 245),

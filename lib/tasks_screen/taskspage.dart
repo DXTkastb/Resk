@@ -5,13 +5,12 @@ import '../tasks/task_list_fetch.dart';
 import './taskWid.dart';
 
 class TasksPage extends StatelessWidget {
-  final Future tasklist;
+   final Future tasklist;
 
-  const TasksPage(this.tasklist);
+   const TasksPage(this.tasklist, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
     // TODO: implement build
     return FutureBuilder(
       future: tasklist,
@@ -33,7 +32,7 @@ class TasksPage extends StatelessWidget {
                   return ChangeNotifierProvider<TaskData>.value(
                     value: tlist.listtaskdata[index],
                     builder: (_, tt) {
-                      return TaskWidget(width);
+                      return const TaskWidget();
                     },
                   );
                 });

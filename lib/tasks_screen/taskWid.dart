@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reminder_app/buttons/reminderbutton.dart';
 
 import '../buttons/del_button.dart';
 import '../buttons/done_button.dart';
@@ -10,9 +11,9 @@ import '../tasks/taskData.dart';
 import '../tasks/task_list_fetch.dart';
 
 class TaskWidget extends StatefulWidget {
-  final double width;
 
-  const TaskWidget(this.width, {Key? key}) : super(key: key);
+
+  const TaskWidget({Key? key}) : super(key: key);
 
   @override
   State<TaskWidget> createState() => _TaskWidgetState();
@@ -40,130 +41,138 @@ class _TaskWidgetState extends State<TaskWidget> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: Padding(
           padding:
-              const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 15),
+          const EdgeInsets.only(top: 21, left: 21, right: 21, bottom: 15),
           child: Consumer<TaskData>(
             builder: (ctx, taskData, child) {
               int toggleReach = (taskData.reached == 0) ? 1 : 0;
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 20, top: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CardText(taskData.title, true),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          (taskData.description.isNotEmpty)
-                              ? CardText(taskData.description, false)
-                              : const SizedBox(),
-                          const SizedBox(
-                            height: 17,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              DoneButton(() async {
-                                await taskData
-                                    .didupdate(taskData.title,
-                                        taskData.description, toggleReach)
-                                    .then((_) async {
-                                  int s = Provider.of<StatProvider>(context,
-                                          listen: false)
-                                      .score;
-                                  int ts = Provider.of<StatProvider>(context,
-                                          listen: false)
-                                      .totalScore;
-                                  if (taskData.reached == 1) {
-                                    await Provider.of<StatProvider>(context,
-                                            listen: false)
-                                        .updateScore(s + 1, ts);
-                                  } else {
-                                    await Provider.of<StatProvider>(context,
-                                            listen: false)
-                                        .updateScore(s - 1, ts);
-                                  }
-                                });
-                              }, (taskData.reached)),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              UpdateButtonIco(() {
-                                removeAnyScaffoldSnack(context);
-                                Navigator.of(context).pushNamed('/updatetask',
-                                    arguments: taskData);
-                              }),
-                              const SizedBox(
-                                width: 4,
-                              ),
-                              DeleteButton(() {
-                                removeAnyScaffoldSnack(context);
-                                showDialog(
-                                  context: context,
-                                  builder: (_) => CustomAlertD(
-                                      Colors.deepPurple.shade100, () async {
-                                    await Future.delayed(Duration.zero,
-                                            () async {
-                                      Navigator.of(context).pop();
-                                      int s = Provider.of<StatProvider>(context,
-                                              listen: false)
-                                          .score;
-                                      int ts = Provider.of<StatProvider>(
-                                              context,
-                                              listen: false)
-                                          .totalScore;
-
-                                      if (taskData.reached == 1) {
-                                        await Provider.of<StatProvider>(context,
-                                                listen: false)
-                                            .updateScore(s - 1, ts - 1);
-                                      } else {
-                                        await Provider.of<StatProvider>(context,
-                                                listen: false)
-                                            .updateScore(s, ts - 1);
-                                      }
-                                      if (mounted) {
-                                        await Provider.of<TaskListFetch>(
-                                                context,
-                                                listen: false)
-                                            .removeTask(taskData);
-                                      }
-                                    })
-                                        //     .then((_) {
-                                        //   Navigator.of(context).pop();
-                                        // })
-                                        ;
-                                  }, false),
-                                );
-                                // async {
-                              }, Colors.deepPurple, () {}),
-                            ],
-                          )
-                        ],
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CardText(taskData.title, true),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            (taskData.description.isNotEmpty)
+                                ? CardText(taskData.description, false)
+                                : const SizedBox(),
+                          ],
+                        ),
                       ),
-                    ),
+                      const SizedBox(
+                        width: 17,
+                      ),
+                      Container(
+                        // width: width*0.2,
+                        // margin: const EdgeInsets.only(top: 5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: getColors(taskData.score),
+                          ),
+                        ),
+
+                        child: Center(
+                            child: Padding(
+                                padding: const EdgeInsets.all(13),
+                                child: Text(
+                                  '${taskData.score}',
+                                  style: Theme.of(context).textTheme.headline2,
+                                ))),
+                      ),
+                    ],
                   ),
-                  Container(
-                    // width: width*0.2,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: getColors(taskData.score),
+                  const SizedBox(
+                    height: 17,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      DoneButton(() async {
+                        await taskData
+                            .didupdate(taskData.title, taskData.description,
+                          toggleReach,)
+                            .then((_) async {
+                          int s =
+                              Provider.of<StatProvider>(context, listen: false)
+                                  .score;
+                          int ts =
+                              Provider.of<StatProvider>(context, listen: false)
+                                  .totalScore;
+                          if (taskData.reached == 1) {
+                            await Provider.of<StatProvider>(context,
+                                listen: false)
+                                .updateScore(s + 1, ts);
+                          } else {
+                            await Provider.of<StatProvider>(context,
+                                listen: false)
+                                .updateScore(s - 1, ts);
+                          }
+                        });
+                      }, (taskData.reached)),
+                      const SizedBox(
+                        width: 4,
                       ),
-                    ),
+                      UpdateButtonIco(() {
+                        removeAnyScaffoldSnack(context);
+                        Navigator.of(context)
+                            .pushNamed('/updatetask', arguments: taskData);
+                      }),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      DeleteButton(() {
+                        removeAnyScaffoldSnack(context);
+                        showDialog(
+                          context: context,
+                          builder: (_) => CustomAlertD(
+                              Colors.deepPurple.shade100, () async {
+                            await Future.delayed(Duration.zero, () async {
+                              Navigator.of(context).pop();
+                              int s = Provider.of<StatProvider>(context,
+                                  listen: false)
+                                  .score;
+                              int ts = Provider.of<StatProvider>(context,
+                                  listen: false)
+                                  .totalScore;
 
-                    child: Center(
-                        child: Padding(
-                            padding: const EdgeInsets.all(13),
-                            child: Text(
-                              '${taskData.score}',
-                              style: Theme.of(context).textTheme.headline2,
-                            ))),
+                              if (taskData.reached == 1) {
+                                await Provider.of<StatProvider>(context,
+                                    listen: false)
+                                    .updateScore(s - 1, ts - 1);
+                              } else {
+                                await Provider.of<StatProvider>(context,
+                                    listen: false)
+                                    .updateScore(s, ts - 1);
+                              }
+                              if (mounted) {
+                                await Provider.of<TaskListFetch>(context,
+                                    listen: false)
+                                    .removeTask(taskData);
+                              }
+                            })
+                            //     .then((_) {
+                            //   Navigator.of(context).pop();
+                            // })
+                                ;
+                          }, false),
+                        );
+                        // async {
+                      }, Colors.deepPurple, () {}),
+                      Expanded(
+                          child: Align(
+                              alignment: Alignment.centerRight,
+                              child: ReminderButton(taskData)))
+                    ],
                   )
                 ],
               );
