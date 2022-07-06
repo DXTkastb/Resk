@@ -16,14 +16,15 @@ import '../tasks/task_list_fetch.dart';
 import '../tasks_screen/brieftaskspage.dart';
 import '../tasks_screen/taskspage.dart';
 import '../update_screen/updateScreen.dart';
+import '../notificationapi/notificationapi.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  DatabaseManager databaseManager = DatabaseManager.databaseManagerInstance;
 
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  DatabaseManager databaseManager = DatabaseManager.databaseManagerInstance;
   await databaseManager.initiateTask();
+  await NotificationApi.init();
   runApp(const MyApp());
 }
 
@@ -73,7 +74,7 @@ class MyApp extends StatelessWidget {
                 return ReminderPage();
               }
             },
-            home: CentralApp());
+            home: const CentralApp());
       },
     );
   }
