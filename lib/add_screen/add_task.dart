@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reminder_app/notificationapi/notificationapi.dart';
 import 'package:reminder_app/statwids/statProvider.dart';
 
 import '../buttons/add_button.dart';
 import '../buttons/cancel_button.dart';
+import '../functions/functions.dart';
 import '../tasks/task_list_fetch.dart';
 
 class AddTask extends StatefulWidget {
@@ -22,7 +24,7 @@ class TaskForm extends State<AddTask> {
   TextEditingController tx1 = TextEditingController();
 
   TextEditingController tx2 = TextEditingController();
-
+  int reminderText = 9999;
   late FocusNode myFocusNode;
 
   bool processing = false;
@@ -41,24 +43,18 @@ class TaskForm extends State<AddTask> {
     super.dispose();
   }
 
-  void onadd(BuildContext ctx) {
+  Future<void> onadd(BuildContext ctx) async {
     setState(() {
       processing = true;
     });
+    await Provider.of<TaskListFetch>(ctx, listen: false)
+        .addTask(tx1.text, tx2.text, reminderText);
+    int s = Provider.of<StatProvider>(context, listen: false).score;
+    int ts = Provider.of<StatProvider>(context, listen: false).totalScore + 1;
+    await Provider.of<StatProvider>(context, listen: false).updateScore(s, ts);
 
-    Future.delayed(Duration.zero).then((_) async {
-      await Provider.of<TaskListFetch>(ctx, listen: false)
-          .addTask(tx1.text, tx2.text);
-    }).then((value) async {
-      int s = Provider.of<StatProvider>(context, listen: false).score;
-      int ts = Provider.of<StatProvider>(context, listen: false).totalScore + 1;
-      await Provider.of<StatProvider>(context, listen: false)
-          .updateScore(s, ts);
-    }).then((value) async {
-      if (mounted) {
-        Navigator.of(ctx).pop(true);
-      }
-    });
+    await Future.delayed(const Duration(seconds: 3));
+    Navigator.of(ctx).pop(true);
   }
 
   @override
@@ -123,7 +119,59 @@ class TaskForm extends State<AddTask> {
                             maxLines: 2,
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(30),
+                            padding: const EdgeInsets.only(top: 10),
+                            child: ElevatedButton(
+                                onPressed: () async {
+                                  TimeOfDay? timeofday = await showTimePicker(
+                                      context: context,
+                                      initialTime:
+                                          const TimeOfDay(hour: 0, minute: 0));
+                                  if (timeofday != null) {
+                                    int timeValue =
+                                        timeofday.hour * 100 + timeofday.minute;
+                                    if (reminderText != timeValue) {
+                                      setState(() {
+                                        reminderText = timeValue;
+                                      });
+                                    }
+                                  }
+                                },
+                                onLongPress: () {
+                                  setState(() {
+                                    reminderText = 9999;
+                                  });
+                                },
+                                style: ButtonStyle(
+                                    minimumSize: MaterialStateProperty.all(
+                                        const Size(80, 35)),
+                                    shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10))),
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Colors.black)),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.access_time_rounded,
+                                        size: 13, color: Colors.white),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      (reminderText == 9999)
+                                          ? 'Add Reminder'
+                                          : Functions.getTimeFromInteger(
+                                              reminderText),
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                )),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(20),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [

@@ -11,6 +11,7 @@ class ReminderButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(taskData.rem);
     return GestureDetector(
       onTap: () async {
         Functions.removeAnyScaffoldSnack(context);

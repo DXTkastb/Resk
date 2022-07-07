@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../notificationapi/notificationapi.dart';
 import '../tasks/taskData.dart';
 
 import '../dbhelper/databaseManager.dart';
@@ -6,6 +7,9 @@ import '../dbhelper/databaseManager.dart';
 class TaskListFetch extends ChangeNotifier {
   late List<TaskData> _listtaskdata;
   static final List<int> _rowList = [];
+
+  static List<int> get rowList => _rowList;
+
   static const List<int> trueList = [
     1,
     2,
@@ -45,17 +49,26 @@ class TaskListFetch extends ChangeNotifier {
 
   Future<void> addTask(
     String title,
-    String description,
+    String description,[int rr=9999]
   ) async {
     if (TaskListFetch._rowList.isNotEmpty) {
-      var tsk = TaskData(TaskListFetch._rowList.last, title, description, 0, 0);
-      (await DatabaseManager.databaseManagerInstance
+      var tsk = TaskData(TaskListFetch._rowList.last, title, description, 0, 0,rr);
+      if(rr!=9999) {
+        var nowTime = DateTime.now();
+        await NotificationApi.launchPeriodicNotification(
+          TaskListFetch._rowList.last,
+          title,
+            description,
+          DateTime(nowTime.year, nowTime.month, nowTime.day, rr ~/ 100,
+              rr % 100));
+      }
+      await DatabaseManager.databaseManagerInstance
           .addDailyTask(tsk)
-          .then((_) {
-        _listtaskdata.add(tsk);
-        TaskListFetch._rowList.removeLast();
-        notifyListeners();
-      }));
+          ;
+      _listtaskdata.add(tsk);
+      TaskListFetch._rowList.removeLast();
+      notifyListeners();
+
     }
   }
 
