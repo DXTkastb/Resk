@@ -62,17 +62,17 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             routes: {
               '/addtask': (_) {
-                return AddTask();
+                return const AddTask();
               },
               '/addbtask': (_) {
-                return AddBTask();
+                return const AddBTask();
               },
               '/updatetask': (_) {
-                return UpdateScreen();
+                return const UpdateScreen();
               },
-              '/reminderpage': (_) {
-                return ReminderPage();
-              }
+              // '/reminderpage': (_) {
+              //   return ReminderPage();
+              // }
             },
             home: const CentralApp());
       },

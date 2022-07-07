@@ -11,17 +11,14 @@ class TaskData extends ChangeNotifier {
   int rem;
 
   TaskData(this.index, this.title, this.description, this.reached, this.score,
-      this.rem);
+      [this.rem=9999]);
 
   Future<void> didAddReminder(int r) async {
-    if(r!=rem)
-    {
-      await DatabaseManager.databaseManagerInstance
+    await DatabaseManager.databaseManagerInstance
           .updateDailyTaskRem(index, r);
       rem=r;
       notifyListeners();
     }
-  }
 
   Future<void> didupdate(String titl, String descriptio, int reach) async {
     if (reach == 1 && reached == 0) {

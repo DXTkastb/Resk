@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:reminder_app/functions/compareDates.dart';
 
 import '../buttons/add_button.dart';
 import '../buttons/cancel_button.dart';
+import '../functions/functions.dart';
 import '../tasks/btask_list_fetch.dart';
 
 class AddBTask extends StatefulWidget {
@@ -126,8 +126,10 @@ class TaskForm extends State<AddBTask> {
                                       .then((value) {
                                     setState(() {
                                       date1 = value ?? date1;
-                                      if(CompareDate.compareDates(date1, date2))
-                                      date2 = date1;
+                                      if (Functions.compareDates(
+                                          date1, date2)) {
+                                        date2 = date1;
+                                      }
                                     });
                                   });
                                 },

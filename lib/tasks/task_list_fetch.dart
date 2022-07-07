@@ -48,7 +48,7 @@ class TaskListFetch extends ChangeNotifier {
     String description,
   ) async {
     if (TaskListFetch._rowList.isNotEmpty) {
-      var tsk = TaskData(TaskListFetch._rowList.last, title, description, 0, 0,0);
+      var tsk = TaskData(TaskListFetch._rowList.last, title, description, 0, 0);
       (await DatabaseManager.databaseManagerInstance
           .addDailyTask(tsk)
           .then((_) {

@@ -9,7 +9,7 @@ class ReminderPage extends StatelessWidget {
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          title: const Text('appbasr'),
+          title: const Text('appbar'),
         ),
         drawer: SafeArea(
           child: Drawer(

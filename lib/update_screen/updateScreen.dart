@@ -8,6 +8,8 @@ import '../statwids/statProvider.dart';
 import '../tasks/taskData.dart';
 
 class UpdateScreen extends StatefulWidget {
+  const UpdateScreen({Key? key}) : super(key: key);
+
   @override
   State<UpdateScreen> createState() => _UpdateScreenState();
 }
@@ -29,12 +31,13 @@ class _UpdateScreenState extends State<UpdateScreen> {
       int s = Provider.of<StatProvider>(context, listen: false).score;
       int ts = Provider.of<StatProvider>(context, listen: false).totalScore;
       if (donebutton != task.reached) {
-        if (donebutton == 1)
+        if (donebutton == 1) {
           await Provider.of<StatProvider>(context, listen: false)
               .updateScore(s + 1, ts);
-        else
+        } else {
           await Provider.of<StatProvider>(context, listen: false)
               .updateScore(s - 1, ts);
+        }
       }
 
       await task

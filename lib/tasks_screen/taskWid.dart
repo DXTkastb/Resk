@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reminder_app/buttons/reminderbutton.dart';
 
-import '../buttons/del_button.dart';
-import '../buttons/done_button.dart';
-import '../buttons/update_button.dart';
-import '../drawer/alert_d.dart';
-import '../statwids/statProvider.dart';
-import '../tasks/taskData.dart';
-import '../tasks/task_list_fetch.dart';
+import '../functions/functions.dart';
+import '/buttons/del_button.dart';
+import '/buttons/done_button.dart';
+import '/buttons/reminderbutton.dart';
+import '/buttons/update_button.dart';
+import '/drawer/alert_d.dart';
+import '/notificationapi/notificationapi.dart';
+import '/statwids/statProvider.dart';
+import '/tasks/taskData.dart';
+import '/tasks/task_list_fetch.dart';
 
 class TaskWidget extends StatefulWidget {
-
-
   const TaskWidget({Key? key}) : super(key: key);
 
   @override
@@ -27,10 +27,6 @@ class _TaskWidgetState extends State<TaskWidget> {
     ];
   }
 
-  void removeAnyScaffoldSnack(BuildContext context) {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -41,7 +37,7 @@ class _TaskWidgetState extends State<TaskWidget> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: Padding(
           padding:
-          const EdgeInsets.only(top: 21, left: 21, right: 21, bottom: 15),
+              const EdgeInsets.only(top: 21, left: 21, right: 21, bottom: 15),
           child: Consumer<TaskData>(
             builder: (ctx, taskData, child) {
               int toggleReach = (taskData.reached == 0) ? 1 : 0;
@@ -99,8 +95,11 @@ class _TaskWidgetState extends State<TaskWidget> {
                     children: [
                       DoneButton(() async {
                         await taskData
-                            .didupdate(taskData.title, taskData.description,
-                          toggleReach,)
+                            .didupdate(
+                          taskData.title,
+                          taskData.description,
+                          toggleReach,
+                        )
                             .then((_) async {
                           int s =
                               Provider.of<StatProvider>(context, listen: false)
@@ -110,11 +109,11 @@ class _TaskWidgetState extends State<TaskWidget> {
                                   .totalScore;
                           if (taskData.reached == 1) {
                             await Provider.of<StatProvider>(context,
-                                listen: false)
+                                    listen: false)
                                 .updateScore(s + 1, ts);
                           } else {
                             await Provider.of<StatProvider>(context,
-                                listen: false)
+                                    listen: false)
                                 .updateScore(s - 1, ts);
                           }
                         });
@@ -123,7 +122,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                         width: 4,
                       ),
                       UpdateButtonIco(() {
-                        removeAnyScaffoldSnack(context);
+                        Functions.removeAnyScaffoldSnack(context);
                         Navigator.of(context)
                             .pushNamed('/updatetask', arguments: taskData);
                       }),
@@ -131,39 +130,45 @@ class _TaskWidgetState extends State<TaskWidget> {
                         width: 4,
                       ),
                       DeleteButton(() {
-                        removeAnyScaffoldSnack(context);
+                        Functions.removeAnyScaffoldSnack(context);
                         showDialog(
                           context: context,
                           builder: (_) => CustomAlertD(
                               Colors.deepPurple.shade100, () async {
-                            await Future.delayed(Duration.zero, () async {
-                              Navigator.of(context).pop();
-                              int s = Provider.of<StatProvider>(context,
-                                  listen: false)
-                                  .score;
-                              int ts = Provider.of<StatProvider>(context,
-                                  listen: false)
-                                  .totalScore;
+                            Navigator.of(context).pop();
+                            int s = Provider.of<StatProvider>(context,
+                                    listen: false)
+                                .score;
+                            int ts = Provider.of<StatProvider>(context,
+                                    listen: false)
+                                .totalScore;
 
-                              if (taskData.reached == 1) {
-                                await Provider.of<StatProvider>(context,
-                                    listen: false)
-                                    .updateScore(s - 1, ts - 1);
-                              } else {
-                                await Provider.of<StatProvider>(context,
-                                    listen: false)
-                                    .updateScore(s, ts - 1);
-                              }
-                              if (mounted) {
-                                await Provider.of<TaskListFetch>(context,
-                                    listen: false)
-                                    .removeTask(taskData);
-                              }
-                            })
+                            if (taskData.reached == 1) {
+                              await Provider.of<StatProvider>(context,
+                                      listen: false)
+                                  .updateScore(s - 1, ts - 1);
+                            } else {
+                              await Provider.of<StatProvider>(context,
+                                      listen: false)
+                                  .updateScore(s, ts - 1);
+                            }
+                            if (taskData.rem == 1) {
+                              await NotificationApi.deleteNotifications(
+                                  taskData.index);
+                            }
+                            if (mounted) {
+                              await Provider.of<TaskListFetch>(context,
+                                      listen: false)
+                                  .removeTask(taskData);
+                            }
+
+                            // await Future.delayed(Duration.zero, () async {
+                            //
+                            // });
+
                             //     .then((_) {
                             //   Navigator.of(context).pop();
                             // })
-                                ;
                           }, false),
                         );
                         // async {

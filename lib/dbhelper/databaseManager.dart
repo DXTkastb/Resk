@@ -27,7 +27,7 @@ class DatabaseManager {
       )
           .then((value) async {
         return await db.execute(
-            'CREATE TABLE IF NOT EXISTS TASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DESCRIPTION TEXT NOT NULL, REACH INTEGER DEFAULT 0 NOT NULL, SCORE INTEGER DEFAULT 0 NOT NULL, REM INTEGER DEFAULT 0 NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS TASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DESCRIPTION TEXT NOT NULL, REACH INTEGER DEFAULT 0 NOT NULL, SCORE INTEGER DEFAULT 0 NOT NULL, REM INTEGER DEFAULT 9999 NOT NULL)');
       }).then((value) async {
         return db.execute('CREATE TABLE CDATE(CD DATE NOT NULL)');
       }).then((value) async {
@@ -137,7 +137,6 @@ class DatabaseManager {
   }
 
   Future<List<Map<String, dynamic>>> queryDailyTaskRows() async {
-    await Future.delayed(const Duration(seconds: 3));
     Database db = await databaseManagerInstance.db;
     return await db.query('TASK', orderBy: 'REACH');
   }
@@ -149,6 +148,7 @@ class DatabaseManager {
       'ID': taskData.index,
       'TITLE': taskData.title,
       'DESCRIPTION': taskData.description,
+      'REM':taskData.rem
     });
   }
 
