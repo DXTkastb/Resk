@@ -4,14 +4,39 @@ import '/functions/functions.dart';
 import '/notificationapi/notificationapi.dart';
 import '/tasks/taskData.dart';
 
-class ReminderButton extends StatelessWidget {
+class ReminderButton extends StatefulWidget {
   final TaskData taskData;
 
   const ReminderButton(this.taskData, {Key? key}) : super(key: key);
 
   @override
+  State<ReminderButton> createState() => _ReminderButtonState();
+}
+
+class _ReminderButtonState extends State<ReminderButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController ac;
+  late Animation<double> animation;
+  late String insideText;
+
+  @override
+  void initState() {
+    insideText = Functions.getTimeFromInteger(widget.taskData.rem);
+    ac = AnimationController(
+      duration: const Duration(milliseconds: 230),
+      reverseDuration: const Duration(microseconds: 0),
+      vsync: this,
+    );
+    animation = Tween(begin: 11.0, end: 0.0)
+        .animate(CurvedAnimation(parent: ac, curve: Curves.linear));
+    animation.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print(taskData.rem);
     return GestureDetector(
       onTap: () async {
         Functions.removeAnyScaffoldSnack(context);
@@ -20,27 +45,42 @@ class ReminderButton extends StatelessWidget {
 
         if (timeOfDay != null) {
           int timeValue = timeOfDay.hour * 100 + timeOfDay.minute;
-          if (taskData.rem != timeValue) {
+          if (widget.taskData.rem != timeValue) {
             DateTime dt = DateTime.now();
-            if (taskData.rem != 9999) {
-              await NotificationApi.deleteNotifications(taskData.index);
+            if (widget.taskData.rem != 9999) {
+              await NotificationApi.deleteNotifications(widget.taskData.index);
             }
             await NotificationApi.launchPeriodicNotification(
-                taskData.index,
-                taskData.title,
-                taskData.description,
+                widget.taskData.index,
+                widget.taskData.title,
+                widget.taskData.description,
                 DateTime(dt.year, dt.month, dt.day, timeOfDay.hour,
                     timeOfDay.minute));
-            taskData.didAddReminder(timeValue);
+            await widget.taskData.didAddReminder(timeValue);
+            if (mounted) {
+              setState(() {
+                insideText = Functions.getTimeFromInteger(widget.taskData.rem);
+
+              });
+              ac.reverse();
+            }
           }
         }
       },
       onLongPress: () async {
         Functions.removeAnyScaffoldSnack(context);
-        if (taskData.rem != 9999) {
+        if (widget.taskData.rem != 9999) {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text('Removing reminder')));
-          await taskData.didAddReminder(9999);
+          await widget.taskData.didAddReminder(9999);
+
+          if (mounted) await ac.forward();
+
+          if (mounted) {
+            setState(() {
+              insideText = Functions.getTimeFromInteger(widget.taskData.rem);
+            });
+          }
         }
       },
       child: Container(
@@ -49,19 +89,32 @@ class ReminderButton extends StatelessWidget {
             color: Colors.black,
           ),
           padding: const EdgeInsets.all(11),
+          alignment: Alignment.center,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Icon(Icons.access_time_rounded,
-                  size: 13,
-                  color                      : Colors.white),
+                  size: 13, color: Colors.white),
               Text(
-                Functions.getTimeFromInteger(taskData.rem),
-                style: const TextStyle(fontSize: 11, color: Colors.white),
+                insideText,
+                style:  TextStyle(fontSize: animation.value, color: Colors.white.withOpacity(animation.value/11)),
               ),
             ],
           )),
     );
+  }
+
+
+  @override
+  void dispose() {
+    ac.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant ReminderButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // insideText=  Functions.getTimeFromInteger(widget.taskData.rem);
   }
 }

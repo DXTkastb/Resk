@@ -10,7 +10,7 @@ class Functions {
   }
 
   static String getTimeFromInteger(int value) {
-    String dummy = ' set';
+    String dummy = '';
     if (value > 2359) return dummy;
 
     int hours = value ~/ 100;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reminder_app/dbhelper/databaseManager.dart';
+import '../dbhelper/databaseManager.dart';
 
 class StatProvider extends ChangeNotifier {
   int score = 0;

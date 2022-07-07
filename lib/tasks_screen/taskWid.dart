@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../functions/functions.dart';
 import '/buttons/del_button.dart';
 import '/buttons/done_button.dart';
 import '/buttons/reminderbutton.dart';
@@ -11,6 +10,7 @@ import '/notificationapi/notificationapi.dart';
 import '/statwids/statProvider.dart';
 import '/tasks/taskData.dart';
 import '/tasks/task_list_fetch.dart';
+import '../functions/functions.dart';
 
 class TaskWidget extends StatefulWidget {
   const TaskWidget({Key? key}) : super(key: key);
@@ -173,10 +173,8 @@ class _TaskWidgetState extends State<TaskWidget> {
                         );
                         // async {
                       }, Colors.deepPurple, () {}),
-                      Expanded(
-                          child: Align(
-                              alignment: Alignment.centerRight,
-                              child: ReminderButton(taskData)))
+                      const Expanded(child: SizedBox()),
+                      ReminderButton(taskData)
                     ],
                   )
                 ],

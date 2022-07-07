@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import '../notificationapi/notificationapi.dart';
-import '../tasks/taskData.dart';
 
 import '../dbhelper/databaseManager.dart';
+import '../notificationapi/notificationapi.dart';
+import '../tasks/taskData.dart';
 
 class TaskListFetch extends ChangeNotifier {
   late List<TaskData> _listtaskdata;
   static final List<int> _rowList = [];
-
-  static List<int> get rowList => _rowList;
-
   static const List<int> trueList = [
     1,
     2,
@@ -36,39 +33,35 @@ class TaskListFetch extends ChangeNotifier {
   List<TaskData> get listtaskdata => _listtaskdata;
 
   Future<void> setTasks() async {
-    TaskListFetch._rowList.addAll(trueList);
+    _rowList.addAll(trueList);
     _listtaskdata =
         (await DatabaseManager.databaseManagerInstance.queryDailyTaskRows())
             .map((e) {
-      TaskListFetch._rowList.remove(e['ID']);
-      return TaskData(
-          e['ID'], e['TITLE'], e['DESCRIPTION'], e['REACH'], e['SCORE'],e['REM']);
+      _rowList.remove(e['ID']);
+      return TaskData(e['ID'], e['TITLE'], e['DESCRIPTION'], e['REACH'],
+          e['SCORE'], e['REM']);
     }).toList();
     notifyListeners();
   }
 
-  Future<void> addTask(
-    String title,
-    String description,[int rr=9999]
-  ) async {
-    if (TaskListFetch._rowList.isNotEmpty) {
-      var tsk = TaskData(TaskListFetch._rowList.last, title, description, 0, 0,rr);
-      if(rr!=9999) {
+  Future<void> addTask(String title, String description,
+      [int rr = 9999]) async {
+    if (_rowList.isNotEmpty) {
+      var tsk =
+          TaskData(TaskListFetch._rowList.last, title, description, 0, 0, rr);
+      if (rr != 9999) {
         var nowTime = DateTime.now();
         await NotificationApi.launchPeriodicNotification(
-          TaskListFetch._rowList.last,
-          title,
+            _rowList.last,
+            title,
             description,
-          DateTime(nowTime.year, nowTime.month, nowTime.day, rr ~/ 100,
-              rr % 100));
+            DateTime(
+                nowTime.year, nowTime.month, nowTime.day, rr ~/ 100, rr % 100));
       }
-      await DatabaseManager.databaseManagerInstance
-          .addDailyTask(tsk)
-          ;
+      await DatabaseManager.databaseManagerInstance.addDailyTask(tsk);
       _listtaskdata.add(tsk);
       TaskListFetch._rowList.removeLast();
       notifyListeners();
-
     }
   }
 

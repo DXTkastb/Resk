@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reminder_app/notificationapi/notificationapi.dart';
-import 'package:reminder_app/statwids/statProvider.dart';
 
 import '../buttons/add_button.dart';
 import '../buttons/cancel_button.dart';
 import '../functions/functions.dart';
+import '../statwids/statProvider.dart';
 import '../tasks/task_list_fetch.dart';
 
 class AddTask extends StatefulWidget {
@@ -47,14 +46,18 @@ class TaskForm extends State<AddTask> {
     setState(() {
       processing = true;
     });
-    await Provider.of<TaskListFetch>(ctx, listen: false)
-        .addTask(tx1.text, tx2.text, reminderText);
     int s = Provider.of<StatProvider>(context, listen: false).score;
     int ts = Provider.of<StatProvider>(context, listen: false).totalScore + 1;
-    await Provider.of<StatProvider>(context, listen: false).updateScore(s, ts);
 
-    await Future.delayed(const Duration(seconds: 3));
-    Navigator.of(ctx).pop(true);
+    await Provider.of<TaskListFetch>(ctx, listen: false)
+        .addTask(tx1.text, tx2.text, reminderText)
+        .then((_) async {
+      await Provider.of<StatProvider>(context, listen: false)
+          .updateScore(s, ts);
+    });
+    if (mounted) {
+      Navigator.of(ctx).pop(true);
+    }
   }
 
   @override
