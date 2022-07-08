@@ -152,7 +152,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                                       listen: false)
                                   .updateScore(s, ts - 1);
                             }
-                            if (taskData.rem == 1) {
+                            if (taskData.rem != 9999) {
                               await NotificationApi.deleteNotifications(
                                   taskData.index);
                             }

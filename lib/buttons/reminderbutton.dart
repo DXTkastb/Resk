@@ -71,8 +71,8 @@ class _ReminderButtonState extends State<ReminderButton>
         if (widget.taskData.rem != 9999) {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text('Removing reminder')));
+          await NotificationApi.deleteNotifications(widget.taskData.index);
           await widget.taskData.didAddReminder(9999);
-
           if (mounted) await ac.forward();
 
           if (mounted) {
