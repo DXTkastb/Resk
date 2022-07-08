@@ -17,6 +17,9 @@ class CircleIndicator extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           return Consumer<StatProvider>(builder: (ctx2, provider, _) {
             return CircularPercentIndicator(
+              animation: true,
+              animationDuration: 200,
+              animateFromLastPercent: true,
               radius: 12,
               lineWidth: 4,
               percent: provider.getPercent(),
