@@ -239,6 +239,7 @@ class MainAppState extends State<MainApp> {
                           ));
               },
             ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 if (_currentindex == 0) {

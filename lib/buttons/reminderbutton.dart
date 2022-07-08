@@ -23,7 +23,7 @@ class _ReminderButtonState extends State<ReminderButton>
   void initState() {
     insideText = Functions.getTimeFromInteger(widget.taskData.rem);
     ac = AnimationController(
-      duration: const Duration(milliseconds: 230),
+      duration: const Duration(milliseconds: 200),
       reverseDuration: const Duration(microseconds: 0),
       vsync: this,
     );
@@ -60,7 +60,6 @@ class _ReminderButtonState extends State<ReminderButton>
             if (mounted) {
               setState(() {
                 insideText = Functions.getTimeFromInteger(widget.taskData.rem);
-
               });
               ac.reverse();
             }
@@ -88,7 +87,7 @@ class _ReminderButtonState extends State<ReminderButton>
             borderRadius: BorderRadius.circular(20),
             color: Colors.black,
           ),
-          padding: const EdgeInsets.all(11),
+          padding: const EdgeInsets.all(12),
           alignment: Alignment.center,
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -98,13 +97,14 @@ class _ReminderButtonState extends State<ReminderButton>
                   size: 13, color: Colors.white),
               Text(
                 insideText,
-                style:  TextStyle(fontSize: animation.value, color: Colors.white.withOpacity(animation.value/11)),
+                style: TextStyle(
+                    fontSize: animation.value,
+                    color: Colors.white.withOpacity(animation.value / 11)),
               ),
             ],
           )),
     );
   }
-
 
   @override
   void dispose() {

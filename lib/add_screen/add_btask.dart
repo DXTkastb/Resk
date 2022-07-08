@@ -50,19 +50,15 @@ class TaskForm extends State<AddBTask> {
     return DateFormat('MMMMd').format(dateTime);
   }
 
-  void onadd(BuildContext ctx) {
+  void onadd(BuildContext ctx) async {
     setState(() {
       processing = true;
     });
-
-    Future.delayed(Duration.zero).then((_) async {
-      await Provider.of<BtaskListFetch>(ctx, listen: false)
-          .addTask(tx1.text, date1, date2);
-    }).then((value) async {
-      if (mounted) {
-        Navigator.of(ctx).pop(true);
-      }
-    });
+    await Provider.of<BtaskListFetch>(ctx, listen: false)
+        .addTask(tx1.text, date1, date2);
+    if (mounted) {
+      Navigator.of(ctx).pop(true);
+    }
   }
 
   @override

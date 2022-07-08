@@ -173,8 +173,12 @@ class _TaskWidgetState extends State<TaskWidget> {
                         );
                         // async {
                       }, Colors.deepPurple, () {}),
-                      const Expanded(child: SizedBox()),
-                      ReminderButton(taskData)
+                      const Expanded(
+                        child: SizedBox(
+                          width: 0,
+                        ),
+                      ),
+                      ReminderButton(taskData),
                     ],
                   )
                 ],
