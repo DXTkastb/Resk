@@ -21,25 +21,18 @@ class DatabaseManager {
   Future<void> initiateTask() async {
     _db = await openDatabase(join(await getDatabasesPath(), taskDbName),
         onCreate: (db, version) async {
-      return await db
-          .execute(
+      await db.execute(
         'CREATE TABLE  IF NOT EXISTS BTASK(ID INTEGER PRIMARY KEY,DAYS INTEGER DEFAULT 0 NOT NULL,TITLE TEXT NOT NULL, DONE INTEGER DEFAULT 0 NOT NULL, TDATE DATE,CRID INTEGER NOT NULL)',
-      )
-          .then((value) async {
-        return await db.execute(
-            'CREATE TABLE IF NOT EXISTS TASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DESCRIPTION TEXT NOT NULL, REACH INTEGER DEFAULT 0 NOT NULL, SCORE INTEGER DEFAULT 0 NOT NULL, REM INTEGER DEFAULT 9999 NOT NULL)');
-      }).then((value) async {
-        return db.execute('CREATE TABLE CDATE(CD DATE NOT NULL)');
-      }).then((value) async {
-        await db.insert('CDATE',
-            {'CD': 'DATE(\'${DateFormat('yMMdd').format(DateTime.now())}\')'});
-      }).then((value) async {
-        await db.execute(
-            'CREATE TABLE DAYDATA(SCORE INTEGER DEFAULT 0,TSCORE INTEGER DEFAULT 0,DAYDATE DATE PRIMARY KEY)');
-      }).then((value) async {
-        await db.insert('DAYDATA', {
-          'DAYDATE': 'DATE(\'${DateFormat('yMMdd').format(DateTime.now())}\')',
-        });
+      );
+      await db.execute(
+          'CREATE TABLE IF NOT EXISTS TASK(ID INTEGER PRIMARY KEY,TITLE TEXT NOT NULL, DESCRIPTION TEXT NOT NULL, REACH INTEGER DEFAULT 0 NOT NULL, SCORE INTEGER DEFAULT 0 NOT NULL, REM INTEGER DEFAULT 9999 NOT NULL)');
+      await db.execute('CREATE TABLE CDATE(CD DATE NOT NULL)');
+      await db.insert('CDATE',
+          {'CD': 'DATE(\'${DateFormat('yMMdd').format(DateTime.now())}\')'});
+      await db.execute(
+          'CREATE TABLE DAYDATA(SCORE INTEGER DEFAULT 0,TSCORE INTEGER DEFAULT 0,DAYDATE DATE PRIMARY KEY)');
+      await db.insert('DAYDATA', {
+        'DAYDATE': 'DATE(\'${DateFormat('yMMdd').format(DateTime.now())}\')',
       });
     }, onOpen: (db) async {
       await onNewDay(db);
@@ -148,7 +141,7 @@ class DatabaseManager {
       'ID': taskData.index,
       'TITLE': taskData.title,
       'DESCRIPTION': taskData.description,
-      'REM':taskData.rem
+      'REM': taskData.rem
     });
   }
 
@@ -173,7 +166,7 @@ class DatabaseManager {
         whereArgs: [id]);
   }
 
-  Future<void> updateDailyTaskRem (int id, int rem) async {
+  Future<void> updateDailyTaskRem(int id, int rem) async {
     await db.update(
         'TASK',
         {
