@@ -48,7 +48,7 @@ class DatabaseManager {
     if (lastDate != nowtime) {
       int lastTSCORE = (await dbx.query('DAYDATA',
           where: 'DAYDATE = ?',
-          whereArgs: ['DATE($lastDate)']))[0]['TSCORE'] as int;
+          whereArgs: ['DATE(\'$lastDate\')']))[0]['TSCORE'] as int;
       await dbx.insert('DAYDATA', {
         'DAYDATE': 'DATE(\'${DateFormat('yMMdd').format(testDate)}\')',
         'TSCORE': lastTSCORE
