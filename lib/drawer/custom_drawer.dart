@@ -14,7 +14,7 @@ class CustomDrawerColumn extends StatelessWidget {
         // const Expanded(child: SizedBox()),
         Padding(
           padding:
-              const EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 14),
+              const EdgeInsets.only(top: 20, left: 20, right: 20,),
           child: TextButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -42,7 +42,36 @@ class CustomDrawerColumn extends StatelessWidget {
                 )),
           ),
         ),
+        Padding(
+          padding:
+          const EdgeInsets.only(top: 15, left: 20, right: 20, bottom: 14),
+          child: TextButton(
+            onPressed: () {
 
+              Navigator.of(context).pushNamed('/exportimport');
+            },
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all(ContinuousRectangleBorder(
+                  borderRadius: BorderRadius.circular(40))),
+              backgroundColor:
+              MaterialStateProperty.all(Colors.deepOrange.shade700),
+              foregroundColor:
+              MaterialStateProperty.all(Colors.deepOrange.shade200),
+              overlayColor:
+              MaterialStateProperty.all(Colors.deepOrange.shade400),
+            ),
+            child: Padding(
+                padding: EdgeInsets.only(top: height / 50, bottom: height / 50),
+                child: Text(
+                  'Export / Import',
+                  style: TextStyle(
+                      fontSize: height / 43,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                  textAlign: TextAlign.center,
+                )),
+          ),
+        ),
         const Divider(
           thickness: 2,
           indent: 17,

@@ -11,14 +11,13 @@ class TaskData extends ChangeNotifier {
   int rem;
 
   TaskData(this.index, this.title, this.description, this.reached, this.score,
-      [this.rem=9999]);
+      [this.rem = 9999]);
 
   Future<void> didAddReminder(int r) async {
-    await DatabaseManager.databaseManagerInstance
-          .updateDailyTaskRem(index, r);
-      rem=r;
-      notifyListeners();
-    }
+    await DatabaseManager.databaseManagerInstance.updateDailyTaskRem(index, r);
+    rem = r;
+    notifyListeners();
+  }
 
   Future<void> didupdate(String titl, String descriptio, int reach) async {
     if (reach == 1 && reached == 0) {
@@ -36,4 +35,9 @@ class TaskData extends ChangeNotifier {
     score = score;
     notifyListeners();
   }
+
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'description': description,'score': score,'rem': rem,
+      };
 }

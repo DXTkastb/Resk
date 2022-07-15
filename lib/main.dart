@@ -3,20 +3,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'export_import/export_importpage.dart';
 
-import './add_screen/add_btask.dart';
-import '../add_screen/add_task.dart';
-import '../dbhelper/databaseManager.dart';
-import '../drawer/custom_drawer.dart';
-import '../reminder_screen/remiderpage.dart';
-import '../statwids/circleindicator.dart';
-import '../statwids/statProvider.dart';
-import '../tasks/btask_list_fetch.dart';
-import '../tasks/task_list_fetch.dart';
-import '../tasks_screen/brieftaskspage.dart';
-import '../tasks_screen/taskspage.dart';
-import '../update_screen/updateScreen.dart';
-import '../notificationapi/notificationapi.dart';
+import 'add_screen/add_btask.dart';
+import 'add_screen/add_task.dart';
+import 'dbhelper/databaseManager.dart';
+import 'drawer/custom_drawer.dart';
+import 'reminder_screen/remiderpage.dart';
+import 'statwids/circleindicator.dart';
+import 'statwids/statProvider.dart';
+import 'tasks/btask_list_fetch.dart';
+import 'tasks/task_list_fetch.dart';
+import 'tasks_screen/brieftaskspage.dart';
+import 'tasks_screen/taskspage.dart';
+import 'update_screen/updateScreen.dart';
+import 'notificationapi/notificationapi.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -69,6 +70,9 @@ class MyApp extends StatelessWidget {
               },
               '/updatetask': (_) {
                 return const UpdateScreen();
+              },
+              '/exportimport': (_) {
+                return const ImportExport();
               },
               // '/reminderpage': (_) {
               //   return ReminderPage();
