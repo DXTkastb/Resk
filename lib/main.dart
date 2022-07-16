@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
                 return const UpdateScreen();
               },
               '/exportimport': (_) {
-                return const ImportExport();
+                return ImportExportWidget();
               },
               // '/reminderpage': (_) {
               //   return ReminderPage();

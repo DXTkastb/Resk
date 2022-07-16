@@ -5,8 +5,8 @@ import '../notificationapi/notificationapi.dart';
 import '../tasks/taskData.dart';
 
 class TaskListFetch extends ChangeNotifier {
-  late List<TaskData> _listtaskdata;
-  static final List<int> _rowList = [];
+  late final List<TaskData> _listtaskdata;
+  static List<int> _rowList = [];
   static const List<int> trueList = [
     1,
     2,
@@ -28,11 +28,23 @@ class TaskListFetch extends ChangeNotifier {
     18,
     19,
     20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
   ];
 
   List<TaskData> get listtaskdata => _listtaskdata;
 
   Future<void> setTasks() async {
+    _rowList = [];
     _rowList.addAll(trueList);
     _listtaskdata =
         (await DatabaseManager.databaseManagerInstance.queryDailyTaskRows())
@@ -45,10 +57,10 @@ class TaskListFetch extends ChangeNotifier {
   }
 
   Future<void> addTask(String title, String description,
-      [int rr = 9999]) async {
+      [int rr = 9999, int sc = 0]) async {
     if (_rowList.isNotEmpty) {
       var tsk =
-          TaskData(TaskListFetch._rowList.last, title, description, 0, 0, rr);
+          TaskData(TaskListFetch._rowList.last, title, description, 0, sc, rr);
       if (rr != 9999) {
         var nowTime = DateTime.now();
         await NotificationApi.launchPeriodicNotification(

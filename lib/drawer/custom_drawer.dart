@@ -47,7 +47,7 @@ class CustomDrawerColumn extends StatelessWidget {
           const EdgeInsets.only(top: 15, left: 20, right: 20, bottom: 14),
           child: TextButton(
             onPressed: () {
-
+              Navigator.of(context).pop();
               Navigator.of(context).pushNamed('/exportimport');
             },
             style: ButtonStyle(

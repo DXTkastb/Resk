@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -19,34 +20,37 @@ class ImportExportApi {
   }
 
   Future<File> get _localFile async {
-    String todayDate = DateFormat('yMMdd').format(DateTime.now());
+    String todayDate = DateFormat('yMMddHms').format(DateTime.now());
 
-    final path = await localPath();     String finalString ='$path/dtask_$todayDate.json';
-    print(finalString);
+    final path = await localPath();
+    String finalString = '/storage/emulated/0/Download/dtask_$todayDate.json';
+
     return File(finalString).create(recursive: true);
   }
 
   Future<bool> export(List<TaskData> listData) async {
     final file = await _localFile;
     try {
-      await file.writeAsString(
-          jsonEncode(listData.map((e) => jsonEncode(e)).toList()),
-          mode: FileMode.append);
+      await file.writeAsString(jsonEncode(listData), mode: FileMode.append);
     } catch (_) {
       return false;
     }
     return true;
   }
 
-  Future<File> get _localFile2 async {
-    return File('/data/user/0/com.example.reminder_app/app_flutter/dtask_20220716.json').create(recursive: true);
+  Future<File?> get _localFile2 async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    print(result?.files.single.path!);
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      return file;
+    }
+    return null;
   }
-  Future<void> tt() async{
+
+  Future<String> tt() async {
     final file = await _localFile2;
-
-    String str = await file.readAsString();
-    print(str);
+    String str = await file!.readAsString();
+    return str;
   }
-
-
 }
