@@ -21,7 +21,7 @@ class CircleIndicator extends StatelessWidget {
               animationDuration: 200,
               animateFromLastPercent: true,
               radius: 12,
-              lineWidth: 4,
+              lineWidth: 6,
               percent: provider.getPercent(),
               progressColor: Colors.deepOrangeAccent,
               circularStrokeCap: CircularStrokeCap.round,

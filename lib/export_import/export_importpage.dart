@@ -155,7 +155,25 @@ class ExportColumnState extends State<ExportColumn> {
               int s = Provider.of<StatProvider>(context, listen: false).score;
               int ts =
                   Provider.of<StatProvider>(context, listen: false).totalScore;
-
+              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: const [
+                  SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 6,
+                        color: Colors.white,
+                      )),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(' Loading Task'),
+                ],
+              )));
               await Future.wait([
                 addAllTasks(),
                 Provider.of<StatProvider>(context, listen: false)
