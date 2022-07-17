@@ -38,7 +38,14 @@ class TasksPage extends StatelessWidget {
                 });
           });
         }
-        return const Center(child: CircularProgressIndicator(strokeWidth: 6,));
+        return  const SizedBox(
+          width: 30,
+          height: 30,
+          child: CircularProgressIndicator(
+            strokeWidth: 6,
+            color: Colors.deepPurple,
+          ),
+        );
       },
     );
   }

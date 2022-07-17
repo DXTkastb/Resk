@@ -190,9 +190,10 @@ class TaskForm extends State<AddBTask> {
             ),
           )
         : Container(
-            color: Colors.teal.shade700,
-            child: const Center(
-              child: CircularProgressIndicator(
+            color: Colors.teal.shade700,alignment: Alignment.center,
+            child:  const SizedBox(
+              width: 30,height: 30,
+              child: CircularProgressIndicator(strokeWidth: 6,
                 color: Colors.white,
               ),
             ));

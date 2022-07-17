@@ -27,6 +27,7 @@ class _UpdateScreenState extends State<UpdateScreen> {
     setState(() {
       updating = !updating;
     });
+    await Future.delayed(const Duration(seconds: 5));
     if (mounted) {
       int s = Provider.of<StatProvider>(context, listen: false).score;
       int ts = Provider.of<StatProvider>(context, listen: false).totalScore;
@@ -161,9 +162,14 @@ class _UpdateScreenState extends State<UpdateScreen> {
           )
         : Container(
             color: Colors.deepPurple.shade700,
-            child: const Center(
-                child: CircularProgressIndicator(
-              color: Colors.white,
-            )));
+            alignment: Alignment.center,
+            child: const SizedBox(
+              width: 30,
+              height: 30,
+              child: CircularProgressIndicator(
+                strokeWidth: 6,
+                color: Colors.white,
+              ),
+            ));
   }
 }

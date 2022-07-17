@@ -42,7 +42,14 @@ class BriefTaskPage extends StatelessWidget {
                   });
             });
           }
-          return const CircularProgressIndicator();
+          return  const SizedBox(
+            width: 30,
+            height: 30,
+            child: CircularProgressIndicator(
+              strokeWidth: 6,
+              color: Colors.teal,
+            ),
+          );
         });
   }
 }

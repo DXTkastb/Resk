@@ -199,8 +199,10 @@ class TaskForm extends State<AddTask> {
           )
         : Container(
             color: Colors.deepPurple,
-            child: const Center(
-              child: CircularProgressIndicator(
+            alignment: Alignment.center,
+            child: const SizedBox(
+              width: 30,height: 30,
+              child: CircularProgressIndicator(strokeWidth: 6,
                 color: Colors.white,
               ),
             ));

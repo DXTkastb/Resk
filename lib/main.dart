@@ -184,6 +184,7 @@ class MainAppState extends State<MainApp> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
                   CircularProgressIndicator(
+                    strokeWidth: 6,
                     color: Colors.white,
                   ),
                   Padding(
