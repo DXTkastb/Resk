@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'export_import/export_importpage.dart';
 
 import 'add_screen/add_btask.dart';
 import 'add_screen/add_task.dart';
 import 'dbhelper/databaseManager.dart';
 import 'drawer/custom_drawer.dart';
-import 'reminder_screen/remiderpage.dart';
+import 'export_import/export_importpage.dart';
+import 'notificationapi/notificationapi.dart';
 import 'statwids/circleindicator.dart';
 import 'statwids/statProvider.dart';
 import 'tasks/btask_list_fetch.dart';
@@ -17,16 +17,90 @@ import 'tasks/task_list_fetch.dart';
 import 'tasks_screen/brieftaskspage.dart';
 import 'tasks_screen/taskspage.dart';
 import 'update_screen/updateScreen.dart';
-import 'notificationapi/notificationapi.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   DatabaseManager databaseManager = DatabaseManager.databaseManagerInstance;
   await databaseManager.initiateTask();
   await NotificationApi.init();
-  runApp(const MyApp());
+  runApp(const Sync());
+}
+
+class Sync extends StatefulWidget {
+  const Sync({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return SyncState();
+  }
+}
+
+class SyncState extends State<Sync> {
+  bool loading = false;
+  DateTime today = DateTime.now();
+  late Timer tt;
+
+  @override
+  void initState() {
+
+    var tomorrow = today.add(const Duration(days: 1));
+    Duration diff = DateTime(tomorrow.year, tomorrow.month, (tomorrow.day + 1))
+        .difference(today);
+    tt = Timer(diff, () async {
+      setState(() {
+        loading = true;
+      });
+      await DatabaseManager.databaseManagerInstance
+          .onNewDay(DatabaseManager.databaseManagerInstance.db);
+      await Future.delayed(const Duration(seconds: 3));
+      setState(() {
+        today = DateTime.now();
+        loading = false;
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    tt.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return (loading)
+        ? MaterialApp(
+            home: Scaffold(
+              backgroundColor: Colors.deepOrange,
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    CircularProgressIndicator(
+                      strokeWidth: 6,
+                      color: Colors.white,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Text(
+                        'SYNCING DATA',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          )
+        : const MyApp();
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -117,10 +191,8 @@ class MainAppState extends State<MainApp> {
   late Future btasklist;
   late Future stat;
   late double height;
-  DateTime today = DateTime.now();
-  late Timer tt;
   int _currentindex = 0;
-  bool loading = false;
+
 
   @override
   void initState() {
@@ -128,26 +200,6 @@ class MainAppState extends State<MainApp> {
     height = widget.box.maxHeight;
     height = (height < 500) ? 500 : height;
 
-    var tomorrow = today.add(const Duration(days: 1));
-    Duration diff = DateTime(tomorrow.year, tomorrow.month, (tomorrow.day + 1))
-        .difference(today);
-    tt = Timer(diff, () async {
-      if (_key.currentState!.isDrawerOpen) {
-        Navigator.of(context).pop();
-        await Future.delayed(const Duration(milliseconds: 500));
-      }
-      setState(() {
-        loading = true;
-      });
-      await DatabaseManager.databaseManagerInstance
-          .onNewDay(DatabaseManager.databaseManagerInstance.db);
-      await Future.delayed(const Duration(seconds: 2));
-      setState(() {
-        setFutures();
-        today = DateTime.now();
-        loading = false;
-      });
-    });
     super.initState();
   }
 
@@ -167,41 +219,10 @@ class MainAppState extends State<MainApp> {
   }
 
   @override
-  void dispose() {
-    tt.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     // upFutures();
 
-    return (loading)
-        ? Scaffold(
-            backgroundColor: Colors.deepOrange,
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  CircularProgressIndicator(
-                    strokeWidth: 6,
-                    color: Colors.white,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Text(
-                      'SYNCING DATA',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          )
-        : Scaffold(
+    return Scaffold(
             key: _key,
             drawer: SafeArea(
               child: Drawer(
@@ -244,7 +265,8 @@ class MainAppState extends State<MainApp> {
                           ));
               },
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 if (_currentindex == 0) {
