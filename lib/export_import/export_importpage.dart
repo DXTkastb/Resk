@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reminder_app/statwids/statProvider.dart';
 
 import '/export_import/exportimportapi.dart';
 import '/tasks/task_list_fetch.dart';
@@ -11,7 +12,7 @@ class ImportExportWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.white,
+        color: Colors.deepOrange,
         alignment: Alignment.center,
         child: const ImportExport(),
       ),
@@ -34,6 +35,11 @@ class _ImportExportState extends State<ImportExport> {
       mainAxisSize: MainAxisSize.min,
       children: [
         ElevatedButton(
+          style: ButtonStyle(
+              padding: MaterialStateProperty.all(const EdgeInsets.all(20)),
+              backgroundColor: MaterialStateProperty.all(Colors.white),
+              shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)))),
           onPressed: () async {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
@@ -41,25 +47,34 @@ class _ImportExportState extends State<ImportExport> {
               bool r = await ImportExportApi.api.export(
                   Provider.of<TaskListFetch>(context, listen: false)
                       .listtaskdata);
-              if (mounted)
+              if (mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Export Completed'),
+                  content: Text(
+                    'Export Completed',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   duration: Duration(seconds: 2),
                 ));
+              }
             } catch (_) {
-              if (mounted)
+              if (mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text('Some Error Occurred. Try Later'),
                   duration: Duration(seconds: 2),
                 ));
+              }
             }
           },
-          child: const Text('Export To Device'),
+          child: const Text(
+            'Export To Device',
+            style: TextStyle(color: Colors.deepOrange),
+          ),
         ),
         const Divider(
+          height: 40,
           thickness: 2,
-          indent: 45,
-          endIndent: 45,
+          indent: 70,
+          endIndent: 70,
         ),
         const ExportColumn()
       ],
@@ -80,6 +95,18 @@ class ExportColumnState extends State<ExportColumn> {
   bool fileAdded = false;
   List myTask = [];
 
+  Future<void> addAllTasks() async {
+    for (var element in myTask) {
+      String title = element['title'] as String;
+      String description = element['description'] as String;
+      int score = element['score'] as int;
+      int rem = element['rem'] as int;
+      await Provider.of<TaskListFetch>(context, listen: false)
+          .addTask(title, description, rem, score)
+          .then((value) async {});
+    }
+  }
+
   @override
   Widget build(BuildContext ctx) {
     return Column(
@@ -95,8 +122,9 @@ class ExportColumnState extends State<ExportColumn> {
           style: ButtonStyle(
             padding: MaterialStateProperty.all(const EdgeInsets.all(20)),
             backgroundColor: MaterialStateProperty.all(
-                fileAdded ? Colors.green.shade400 : Colors.blue),
-            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius:BorderRadius.circular(30) )),
+                fileAdded ? Colors.green.shade400 : Colors.white),
+            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30))),
           ),
           onPressed: () async {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -124,14 +152,16 @@ class ExportColumnState extends State<ExportColumn> {
                     const SnackBar(content: Text('File not selected')));
               }
             } else {
-              for (var element in myTask) {
-                String title = element['title'] as String;
-                String description = element['description'] as String;
-                int score = element['score'] as int;
-                int rem = element['rem'] as int;
-                await Provider.of<TaskListFetch>(context, listen: false)
-                    .addTask(title, description, rem, score);
-              }
+              int s = Provider.of<StatProvider>(context, listen: false).score;
+              int ts =
+                  Provider.of<StatProvider>(context, listen: false).totalScore;
+
+              await Future.wait([
+                addAllTasks(),
+                Provider.of<StatProvider>(context, listen: false)
+                    .updateScore(s, ts + myTask.length),
+              ]);
+
               if (mounted) {
                 ScaffoldMessenger.of(context).removeCurrentSnackBar();
                 Navigator.of(context).pushNamedAndRemoveUntil(
@@ -140,7 +170,10 @@ class ExportColumnState extends State<ExportColumn> {
             }
           },
           child: Text(
-              (fileAdded) ? ('Add Tasks From File') : ('Import From Device')),
+            (fileAdded) ? ('Add Tasks From File') : ('Import From Device'),
+            style:
+                TextStyle(color: fileAdded ? Colors.white : Colors.deepOrange),
+          ),
         )
       ],
     );

@@ -40,7 +40,6 @@ class ImportExportApi {
 
   Future<File?> get _localFile2 async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
-    print(result?.files.single.path!);
     if (result != null) {
       File file = File(result.files.single.path!);
       return file;
