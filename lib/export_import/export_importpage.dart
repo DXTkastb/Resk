@@ -12,7 +12,10 @@ class ImportExportWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Colors.deepOrange,
+        decoration: const BoxDecoration(gradient: LinearGradient(
+            end: Alignment.topCenter, begin: Alignment.bottomCenter,
+            colors: [ Colors.deepOrange, Colors.red]
+        )),
         alignment: Alignment.center,
         child: const ImportExport(),
       ),
@@ -44,25 +47,23 @@ class _ImportExportState extends State<ImportExport> {
             ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
             try {
-              bool r = await ImportExportApi.api.export(
-                  Provider.of<TaskListFetch>(context, listen: false)
+              String filePath = await ImportExportApi.api.export(
+                  Provider
+                      .of<TaskListFetch>(context, listen: false)
                       .listtaskdata);
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text(
-                    'Export Completed',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  duration: Duration(seconds: 2),
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: ExtraSnack(filePath),
+                    duration: const Duration(days: 1),
                 ));
-              }
+            }
             } catch (_) {
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Some Error Occurred. Try Later'),
-                  duration: Duration(seconds: 2),
-                ));
-              }
+            if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Some Error Occurred. Try Later'),
+            duration: Duration(seconds: 2),
+            ));
+            }
             }
           },
           child: const Text(
@@ -152,28 +153,32 @@ class ExportColumnState extends State<ExportColumn> {
                     const SnackBar(content: Text('File not selected')));
               }
             } else {
-              int s = Provider.of<StatProvider>(context, listen: false).score;
+              int s = Provider
+                  .of<StatProvider>(context, listen: false)
+                  .score;
               int ts =
-                  Provider.of<StatProvider>(context, listen: false).totalScore;
+                  Provider
+                      .of<StatProvider>(context, listen: false)
+                      .totalScore;
               ScaffoldMessenger.of(context).removeCurrentSnackBar();
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
-                  SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 6,
-                        color: Colors.white,
-                      )),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(' Loading Task'),
-                ],
-              )));
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: const [
+                      SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 6,
+                            color: Colors.white,
+                          )),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(' Loading Task'),
+                    ],
+                  )));
               await Future.wait([
                 addAllTasks(),
                 Provider.of<StatProvider>(context, listen: false)
@@ -190,10 +195,43 @@ class ExportColumnState extends State<ExportColumn> {
           child: Text(
             (fileAdded) ? ('Add Tasks From File') : ('Import From Device'),
             style:
-                TextStyle(color: fileAdded ? Colors.white : Colors.deepOrange),
+            TextStyle(color: fileAdded ? Colors.white : Colors.deepOrange),
           ),
         )
       ],
     );
   }
+}
+
+class ExtraSnack extends StatelessWidget {
+  final String filePath;
+
+  const ExtraSnack(this.filePath);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'Export Completed : $filePath',
+          style: const TextStyle(color: Colors.white),
+        ),
+        const SizedBox(height: 10,),
+        ElevatedButton(onPressed: () {
+          Future.delayed(Duration.zero,(){
+            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          });
+        },
+        style:ButtonStyle(
+          padding: MaterialStateProperty.all(const EdgeInsets.only(top:5,bottom: 5,left: 5,right: 5)),
+          backgroundColor: MaterialStateProperty.all(
+          Colors.white),
+          shape: MaterialStateProperty.all(RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30))),
+        ), child: const Text('OK',style: TextStyle(fontSize: 12,color: Colors.black),),)
+      ],
+    );
+  }
+
 }

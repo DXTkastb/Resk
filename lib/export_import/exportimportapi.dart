@@ -9,7 +9,7 @@ import '../tasks/taskData.dart';
 
 class ImportExportApi {
   static late final Future<Directory> directory;
-
+  static String latestFile = '';
   ImportExportApi._constructor();
 
   static final api = ImportExportApi._constructor();
@@ -24,18 +24,18 @@ class ImportExportApi {
 
     final path = await localPath();
     String finalString = '/storage/emulated/0/Download/dtask_$todayDate.json';
-
+    latestFile = finalString;
     return File(finalString).create(recursive: true);
   }
 
-  Future<bool> export(List<TaskData> listData) async {
+  Future<String> export(List<TaskData> listData) async {
     final file = await _localFile;
     try {
       await file.writeAsString(jsonEncode(listData), mode: FileMode.append);
     } catch (_) {
-      return false;
+      return '';
     }
-    return true;
+    return latestFile;
   }
 
   Future<File?> get _localFile2 async {
