@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:android_autostart/android_autostart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +61,12 @@ class SyncState extends State<Sync> {
         loading = false;
       });
     });
+    askAutoStart();
     super.initState();
+  }
+
+  Future<void> askAutoStart() async {
+    await AndroidAutostart.navigateAutoStartSetting;
   }
 
   @override

@@ -42,6 +42,7 @@ dependencies:
   timezone: ^0.8.0
   path_provider: ^2.0.11
   file_picker: ^3.0.4
+  android_autostart: ^0.0.3
 
 dev_dependencies:
   flutter_test:
