@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:android_autostart/android_autostart.dart';
+import 'package:auto_start_flutter/auto_start_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -224,8 +224,11 @@ class MainAppState extends State<MainApp> {
                   ElevatedButton(
                     onPressed: () async {
                       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                      await AndroidAutostart.navigateAutoStartSetting;
-                      prefs.setString('initApp', 'DONE');
+                       bool? autos = await isAutoStartAvailable;
+                       if(autos!=null && autos == true){
+                         await getAutoStartPermission();
+                       }
+
                     },
                     style: ButtonStyle(
                       padding:
