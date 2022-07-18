@@ -5,6 +5,27 @@ class CustomDrawerColumn extends StatelessWidget {
 
   const CustomDrawerColumn(this.height, {Key? key}) : super(key: key);
 
+  ButtonStyle getbuttonstyle(){
+    return ButtonStyle(
+      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(200))),
+      backgroundColor:
+      MaterialStateProperty.all(Colors.deepOrange.shade700),
+      foregroundColor:
+      MaterialStateProperty.all(Colors.deepOrange.shade200),
+      overlayColor:
+      MaterialStateProperty.all(Colors.deepOrange.shade400),
+    );
+  }
+
+  TextStyle getButtonTextStyle(){
+    return TextStyle(
+        fontSize: height / 43,
+        fontWeight: FontWeight.bold,
+        color: Colors.white);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -20,24 +41,12 @@ class CustomDrawerColumn extends StatelessWidget {
               Navigator.of(context).pop();
               // Navigator.of(context).pushNamed('/reminderpage');
             },
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all(ContinuousRectangleBorder(
-                  borderRadius: BorderRadius.circular(40))),
-              backgroundColor:
-                  MaterialStateProperty.all(Colors.deepOrange.shade700),
-              foregroundColor:
-                  MaterialStateProperty.all(Colors.deepOrange.shade200),
-              overlayColor:
-                  MaterialStateProperty.all(Colors.deepOrange.shade400),
-            ),
+            style: getbuttonstyle(),
             child: Padding(
                 padding: EdgeInsets.only(top: height / 50, bottom: height / 50),
                 child: Text(
                   'Reminders',
-                  style: TextStyle(
-                      fontSize: height / 43,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                  style: getButtonTextStyle(),
                   textAlign: TextAlign.center,
                 )),
           ),
@@ -50,24 +59,12 @@ class CustomDrawerColumn extends StatelessWidget {
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed('/exportimport');
             },
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all(ContinuousRectangleBorder(
-                  borderRadius: BorderRadius.circular(40))),
-              backgroundColor:
-              MaterialStateProperty.all(Colors.deepOrange.shade700),
-              foregroundColor:
-              MaterialStateProperty.all(Colors.deepOrange.shade200),
-              overlayColor:
-              MaterialStateProperty.all(Colors.deepOrange.shade400),
-            ),
+            style: getbuttonstyle(),
             child: Padding(
                 padding: EdgeInsets.only(top: height / 50, bottom: height / 50),
                 child: Text(
                   'Export / Import',
-                  style: TextStyle(
-                      fontSize: height / 43,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                  style: getButtonTextStyle(),
                   textAlign: TextAlign.center,
                 )),
           ),
