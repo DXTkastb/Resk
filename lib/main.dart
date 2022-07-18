@@ -4,6 +4,7 @@ import 'package:android_autostart/android_autostart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'add_screen/add_btask.dart';
 import 'add_screen/add_task.dart';
@@ -61,12 +62,7 @@ class SyncState extends State<Sync> {
         loading = false;
       });
     });
-    askAutoStart();
     super.initState();
-  }
-
-  Future<void> askAutoStart() async {
-    await AndroidAutostart.navigateAutoStartSetting;
   }
 
   @override
@@ -200,11 +196,74 @@ class MainAppState extends State<MainApp> {
 
   @override
   void initState() {
-    setFutures();
     height = widget.box.maxHeight;
     height = (height < 500) ? 500 : height;
-
+    setFutures();
+    askAutoStart();
     super.initState();
+  }
+
+  Future<void> askAutoStart() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? app = prefs.get('initApp') as String?;
+    if (app == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                  'Autostart enables reminders even after device reboot. Allow autostart :'),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                      await AndroidAutostart.navigateAutoStartSetting;
+                      prefs.setString('initApp', 'DONE');
+                    },
+                    style: ButtonStyle(
+                      padding:
+                          MaterialStateProperty.all(const EdgeInsets.all(5)),
+                      backgroundColor: MaterialStateProperty.all(Colors.white),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30))),
+                    ),
+                    child: const Text(
+                      'ALLOW',
+                      style: TextStyle(fontSize: 12, color: Colors.black),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                      await prefs.setString('initApp', 'UNDONE');
+                    },
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all(const EdgeInsets.only(
+                          top: 5, bottom: 5, left: 5, right: 5)),
+                      backgroundColor: MaterialStateProperty.all(Colors.white),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30))),
+                    ),
+                    child: const Text(
+                      'NO',
+                      style: TextStyle(fontSize: 12, color: Colors.black),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+          duration: const Duration(days: 1),
+        ));
+      }
+    }
   }
 
   @override
