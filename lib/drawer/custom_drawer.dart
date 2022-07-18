@@ -32,10 +32,9 @@ class CustomDrawerColumn extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // const Expanded(child: SizedBox()),
         Padding(
           padding:
-              const EdgeInsets.only(top: 20, left: 20, right: 20,),
+              const EdgeInsets.only(top: 20, left: 30, right: 30,),
           child: TextButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -53,7 +52,7 @@ class CustomDrawerColumn extends StatelessWidget {
         ),
         Padding(
           padding:
-          const EdgeInsets.only(top: 15, left: 20, right: 20, bottom: 14),
+          const EdgeInsets.only(top: 15, left: 30, right: 30, bottom: 14),
           child: TextButton(
             onPressed: () {
               Navigator.of(context).pop();
