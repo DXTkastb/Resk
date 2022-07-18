@@ -165,7 +165,17 @@ class CentralApp extends StatefulWidget {
   State<CentralApp> createState() => _CentralAppState();
 }
 
-class _CentralAppState extends State<CentralApp> {
+class _CentralAppState extends State<CentralApp>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(milliseconds: 300),
+    reverseDuration: const Duration(milliseconds: 200),
+    vsync: this,
+  );
+  late final Animation<double> _animation = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.fastOutSlowIn,
+  );
   late OverlayEntry overlayEntry;
   late OverlayState overlayState;
 
@@ -173,6 +183,7 @@ class _CentralAppState extends State<CentralApp> {
     overlayEntry = getOverLay(sharedPreferences);
     Overlay.of(context)!.insert(overlayEntry);
     overlayState = Overlay.of(context)!;
+    _controller.forward();
   }
 
   @override
@@ -190,7 +201,8 @@ class _CentralAppState extends State<CentralApp> {
     super.initState();
   }
 
-  void removeOverlay() {
+  Future<void> onDone() async {
+    await _controller.reverse();
     if (mounted && overlayState.mounted) {
       overlayEntry.remove();
     }
@@ -213,82 +225,90 @@ class _CentralAppState extends State<CentralApp> {
 
   OverlayEntry getOverLay(SharedPreferences sharedPreferences) =>
       OverlayEntry(builder: (ctx) {
-        return Container(
-          color: Colors.white.withOpacity(0.2),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.only(
-                    bottom: 20, left: 25, right: 25, top: 27),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  color: const Color.fromRGBO(33, 33, 33, 1.0),
-                ),
-                width: 300,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'Autostart enables reminders even after device reboot. Allow autostart :',
-                      style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                          decoration: TextDecoration.none),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            await getAutoStartPermission();
-                            removeOverlay();
-                            await sharedPreferences.setString(
-                                'initApp', 'DONE');
-                          },
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(
-                                const EdgeInsets.all(5)),
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.white),
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30))),
+        return FadeTransition(
+          opacity: _animation,
+          child: Container(
+            color: Colors.white.withOpacity(0.2),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.only(
+                      bottom: 20, left: 25, right: 25, top: 27),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: const Color.fromRGBO(33, 33, 33, 1.0),
+                  ),
+                  width: 300,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        '! Autostart enables reminders even after device reboot. Allow autostart :',
+                        style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                            decoration: TextDecoration.none),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              await onDone();
+                              await sharedPreferences.setString(
+                                  'initApp', 'DONE');
+
+                              await getAutoStartPermission().timeout(
+                                  const Duration(seconds: 15),
+                                  onTimeout: () {});
+                            },
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.all(5)),
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.white),
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30))),
+                            ),
+                            child: const Text(
+                              'ALLOW',
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.black),
+                            ),
                           ),
-                          child: const Text(
-                            'ALLOW',
-                            style: TextStyle(fontSize: 12, color: Colors.black),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            removeOverlay();
-                            await sharedPreferences.setString(
-                                'initApp', 'UNDONE');
-                          },
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(
-                                const EdgeInsets.only(
-                                    top: 5, bottom: 5, left: 5, right: 5)),
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.white),
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30))),
-                          ),
-                          child: const Text(
-                            'NO',
-                            style: TextStyle(fontSize: 12, color: Colors.black),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
+                          ElevatedButton(
+                            onPressed: () async {
+                              // await sharedPreferences.setString(
+                              //     'initApp', 'UNDONE');
+                              await onDone();
+                            },
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.only(
+                                      top: 5, bottom: 5, left: 5, right: 5)),
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.white),
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30))),
+                            ),
+                            child: const Text(
+                              'NO',
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.black),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
