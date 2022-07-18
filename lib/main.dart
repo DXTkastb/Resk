@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:auto_start_flutter/auto_start_flutter.dart';
 import 'package:flutter/material.dart';
@@ -9,15 +10,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'add_screen/add_btask.dart';
 import 'add_screen/add_task.dart';
 import 'dbhelper/databaseManager.dart';
-import 'drawer/custom_drawer.dart';
 import 'export_import/export_importpage.dart';
+import 'homeview/appfront.dart';
 import 'notificationapi/notificationapi.dart';
-import 'statwids/circleindicator.dart';
 import 'statwids/statProvider.dart';
 import 'tasks/btask_list_fetch.dart';
 import 'tasks/task_list_fetch.dart';
-import 'tasks_screen/brieftaskspage.dart';
-import 'tasks_screen/taskspage.dart';
 import 'update_screen/updateScreen.dart';
 
 void main() async {
@@ -62,6 +60,7 @@ class SyncState extends State<Sync> {
         loading = false;
       });
     });
+
     super.initState();
   }
 
@@ -159,252 +158,141 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class CentralApp extends StatelessWidget {
+class CentralApp extends StatefulWidget {
   const CentralApp({Key? key}) : super(key: key);
+
+  @override
+  State<CentralApp> createState() => _CentralAppState();
+}
+
+class _CentralAppState extends State<CentralApp> {
+  late OverlayEntry overlayEntry;
+  late OverlayState overlayState;
+
+  void showOverlay(SharedPreferences sharedPreferences) {
+    overlayEntry = getOverLay(sharedPreferences);
+    Overlay.of(context)!.insert(overlayEntry);
+    overlayState = Overlay.of(context)!;
+  }
+
+  @override
+  void initState() {
+    Future.delayed(Duration.zero, () async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? app = prefs.get('initApp') as String?;
+      bool? autos = await isAutoStartAvailable;
+      if (app == null && autos == true) {
+        if (mounted) {
+          showOverlay(prefs);
+        }
+      }
+    });
+    super.initState();
+  }
+
+  void removeOverlay() {
+    if (mounted && overlayState.mounted) {
+      overlayEntry.remove();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement createState
-    return LayoutBuilder(builder: (ctx, cons) {
+    return
+        //   const Center(
+        //   child: Text(''),
+        // );
+        LayoutBuilder(builder: (ctx, cons) {
       return (MainApp(cons));
       // return Consumer<SyncTaskUpdate>(builder: (ctx, stu, _) {
       //   return (MainApp(cons));
       // });
     });
   }
-}
 
-class MainApp extends StatefulWidget {
-  final BoxConstraints box;
-
-  const MainApp(this.box);
-
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return MainAppState();
-  }
-}
-
-class MainAppState extends State<MainApp> {
-  final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
-  late Future tasklist;
-  late Future btasklist;
-  late Future stat;
-  late double height;
-  int _currentindex = 0;
-
-  @override
-  void initState() {
-    height = widget.box.maxHeight;
-    height = (height < 500) ? 500 : height;
-    setFutures();
-    askAutoStart();
-    super.initState();
-  }
-
-  Future<void> askAutoStart() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? app = prefs.get('initApp') as String?;
-    if (app == null) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                  'Autostart enables reminders even after device reboot. Allow autostart :'),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                       bool? autos = await isAutoStartAvailable;
-                       if(autos!=null && autos == true){
-                         await getAutoStartPermission();
-                       }
-
-                    },
-                    style: ButtonStyle(
-                      padding:
-                          MaterialStateProperty.all(const EdgeInsets.all(5)),
-                      backgroundColor: MaterialStateProperty.all(Colors.white),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30))),
-                    ),
-                    child: const Text(
-                      'ALLOW',
-                      style: TextStyle(fontSize: 12, color: Colors.black),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                      await prefs.setString('initApp', 'UNDONE');
-                    },
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all(const EdgeInsets.only(
-                          top: 5, bottom: 5, left: 5, right: 5)),
-                      backgroundColor: MaterialStateProperty.all(Colors.white),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30))),
-                    ),
-                    child: const Text(
-                      'NO',
-                      style: TextStyle(fontSize: 12, color: Colors.black),
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
-          duration: const Duration(days: 1),
-        ));
-      }
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  void removeAnyScaffoldSnack() {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-  }
-
-  void setFutures() {
-    tasklist = Provider.of<TaskListFetch>(context, listen: false).setTasks();
-    btasklist = Provider.of<BtaskListFetch>(context, listen: false).setTasks();
-    stat = Provider.of<StatProvider>(context, listen: false).setScore();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // upFutures();
-
-    return Scaffold(
-      key: _key,
-      drawer: SafeArea(
-        child: Drawer(
-          child: CustomDrawerColumn(height),
-        ),
-      ),
-      body: LayoutBuilder(
-        builder: (ctx, cons) {
-          return Theme(
-              data: ThemeData(
-                  textTheme: TextTheme(
-                headline1: TextStyle(
-                    fontSize: cons.maxHeight / 25,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black.withOpacity(1)),
-                headline2: TextStyle(
-                    fontSize: cons.maxHeight / 26,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-                headline3: TextStyle(
-                    fontSize: cons.maxHeight / 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black.withOpacity(0.6)),
-                headline4: TextStyle(
-                  color: Colors.deepPurple,
-                  fontSize: cons.maxHeight / 28,
-                  fontWeight: FontWeight.bold,
+  OverlayEntry getOverLay(SharedPreferences sharedPreferences) =>
+      OverlayEntry(builder: (ctx) {
+        return Container(
+          color: Colors.white.withOpacity(0.2),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.only(
+                    bottom: 20, left: 25, right: 25, top: 27),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  color: const Color.fromRGBO(33, 33, 33, 1.0),
                 ),
-                headline6: TextStyle(
-                    fontSize: cons.maxHeight / 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-              )),
-              child: (_currentindex == 1)
-                  ? BriefTaskPage(
-                      btasklist,
+                width: 300,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Autostart enables reminders even after device reboot. Allow autostart :',
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                          decoration: TextDecoration.none),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            await getAutoStartPermission();
+                            removeOverlay();
+                            await sharedPreferences.setString(
+                                'initApp', 'DONE');
+                          },
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(
+                                const EdgeInsets.all(5)),
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.white),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30))),
+                          ),
+                          child: const Text(
+                            'ALLOW',
+                            style: TextStyle(fontSize: 12, color: Colors.black),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            removeOverlay();
+                            await sharedPreferences.setString(
+                                'initApp', 'UNDONE');
+                          },
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(
+                                const EdgeInsets.only(
+                                    top: 5, bottom: 5, left: 5, right: 5)),
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.white),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30))),
+                          ),
+                          child: const Text(
+                            'NO',
+                            style: TextStyle(fontSize: 12, color: Colors.black),
+                          ),
+                        )
+                      ],
                     )
-                  : TasksPage(
-                      tasklist,
-                    ));
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (_currentindex == 0) {
-            removeAnyScaffoldSnack();
-            Navigator.of(context).pushNamed('/addtask').then((value) {
-              if (value == true) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(const SnackBar(content: Text('Task Added!')));
-              }
-            });
-          } else {
-            removeAnyScaffoldSnack();
-            Navigator.of(context).pushNamed('/addbtask').then((value) {
-              if (value == true) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(const SnackBar(content: Text('Task Added!')));
-              }
-            });
-          }
-        },
-        backgroundColor: (_currentindex == 1) ? Colors.teal : Colors.deepPurple,
-        child: const Icon(
-          Icons.add_box_rounded,
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.shifting,
-        currentIndex: _currentindex,
-        onTap: (x) {
-          removeAnyScaffoldSnack();
-          if (_currentindex != x) {
-            setState(() {
-              _currentindex = x;
-            });
-          }
-        },
-        items: [
-          BottomNavigationBarItem(
-              backgroundColor: Colors.deepPurple,
-              icon: Icon(
-                Icons.alarm_rounded,
-                size: height / 27,
+                  ],
+                ),
               ),
-              label: 'Daily Tasks'),
-          BottomNavigationBarItem(
-              backgroundColor: Colors.teal,
-              icon: Icon(
-                Icons.task_rounded,
-                size: height / 27,
-              ),
-              label: 'Brief Tasks'),
-        ],
-      ),
-      appBar: AppBar(
-        toolbarHeight: height / 13,
-        shape: const ContinuousRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(30),
-                bottomLeft: Radius.circular(30))),
-        backgroundColor: (_currentindex == 0) ? Colors.deepPurple : Colors.teal,
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              'Resk',
-              style:
-                  TextStyle(fontSize: height / 28, fontWeight: FontWeight.bold),
             ),
-            const Expanded(child: SizedBox()),
-            (_currentindex == 0) ? CircleIndicator(stat) : const SizedBox(),
-          ],
-        ),
-      ),
-    );
-  }
+          ),
+        );
+      });
 }
