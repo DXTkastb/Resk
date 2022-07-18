@@ -150,7 +150,7 @@ class TaskForm extends State<AddTask> {
                                     shape: MaterialStateProperty.all(
                                         RoundedRectangleBorder(
                                             borderRadius:
-                                                BorderRadius.circular(10))),
+                                                BorderRadius.circular(30))),
                                     backgroundColor: MaterialStateProperty.all(
                                         Colors.black)),
                                 child: Row(
