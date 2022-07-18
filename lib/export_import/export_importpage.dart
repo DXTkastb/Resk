@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reminder_app/functions/functions.dart';
 import 'package:reminder_app/statwids/statProvider.dart';
 
 import '/export_import/exportimportapi.dart';
@@ -41,8 +42,7 @@ class _ImportExportState extends State<ImportExport> {
               shape: MaterialStateProperty.all(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30)))),
           onPressed: () async {
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
+            Functions.removeAnyScaffoldSnack(context);
             try {
               String filePath = await ImportExportApi.api.export(
                   Provider.of<TaskListFetch>(context, listen: false)
@@ -124,7 +124,7 @@ class ExportColumnState extends State<ExportColumn> {
                 borderRadius: BorderRadius.circular(30))),
           ),
           onPressed: () async {
-            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+            Functions.removeAnyScaffoldSnack(context);
             if (!fileAdded) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text('Reading file. Please don\'t close app.'),
@@ -134,7 +134,7 @@ class ExportColumnState extends State<ExportColumn> {
                 myTask = jsonDecode(await ImportExportApi.api.tt()) as List;
 
                 if (mounted) {
-                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                  Functions.removeAnyScaffoldSnack(context);
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text('File Uploaded'),
                   ));
@@ -144,7 +144,7 @@ class ExportColumnState extends State<ExportColumn> {
                   });
                 }
               } catch (e) {
-                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                Functions.removeAnyScaffoldSnack(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('File not selected')));
               }
@@ -152,7 +152,7 @@ class ExportColumnState extends State<ExportColumn> {
               int s = Provider.of<StatProvider>(context, listen: false).score;
               int ts =
                   Provider.of<StatProvider>(context, listen: false).totalScore;
-              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              Functions.removeAnyScaffoldSnack(context);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -178,7 +178,7 @@ class ExportColumnState extends State<ExportColumn> {
               ]);
 
               if (mounted) {
-                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                Functions.removeAnyScaffoldSnack(context);
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     '/', (Route<dynamic> route) => false);
               }
@@ -215,7 +215,7 @@ class ExtraSnack extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             Future.delayed(Duration.zero, () {
-              ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              Functions.removeAnyScaffoldSnack(context);
             });
           },
           style: ButtonStyle(

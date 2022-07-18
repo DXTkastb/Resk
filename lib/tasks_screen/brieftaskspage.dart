@@ -5,6 +5,7 @@ import '../buttons/del_button.dart';
 import '../buttons/done_button.dart';
 import '../dbhelper/databaseManager.dart';
 import '../drawer/alert_d.dart';
+import '../functions/functions.dart';
 import '../tasks/btask_list_fetch.dart';
 import '../tasks/btaskdata.dart';
 
@@ -58,7 +59,7 @@ class BTaskCard extends StatelessWidget {
   const BTaskCard({Key? key}) : super(key: key);
 
   void removeAnyScaffoldSnack(BuildContext context) {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    Functions.removeAnyScaffoldSnack(context);
   }
 
   Future<void> updateTask(int id, bool done) async {

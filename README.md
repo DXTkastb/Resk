@@ -14,6 +14,6 @@ For Testing (on Emulator/Connected Physical Device) : [flutter run](https://docs
 :green_circle: Persist task data using sqlite <br />
 :green_circle: Show progress for each day<br />:green_circle: Add Reminders for Daily Tasks <br />
 :green_circle: Export Task Data to Json file (for future use) <br />
-:orange_circle: Add idependent isolated Reminders along with add/delete functionality <br />
+:orange_circle: Add independent isolated Reminders along with add/delete functionality <br />
 :orange_circle: Add Statistic Data to UI <br />
 :orange_circle: Push Data/Api Layers to separate dart isolate. <br />

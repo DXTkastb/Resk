@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../functions/functions.dart';
 import '/drawer/custom_drawer.dart';
 import '/statwids/circleindicator.dart';
 import '/statwids/statProvider.dart';
@@ -45,10 +46,6 @@ class MainAppState extends State<MainApp> {
     super.didChangeDependencies();
   }
 
-  void removeAnyScaffoldSnack() {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-  }
-
   void setFutures() {
     tasklist = Provider.of<TaskListFetch>(context, listen: false).setTasks();
     btasklist = Provider.of<BtaskListFetch>(context, listen: false).setTasks();
@@ -57,8 +54,6 @@ class MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    // upFutures();
-
     return Scaffold(
       key: _key,
       drawer: SafeArea(
@@ -106,7 +101,7 @@ class MainAppState extends State<MainApp> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (_currentindex == 0) {
-            removeAnyScaffoldSnack();
+            Functions.removeAnyScaffoldSnack(context);
             Navigator.of(context).pushNamed('/addtask').then((value) {
               if (value == true) {
                 ScaffoldMessenger.of(context)
@@ -114,7 +109,7 @@ class MainAppState extends State<MainApp> {
               }
             });
           } else {
-            removeAnyScaffoldSnack();
+            Functions.removeAnyScaffoldSnack(context);
             Navigator.of(context).pushNamed('/addbtask').then((value) {
               if (value == true) {
                 ScaffoldMessenger.of(context)
@@ -132,7 +127,7 @@ class MainAppState extends State<MainApp> {
         type: BottomNavigationBarType.shifting,
         currentIndex: _currentindex,
         onTap: (x) {
-          removeAnyScaffoldSnack();
+          Functions.removeAnyScaffoldSnack(context);
           if (_currentindex != x) {
             setState(() {
               _currentindex = x;
