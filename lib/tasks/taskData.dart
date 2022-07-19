@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../dbhelper/databaseManager.dart';
+import '../notificationapi/notificationapi.dart';
 
 class TaskData extends ChangeNotifier {
   int index;
@@ -19,7 +20,7 @@ class TaskData extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> didupdate(String titl, String descriptio, int reach) async {
+  Future<void> didupdate(String newTitle, String newDescription, int reach) async {
     if (reach == 1 && reached == 0) {
       score++;
     } else if (reach == 0 && reached == 1) {
@@ -27,12 +28,17 @@ class TaskData extends ChangeNotifier {
     }
 
     await DatabaseManager.databaseManagerInstance
-        .updateDailyTask(index, titl, descriptio, reach, score);
-
-    title = titl;
-    description = descriptio;
+        .updateDailyTask(index, newTitle, newDescription, reach, score);
+    var nowTime = DateTime.now();
+    await NotificationApi.launchPeriodicNotification(
+        index,
+        newTitle,
+        newDescription,
+        DateTime(
+            nowTime.year, nowTime.month, nowTime.day, rem ~/ 100, rem % 100));
+    title = newTitle;
+    description = newDescription;
     reached = reach;
-    score = score;
     notifyListeners();
   }
 
