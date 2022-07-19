@@ -153,10 +153,10 @@ class MainAppState extends State<MainApp> {
       ),
       appBar: AppBar(
         toolbarHeight: height / 13,
-        shape: const ContinuousRectangleBorder(
+        shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(30),
-                bottomLeft: Radius.circular(30))),
+                bottomRight: Radius.circular(20),
+                bottomLeft: Radius.circular(20))),
         backgroundColor: (_currentindex == 0) ? Colors.deepPurple : Colors.teal,
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.center,

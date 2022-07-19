@@ -20,7 +20,7 @@ class CustomDrawerColumn extends StatelessWidget {
 
   TextStyle getButtonTextStyle(){
     return TextStyle(
-        fontSize: height / 43,
+        fontSize: height / 45,
         fontWeight: FontWeight.bold,
         color: Colors.white);
   }
@@ -99,7 +99,7 @@ class CustomDrawerColumn extends StatelessWidget {
             style: ButtonStyle(
               elevation: MaterialStateProperty.all(0),
               shape:
-                  MaterialStateProperty.all(const ContinuousRectangleBorder()),
+                  MaterialStateProperty.all(const RoundedRectangleBorder()),
               backgroundColor:
                   MaterialStateProperty.all(Colors.deepOrange.shade800),
               foregroundColor:
