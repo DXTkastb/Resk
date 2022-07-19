@@ -27,7 +27,6 @@ class _UpdateScreenState extends State<UpdateScreen> {
     setState(() {
       updating = !updating;
     });
-    await Future.delayed(const Duration(seconds: 5));
     if (mounted) {
       int s = Provider.of<StatProvider>(context, listen: false).score;
       int ts = Provider.of<StatProvider>(context, listen: false).totalScore;

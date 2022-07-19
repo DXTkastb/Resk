@@ -67,7 +67,7 @@ class MainAppState extends State<MainApp> {
               data: ThemeData(
                   textTheme: TextTheme(
                 headline1: TextStyle(
-                    fontSize: cons.maxHeight / 25,
+                    fontSize: cons.maxHeight / 27,
                     fontWeight: FontWeight.bold,
                     color: Colors.black.withOpacity(1)),
                 headline2: TextStyle(
@@ -75,7 +75,7 @@ class MainAppState extends State<MainApp> {
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
                 headline3: TextStyle(
-                    fontSize: cons.maxHeight / 32,
+                    fontSize: cons.maxHeight / 35,
                     fontWeight: FontWeight.bold,
                     color: Colors.black.withOpacity(0.6)),
                 headline4: TextStyle(
