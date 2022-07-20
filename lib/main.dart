@@ -188,7 +188,7 @@ class _CentralAppState extends State<CentralApp>
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () async {
+    Future.delayed(const Duration(seconds: 2), () async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? app = prefs.get('initApp') as String?;
       bool? autos = await isAutoStartAvailable;
@@ -196,6 +196,8 @@ class _CentralAppState extends State<CentralApp>
         if (mounted) {
           showOverlay(prefs);
         }
+      } else {
+        _controller.dispose();
       }
     });
     super.initState();
@@ -206,6 +208,12 @@ class _CentralAppState extends State<CentralApp>
     if (mounted && overlayState.mounted) {
       overlayEntry.remove();
     }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override

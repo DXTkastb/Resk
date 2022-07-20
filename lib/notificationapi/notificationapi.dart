@@ -39,7 +39,7 @@ class NotificationApi {
       priority: Priority.high,
       colorized: true,
       subText: 'keep going!',
-      color: const Color.fromARGB(255, 66, 165, 245),
+      color: const Color.fromARGB(255, 255, 255, 255),
       playSound: true,
       vibrationPattern: Int64List(5),
       enableVibration: true,
